@@ -22,6 +22,7 @@ runs:
   using: "composite"
   steps:
     - name: CDK synth
+      shell: bash
       run: node index.js
 
     - uses: actions/download-artifact@v3
@@ -30,10 +31,12 @@ runs:
         path: site
 
     - name: Display structure of downloaded files
+      shell: bash
       run: ls -R
       working-directory: site
 
     - name: ZIP site
+      shell: bash
       run: zip site.zip site
 
     - uses: guardian/actions-riff-raff@v1
