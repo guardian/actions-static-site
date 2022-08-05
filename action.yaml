@@ -24,6 +24,12 @@ runs:
     - name: CDK synth
       shell: bash
       run: node index.js
+      env:
+        INPUT_APP: ${{ inputs.app }}
+        INPUT_DOMAIN: ${{ inputs.domain }}
+        INPUT_AUTH: ${{ inputs.auth }}
+        INPUT_ARTIFACT: ${{ inputs.artifact }}
+        INPUT_DRYRUN: ${{ inputs.dryRun}}
 
     - uses: actions/download-artifact@v3
       with:
