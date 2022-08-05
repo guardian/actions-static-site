@@ -1,4 +1,4 @@
-# actions-static-site
+# @guardian/actions-static-site
 
 Github Action for a Guardian static site. The action takes static files (which
 you generate in an earlier workflow step) and creates a Riffraff deployment for
