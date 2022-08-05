@@ -7,8 +7,8 @@ import * as fs from "fs";
 
 export const main = async (): Promise<void> => {
   const app = core.getInput("app", { required: true });
-  const stack = core.getInput("stack", { required: true });
   const domain = core.getInput("domain", { required: true });
+  const stack = "deploy";
   core.info(JSON.stringify({ app, stack, domain }));
 
   const artifactName = core.getInput("artifact") || "artifact"; // TODO check if default is passed or must be set.
