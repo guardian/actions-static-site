@@ -6,6 +6,8 @@ import { StaticSite } from "./cdk/stack";
 import * as fs from "fs";
 
 export const main = async (): Promise<void> => {
+  console.log(process.env);
+
   const app = core.getInput("app", { required: true });
   const stack = core.getInput("stack", { required: true });
   const domain = core.getInput("domain", { required: true });
