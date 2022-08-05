@@ -1,0 +1,72 @@
+name: "guardian/actions-static-site"
+description: "Deploy a Guardian static site."
+inputs:
+  app:
+    description: "App name (pattern: [a-zA-Z-]+)."
+    required: true
+  domain:
+    description: A Guardian-owned domain. [name].gutools.co.uk is recommended.
+    required: true
+  auth:
+    description: Auth mechanism to use.
+    required: false
+    default: "google"
+  artifact:
+    description: "Name of artifact containing the static site. Should be uploaded in an earlier workflow step."
+    required: false
+    default: "artifact"
+  dryRun:
+    description: "If set to true, will not upload Riffraff artifact."
+    default: false
+runs:
+  using: "composite"
+  steps:
+    - name: CDK synth
+      run: node index.js
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.artifact }}
+        path: site
+
+    - name: Display structure of downloaded files
+      run: ls -R
+      working-directory: site
+
+    - name: ZIP site
+      run: zip site.zip site
+
+    - uses: guardian/actions-riff-raff@v1
+      with:
+        app: ${{ inputs.app }}
+        dryRun: ${{ inputs.dryRun }}
+        config: |
+          stacks:
+            - deploy
+          regions:
+            - eu-west-1
+          allowedStages:
+            - PROD
+          deployments:
+            lambda-to-s3:
+              type: aws-s3
+              sources:
+                - site.zip
+                - lambda/lambda.zip
+              parameters:
+                bucket: deploy-tools-dist
+            lambda:
+              type: aws-lambda
+              parameters:
+                fileName: ${{ inputs.app }}
+                lookupByTags: true
+              actions:
+                - updateLambda
+              dependencies:
+                - lambda-to-s3
+            cfn:
+              type: cloud-formation
+              sources:
+                - cfn.json
+              parameters:
+                templatePath: cfn.json

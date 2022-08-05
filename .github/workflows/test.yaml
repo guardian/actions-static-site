@@ -1,0 +1,38 @@
+name: test
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+
+      - name: build + test
+        run: |
+          npm ci
+          npm run build
+          npm test
+
+      - name: prep action
+        run: |
+          mkdir my-site
+          touch my-site/index.html
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: my-site
+
+      - uses: ./
+        with:
+          dryRun: true
+          domain: test.gutools.co.uk
+          auth: "none"
