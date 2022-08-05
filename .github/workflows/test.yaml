@@ -33,6 +33,7 @@ jobs:
 
       - uses: ./
         with:
+          app: the-coolest-static-site
           dryRun: true
           domain: test.gutools.co.uk
           auth: "none"
