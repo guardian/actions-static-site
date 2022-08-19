@@ -46,7 +46,7 @@ runs:
 
     - name: ZIP site
       shell: bash
-      run: zip site.zip site
+      run: zip -r site.zip site
 
     # TODO credentials stuff!
 
