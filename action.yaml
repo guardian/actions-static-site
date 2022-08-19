@@ -71,6 +71,14 @@ runs:
                 bucket: deploy-tools-dist
                 cacheControl: no-cache
                 publicReadAcl: false
+            cfn:
+              type: cloud-formation
+              sources:
+                - cfn.json
+              parameters:
+                templatePath: cfn.json
+              dependencies:
+                - lambda-to-s3
             lambda:
               type: aws-lambda
               parameters:
@@ -80,10 +88,4 @@ runs:
               actions:
                 - updateLambda
               dependencies:
-                - lambda-to-s3
-            cfn:
-              type: cloud-formation
-              sources:
-                - cfn.json
-              parameters:
-                templatePath: cfn.json
+                - cfn
