@@ -76,6 +76,7 @@ runs:
               parameters:
                 fileName: ${{ inputs.app }}
                 lookupByTags: true
+                bucket: deploy-tools-dist
               actions:
                 - updateLambda
               dependencies:

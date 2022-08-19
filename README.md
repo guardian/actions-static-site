@@ -27,9 +27,10 @@ Example usage:
 
 ## TODOs
 
-- [ ] get synth working
-- [ ] get riff-raff bundle working
+- [x] get synth working
+- [] get riff-raff bundle working
 - [ ] get google creds for \*.devx.gutools.co.uk and update inputs accordingly
+- [ ] ensure works cross-account (dist buckets are currently hardcoded in rr config)
 
 ## Inputs
 
