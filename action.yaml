@@ -50,8 +50,6 @@ runs:
     # TODO credentials stuff!
 
     - uses: guardian/actions-riff-raff@v1
-      env:
-
       with:
         app: ${{ inputs.app }}
         dryRun: ${{ inputs.dryRun }}
