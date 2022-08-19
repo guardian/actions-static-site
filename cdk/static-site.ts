@@ -41,6 +41,7 @@ export class StaticSite extends GuStack {
     const siteLayer = new LayerVersion(this, "site-layer", {
       code: Code.fromBucket(bucket, `${keyPrefix}/site.zip`),
       description: "layer for static site",
+      layerVersionName: `site-layer-${Math.floor(new Date().getTime() / 1000)}`
     });
 
     const lambda = new Function(this, "lambda", {
