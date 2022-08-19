@@ -64,6 +64,7 @@ runs:
           deployments:
             lambda-to-s3:
               type: aws-s3
+              app: ${{ inputs.app }}
               sources:
                 - site.zip
                 - lambda/lambda.zip
