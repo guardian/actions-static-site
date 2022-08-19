@@ -69,6 +69,8 @@ runs:
                 - lambda/lambda.zip
               parameters:
                 bucket: deploy-tools-dist
+                cacheControl: no-cache
+                publicReadAcl: false
             lambda:
               type: aws-lambda
               parameters:
