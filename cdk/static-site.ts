@@ -80,8 +80,7 @@ export class StaticSite extends GuStack {
 
     // ListenerAction.authenticateOidc; TODO once I have Google powers.
 
-    listener.addTargets("target", {
-      targets: [new LambdaTarget(lambda)],
-    });
+    const targets = listener.addTargets("target", { targets: [new LambdaTarget(lambda)] });
+    targets.setAttribute("lambda.multi_value_headers.enabled", "true"); // See: https://github.com/akrylysov/algnhsa/pull/20/files#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5R81.
   }
 }

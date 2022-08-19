@@ -186,6 +186,12 @@ Object {
             "Value": "PROD",
           },
         ],
+        "TargetGroupAttributes": Array [
+          Object {
+            "Key": "lambda.multi_value_headers.enabled",
+            "Value": "true",
+          },
+        ],
         "TargetType": "lambda",
         "Targets": Array [
           Object {
