@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import { Template } from "aws-cdk-lib/assertions";
 import { App } from "aws-cdk-lib";
-import { StaticSite } from "./cdk/stack";
+import { StaticSite } from "./cdk/static-site";
 import * as fs from "fs";
 
 export const main = async (): Promise<void> => {

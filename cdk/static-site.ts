@@ -5,8 +5,7 @@ import {
   ApplicationProtocol,
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { Bucket } from "aws-cdk-lib/aws-s3";
-import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
-import { SubnetType } from "aws-cdk-lib/aws-ec2";
+import { GuVpc, SubnetType } from "@guardian/cdk/lib/constructs/ec2";
 import { GuCname } from "@guardian/cdk/lib/constructs/dns/";
 import { GuCertificate } from "@guardian/cdk/lib/constructs/acm";
 import { Code, Function, LayerVersion, Runtime } from "aws-cdk-lib/aws-lambda";
@@ -47,10 +46,12 @@ export class StaticSite extends GuStack {
     });
 
     const vpc = GuVpc.fromIdParameter(this, "vpc-id");
+    const publicSubnets = GuVpc.subnetsFromParameter(this, { type: SubnetType.PUBLIC, app: props.app });
+
 
     const alb = new ApplicationLoadBalancer(this, "alb", {
       vpc: vpc,
-      vpcSubnets: { subnetType: SubnetType.PUBLIC },
+      vpcSubnets: { subnets: publicSubnets },
       internetFacing: true,
     });
 
