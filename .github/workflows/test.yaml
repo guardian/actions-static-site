@@ -25,7 +25,19 @@ jobs:
       - name: prep action
         run: |
           mkdir my-site
-          touch my-site/index.html
+
+          cat << EOF > my-site/index.html
+          <!DOCTYPE html>
+          <html lang="en-GB">
+            <head>
+              <meta charset="utf-8">
+              <title>Test</title>
+            </head>
+            <body>
+              <p>Hello, world!</p>
+            </body>
+          </html>
+          EOF
 
       - uses: actions/upload-artifact@v3
         with:
@@ -34,6 +46,5 @@ jobs:
       - uses: ./
         with:
           app: the-coolest-static-site
-          dryRun: true
           domain: test.devx.gutools.co.uk
           auth: "none"
