@@ -1,5 +1,4 @@
 import * as core from "@actions/core";
-import * as artifact from "@actions/artifact";
 import { Template } from "aws-cdk-lib/assertions";
 import { App } from "aws-cdk-lib";
 import { StaticSite } from "./cdk/stack";
@@ -10,11 +9,6 @@ export const main = async (): Promise<void> => {
   const domain = core.getInput("domain", { required: true });
   const stack = "deploy";
   core.info(JSON.stringify({ app, stack, domain }));
-
-  const artifactName = core.getInput("artifact") || "artifact"; // TODO check if default is passed or must be set.
-  const artifactClient = artifact.create();
-  const sitePath = await artifactClient.downloadArtifact(artifactName); // TODO better error handling
-  core.info(JSON.stringify({ sitePath }));
 
   const cdkApp = new App();
   const cdkStack = new StaticSite(cdkApp, "static-site", {
