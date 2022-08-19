@@ -23,6 +23,13 @@ runs:
   # env) so need to be passed them explicitly :(. Sad times I know.
   using: "composite"
   steps:
+    - name: Debug
+      shell: bash
+      run: |
+        env
+        echo '${{ toJSON(github) }}'
+        echo '${{ toJSON(inputs) }}'
+
     - name: CDK synth
       shell: bash
       run: node index.js
@@ -32,6 +39,7 @@ runs:
         INPUT_AUTH: ${{ inputs.auth }}
         INPUT_ARTIFACT: ${{ inputs.artifact }}
         INPUT_DRYRUN: ${{ inputs.dryRun}}
+        INPUT_ACTIONS_RUNTIME_TOKEN: ${ inputs.ACTIONS_RUNTIME_TOKEN }
 
     - uses: actions/download-artifact@v3
       with:
