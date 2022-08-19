@@ -25,6 +25,12 @@ Example usage:
 
 (There are some additional optional arguments too - see below for details.)
 
+## TODOs
+
+- [ ] get synth working
+- [ ] get riff-raff bundle working
+- [ ] get google creds for \*.devx.gutools.co.uk and update inputs accordingly
+
 ## Inputs
 
 #### **stack** `string` (required):

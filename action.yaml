@@ -19,6 +19,8 @@ inputs:
     description: "If set to true, will not upload Riffraff artifact."
     default: false
 runs:
+  # Note composite steps do not have direct access to secrets, or inputs (via
+  # env) so need to be passed them explicitly :(. Sad times I know.
   using: "composite"
   steps:
     - name: CDK synth
@@ -45,7 +47,11 @@ runs:
       shell: bash
       run: zip site.zip site
 
+    # TODO credentials stuff!
+
     - uses: guardian/actions-riff-raff@v1
+      env:
+
       with:
         app: ${{ inputs.app }}
         dryRun: ${{ inputs.dryRun }}

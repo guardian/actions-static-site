@@ -35,5 +35,5 @@ jobs:
         with:
           app: the-coolest-static-site
           dryRun: true
-          domain: test.gutools.co.uk
+          domain: test.devx.gutools.co.uk
           auth: "none"
