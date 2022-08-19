@@ -86,7 +86,7 @@ runs:
               type: aws-lambda
               app: ${{ inputs.app }}
               parameters:
-                fileName: ${{ inputs.app }}
+                fileName: lambda.zip
                 lookupByTags: true
                 bucket: deploy-tools-dist
               actions:
