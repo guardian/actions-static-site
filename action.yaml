@@ -78,8 +78,6 @@ runs:
                 - updateLambda
               dependencies:
                 - lambda-to-s3
-              sources:
-                - cfn.json # hack for now
             cfn:
               type: cloud-formation
               sources:
