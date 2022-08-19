@@ -13,6 +13,6 @@ describe("static site", () => {
     });
 
     const got = Template.fromStack(cdkStack).toJSON();
-    expect(got).toMatchSnapshot
+    expect(got).toMatchSnapshot()
   })
 })

@@ -1,4 +1,4 @@
-import { GuStack, GuStackProps } from "@guardian/cdk/lib/constructs/core";
+import { GuDistributionBucketParameter, GuStack, GuStackProps } from "@guardian/cdk/lib/constructs/core";
 import { App, Duration } from "aws-cdk-lib";
 import {
   ApplicationLoadBalancer,
@@ -30,7 +30,12 @@ export class StaticSite extends GuStack {
   constructor(scope: App, id: string, props: StaticSiteProps) {
     super(scope, id, props);
 
-    const bucket = new Bucket(this, "lambda-code-bucket");
+    const bucket = Bucket.fromBucketName(
+      this,
+      `${id}-bucket`,
+      GuDistributionBucketParameter.getInstance(this).valueAsString
+    );
+
     const keyPrefix = `${this.stack}/${this.stage}/${props.app}`;
 
     const siteLayer = new LayerVersion(this, "site-layer", {
