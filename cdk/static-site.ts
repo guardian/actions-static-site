@@ -92,12 +92,18 @@ export class StaticSite extends GuStack {
 
     if (props.auth) {
       const ssmPrefix = `/${this.stage}/${this.stack}/${props.app}`;
+      const clientId = StringParameter.fromStringParameterAttributes(this, 'clientID', { parameterName: `${ssmPrefix}/googleClientID`}).stringValue;
+      const clientSecret = StringParameter.fromSecureStringParameterAttributes(this, 'clientSecret', { parameterName: `${ssmPrefix}/googleClientSecret`}).stringValue;
 
       const authAction = ListenerAction.authenticateOidc({
         next: ListenerAction.forward([targetGroup]),
 
-        clientId: StringParameter.fromStringParameterAttributes(this, 'clientID', { parameterName: `${ssmPrefix}/googleClientID`}).stringValue,
-        clientSecret: SecretValue.ssmSecure(`${ssmPrefix}/googleClientSecret`),
+        clientId: clientId,
+
+        // This is actually safe as it is a dynamic reference. Nb.
+        // SecretValue.fromSsmParameter isn't valid here (will fail at runtime)
+        // surprisingly. :(
+        clientSecret: SecretValue.unsafePlainText(clientSecret),
 
         scope: "openid&email&hd=guardian.co.uk",
 
