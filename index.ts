@@ -7,13 +7,15 @@ import * as fs from "fs";
 export const main = async (): Promise<void> => {
   const app = core.getInput("app", { required: true });
   const domain = core.getInput("domain", { required: true });
-  const stack = "deploy";
-  core.info(JSON.stringify({ app, stack, domain }));
+  const auth = core.getInput("auth");
+  const stack = "deploy"; // TODO support all stacks
+  core.info(JSON.stringify({ app, stack, domain, auth }));
 
   const cdkApp = new App();
   const cdkStack = new StaticSite(cdkApp, "static-site", {
     app,
     stack,
+    auth: auth === "google",
     stage: "PROD",
     domainName: domain,
   });

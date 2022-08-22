@@ -50,6 +50,23 @@ The auth mechanism to use for access. If 'google' is selected access users will
 need to authenticate with a Guardian (Google) email address in order to access
 the site.
 
+To make this work you will also need to set up the following SSM parameters in
+your target account:
+
+    /:STAGE/:stack/:app/googleClientID
+    /:STAGE/:stack/:app/googleClientSecret
+
+For example:
+
+    /PROD/deploy/the-coolest-static-site/googleClientID
+    /PROD/deploy/the-coolest-static-site/googleClientSecret
+
+**Ensure the secret is a _secure_ SSM Parameter.**
+
+To get sensible values for these, you will need to create a new Google Cloud
+project and generate Oauth credentials for it. For more info, see
+[here](https://developers.google.com/identity/protocols/oauth2/openid-connect#getcredentials).
+
 #### **artifact** `string` (optional - default='artifact')
 
 Name of the artifact containing the static resources. Should be uploaded in

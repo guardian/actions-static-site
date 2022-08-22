@@ -339,7 +339,7 @@ Object {
           "S3Key": "stack/PROD/app/site.zip",
         },
         "Description": "layer for static site",
-        "LayerName": "site-layer-1660916666",
+        "LayerName": "layer",
       },
       "Type": "AWS::Lambda::LayerVersion",
     },
