@@ -18,6 +18,10 @@ Object {
       "Description": "A list of public subnets",
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
+    "clientIDParameter": Object {
+      "Default": "/PROD/stack/app/googleClientID",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
   },
   "Resources": Object {
     "CertificateAppCEE540C3": Object {
@@ -149,6 +153,22 @@ Object {
         ],
         "DefaultActions": Array [
           Object {
+            "AuthenticateOidcConfig": Object {
+              "AuthorizationEndpoint": "https://accounts.google.com/o/oauth2/v2/auth",
+              "ClientId": Object {
+                "Ref": "clientIDParameter",
+              },
+              "ClientSecret": "{{resolve:secretsmanager:PROD/deploy/the-coolest-static-site/googleClientSecret:SecretString:::}}",
+              "Issuer": "https://accounts.google.com",
+              "Scope": "openid&email&hd=guardian.co.uk",
+              "TokenEndpoint": "https://oauth2.googleapis.com/token",
+              "UserInfoEndpoint": "https://openidconnect.googleapis.com/v1/userinfo",
+            },
+            "Order": 1,
+            "Type": "authenticate-oidc",
+          },
+          Object {
+            "Order": 2,
             "TargetGroupArn": Object {
               "Ref": "alblistenertargetGroup2F1EE73B",
             },
