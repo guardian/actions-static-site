@@ -10,6 +10,8 @@ describe("static site", () => {
       stack: 'stack',
       stage: "PROD",
       domainName: "example.devx.gutools.co.uk",
+      layerVersionName: "layer",
+      auth: true,
     });
 
     const got = Template.fromStack(cdkStack).toJSON();

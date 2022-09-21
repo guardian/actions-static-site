@@ -18,6 +18,10 @@ Object {
       "Description": "A list of public subnets",
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
+    "clientIDParameter": Object {
+      "Default": "/PROD/stack/app/googleClientID",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
   },
   "Resources": Object {
     "CertificateAppCEE540C3": Object {
@@ -98,11 +102,11 @@ Object {
         "GroupDescription": "Automatically created Security Group for ELB staticsitealb4CA23368",
         "SecurityGroupEgress": Array [
           Object {
-            "CidrIp": "255.255.255.255/32",
-            "Description": "Disallow all traffic",
-            "FromPort": 252,
-            "IpProtocol": "icmp",
-            "ToPort": 86,
+            "CidrIp": "0.0.0.0/0",
+            "Description": "from 0.0.0.0/0:443",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
           },
         ],
         "SecurityGroupIngress": Array [
@@ -149,6 +153,25 @@ Object {
         ],
         "DefaultActions": Array [
           Object {
+            "AuthenticateOidcConfig": Object {
+              "AuthenticationRequestExtraParams": Object {
+                "hd": "guardian.co.uk",
+              },
+              "AuthorizationEndpoint": "https://accounts.google.com/o/oauth2/v2/auth",
+              "ClientId": Object {
+                "Ref": "clientIDParameter",
+              },
+              "ClientSecret": "{{resolve:secretsmanager:PROD/stack/app/googleClientSecret:SecretString:::}}",
+              "Issuer": "https://accounts.google.com",
+              "Scope": "openid email",
+              "TokenEndpoint": "https://oauth2.googleapis.com/token",
+              "UserInfoEndpoint": "https://openidconnect.googleapis.com/v1/userinfo",
+            },
+            "Order": 1,
+            "Type": "authenticate-oidc",
+          },
+          Object {
+            "Order": 2,
             "TargetGroupArn": Object {
               "Ref": "alblistenertargetGroup2F1EE73B",
             },
@@ -339,7 +362,7 @@ Object {
           "S3Key": "stack/PROD/app/site.zip",
         },
         "Description": "layer for static site",
-        "LayerName": "site-layer-1660916666",
+        "LayerName": "layer",
       },
       "Type": "AWS::Lambda::LayerVersion",
     },

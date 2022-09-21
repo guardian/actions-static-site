@@ -25,32 +25,51 @@ Example usage:
 
 (There are some additional optional arguments too - see below for details.)
 
-## TODOs
-
-- [x] get synth working
-- [x] get riff-raff bundle working
-- [ ] ensure works cross-account (dist buckets are currently hardcoded in rr config)
-- [ ] get google creds for \*.devx.gutools.co.uk and update inputs accordingly
-
 ## Inputs
 
-#### **stack** `string` (required):
+### **stack** `string` (required):
 
 A Riffraff stack. This determines which AWS account your static site will be
 deployed into.
 
-#### **domain** `string` (required):
+### **domain** `string` (required):
 
 The domain should be a Guardian-owned domain. For internal tools,
 `[app].gutools.co.uk` is recommended.
 
-#### **auth** `'google' | 'none'` (optional - default='google'):
+### **auth** `'google' | 'none'` (optional - default='google'):
 
-The auth mechanism to use for access. If 'google' is selected access users will
-need to authenticate with a Guardian (Google) email address in order to access
-the site.
+The auth mechanism to use for access.
 
-#### **artifact** `string` (optional - default='artifact')
+'none' means that your application will be completely public. It is therefore
+not a good choice for most applications.
+
+If 'google' is selected access users will need to authenticate with a Guardian
+(Google) email address in order to access the site.
+
+You will therefore need to create a new Google Cloud project and generate Oauth
+credentials for it. For more info, see
+[here](https://developers.google.com/identity/protocols/oauth2/openid-connect#getcredentials).
+
+Once the Google Cloud project is created and Oauth credentials generate you will
+need to do the following:
+
+1. Add the Google Client ID in Parameter Store
+
+`/PROD/:stack/:app/googleClientID`
+
+E.g. '/PROD/deploy/the-coolest-static-site/googleClientID'.
+
+2. Add the Google Client Secret in Secret Manager
+
+`/PROD/:stack/:app/googleClientSecret`
+
+E.g. '/PROD/deploy/the-coolest-static-site/googleClientSecret'.
+
+In both cases `:app` and `:stack` should match the inputs you use when
+configuring the action in your workflow file.
+
+### **artifact** `string` (optional - default='artifact')
 
 Name of the artifact containing the static resources. Should be uploaded in
 an earlier workflow step.
