@@ -106,11 +106,11 @@ export class StaticSite extends GuStack {
     targetGroup.setAttribute("lambda.multi_value_headers.enabled", "true"); // See: https://github.com/akrylysov/algnhsa/pull/20/files#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5R81.
 
     if (props.auth) {
-      const ssmPrefix = `/${this.stage}/${this.stack}/${props.app}`;
+      const ssmPrefix = `${this.stage}/${this.stack}/${props.app}`;
       const clientId = StringParameter.fromStringParameterAttributes(
         this,
         "clientID",
-        { parameterName: `${ssmPrefix}/googleClientID` }
+        { parameterName: `/${ssmPrefix}/googleClientID` }
       ).stringValue;
 
       // Secure SSM Parameters here aren't possible unfortunately

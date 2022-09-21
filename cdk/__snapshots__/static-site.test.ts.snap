@@ -161,7 +161,7 @@ Object {
               "ClientId": Object {
                 "Ref": "clientIDParameter",
               },
-              "ClientSecret": "{{resolve:secretsmanager:PROD/deploy/the-coolest-static-site/googleClientSecret:SecretString:::}}",
+              "ClientSecret": "{{resolve:secretsmanager:PROD/stack/app/googleClientSecret:SecretString:::}}",
               "Issuer": "https://accounts.google.com",
               "Scope": "openid email",
               "TokenEndpoint": "https://oauth2.googleapis.com/token",
