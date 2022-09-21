@@ -16,6 +16,7 @@ import { GuCertificate } from "@guardian/cdk/lib/constructs/acm";
 import { Code, Function, LayerVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { LambdaTarget } from "aws-cdk-lib/aws-elasticloadbalancingv2-targets";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
+import { Port } from "aws-cdk-lib/aws-ec2";
 
 interface StaticSiteProps extends GuStackProps {
   app: string;
@@ -76,6 +77,10 @@ export class StaticSite extends GuStack {
       vpcSubnets: { subnets: publicSubnets },
       internetFacing: true,
     });
+
+    // Ensure ALB can reach ldp userInfo endpont - see
+    // https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-troubleshooting.html#http-500-issues.
+    alb.connections.allowToAnyIpv4(Port.tcp(443));
 
     new GuCname(this, "cname", {
       app: props.app,
