@@ -1,4 +1,8 @@
-import { GuDistributionBucketParameter, GuStack, GuStackProps } from "@guardian/cdk/lib/constructs/core";
+import {
+  GuDistributionBucketParameter,
+  GuStack,
+  GuStackProps,
+} from "@guardian/cdk/lib/constructs/core";
 import { App, Duration, SecretValue } from "aws-cdk-lib";
 import {
   ApplicationLoadBalancer,
@@ -49,7 +53,9 @@ export class StaticSite extends GuStack {
     const siteLayer = new LayerVersion(this, "site-layer", {
       code: Code.fromBucket(bucket, `${s3Prefix}/site.zip`),
       description: "layer for static site",
-      layerVersionName: props.layerVersionName ?? `site-layer-${Math.floor(new Date().getTime() / 1000)}`
+      layerVersionName:
+        props.layerVersionName ??
+        `site-layer-${Math.floor(new Date().getTime() / 1000)}`,
     });
 
     const lambda = new Function(this, "lambda", {
@@ -60,8 +66,10 @@ export class StaticSite extends GuStack {
     });
 
     const vpc = GuVpc.fromIdParameter(this, "vpc-id");
-    const publicSubnets = GuVpc.subnetsFromParameter(this, { type: SubnetType.PUBLIC, app: props.app });
-
+    const publicSubnets = GuVpc.subnetsFromParameter(this, {
+      type: SubnetType.PUBLIC,
+      app: props.app,
+    });
 
     const alb = new ApplicationLoadBalancer(this, "alb", {
       vpc: vpc,
@@ -87,25 +95,34 @@ export class StaticSite extends GuStack {
       certificates: [cert],
     });
 
-    const targetGroup = listener.addTargets("target", { targets: [new LambdaTarget(lambda)] });
+    const targetGroup = listener.addTargets("target", {
+      targets: [new LambdaTarget(lambda)],
+    });
     targetGroup.setAttribute("lambda.multi_value_headers.enabled", "true"); // See: https://github.com/akrylysov/algnhsa/pull/20/files#diff-b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5R81.
 
     if (props.auth) {
       const ssmPrefix = `/${this.stage}/${this.stack}/${props.app}`;
-      const clientId = StringParameter.fromStringParameterAttributes(this, 'clientID', { parameterName: `${ssmPrefix}/googleClientID`}).stringValue;
-      const clientSecret = SecretValue.secretsManager("PROD/deploy/the-coolest-static-site/googleClientSecret");
+      const clientId = StringParameter.fromStringParameterAttributes(
+        this,
+        "clientID",
+        { parameterName: `${ssmPrefix}/googleClientID` }
+      ).stringValue;
+
+      // Secure SSM Parameters here aren't possible unfortunately
+      // (Cloudformation only provides narrow support for them at the time of
+      // writing). See:
+      // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html#template-parameters-dynamic-patterns-resources.
+      const clientSecret = SecretValue.secretsManager(
+        "PROD/deploy/the-coolest-static-site/googleClientSecret"
+      );
 
       const authAction = ListenerAction.authenticateOidc({
         next: ListenerAction.forward([targetGroup]),
 
         clientId: clientId,
-
-        // This is actually safe as it is a dynamic reference. Nb.
-        // SecretValue.fromSsmParameter isn't valid here (will fail at runtime)
-        // surprisingly. :(
         clientSecret: clientSecret,
 
-        scope: "openid&email&hd=guardian.co.uk",
+        scope: "openid email hd=guardian.co.uk",
 
         authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
         issuer: "https://accounts.google.com",
@@ -113,7 +130,7 @@ export class StaticSite extends GuStack {
         userInfoEndpoint: "https://openidconnect.googleapis.com/v1/userinfo",
       });
 
-      listener.addAction("auth", { action: authAction })
+      listener.addAction("auth", { action: authAction });
     }
   }
 }

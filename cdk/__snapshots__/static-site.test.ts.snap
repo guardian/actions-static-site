@@ -160,7 +160,7 @@ Object {
               },
               "ClientSecret": "{{resolve:secretsmanager:PROD/deploy/the-coolest-static-site/googleClientSecret:SecretString:::}}",
               "Issuer": "https://accounts.google.com",
-              "Scope": "openid&email&hd=guardian.co.uk",
+              "Scope": "openid email hd=guardian.co.uk",
               "TokenEndpoint": "https://oauth2.googleapis.com/token",
               "UserInfoEndpoint": "https://openidconnect.googleapis.com/v1/userinfo",
             },
