@@ -122,7 +122,10 @@ export class StaticSite extends GuStack {
         clientId: clientId,
         clientSecret: clientSecret,
 
-        scope: "openid email hd=guardian.co.uk",
+        scope: "openid email",
+
+        // See the `hd` section of https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters.
+        authenticationRequestExtraParams: { hd: "guardian.co.uk" },
 
         authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
         issuer: "https://accounts.google.com",
