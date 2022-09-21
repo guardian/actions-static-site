@@ -118,7 +118,7 @@ export class StaticSite extends GuStack {
       // writing). See:
       // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html#template-parameters-dynamic-patterns-resources.
       const clientSecret = SecretValue.secretsManager(
-        "PROD/deploy/the-coolest-static-site/googleClientSecret"
+        `${ssmPrefix}/googleClientSecret`
       );
 
       const authAction = ListenerAction.authenticateOidc({
