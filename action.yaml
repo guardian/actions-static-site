@@ -25,7 +25,10 @@ runs:
   steps:
     - name: CDK synth
       shell: bash
-      run: node index.js
+      run: |
+        node ci
+        node run build
+        node index.js
       env:
         INPUT_APP: ${{ inputs.app }}
         INPUT_DOMAIN: ${{ inputs.domain }}

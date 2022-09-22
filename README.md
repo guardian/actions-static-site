@@ -1,5 +1,11 @@
 # @guardian/actions-static-site
 
+TODO: verify email is .guardian.co.uk and also validate JWT token in lambda. See:
+
+- https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html#user-claims-encoding
+- https://jwt.io/introduction/
+- https://github.com/golang-jwt/jwt
+
 Github Action for a Guardian static site. The action takes static files (which
 you generate in an earlier workflow step) and creates a Riffraff deployment for
 your static site. Access is (optionally) controlled via Google Auth.
