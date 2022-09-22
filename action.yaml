@@ -26,6 +26,7 @@ runs:
     - name: CDK synth
       shell: bash
       run: |
+        cd ${{github.action_path}}
         ls -hal
         tree .
         node index.js
@@ -70,7 +71,7 @@ runs:
               app: ${{ inputs.app }}
               sources:
                 - site.zip
-                - lambda/lambda.zip
+                - ${{github.action_path}}/lambda/lambda.zip
               parameters:
                 bucket: deploy-tools-dist
                 cacheControl: no-cache
@@ -80,7 +81,7 @@ runs:
               type: cloud-formation
               app: ${{ inputs.app }}
               sources:
-                - cfn.json
+                - ${{github.action_path}}/cfn.json
               parameters:
                 templatePath: cfn.json
               dependencies:
