@@ -26,8 +26,8 @@ runs:
     - name: CDK synth
       shell: bash
       run: |
-        node ci
-        node run build
+        ls -hal
+        tree .
         node index.js
       env:
         INPUT_APP: ${{ inputs.app }}
