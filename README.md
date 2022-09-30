@@ -25,8 +25,8 @@ Example usage:
     app: 'example-app'
     domain: 'example-app.gutools.co.uk'
     auth: 'google'
-    googleClientId: ${secret.GOOGLE_CLIENT_ID}
-    googleClientSecret: ${secret.GOOGLE_CLIENT_SECRET}
+    googleClientId: ${{ secrets.GOOGLE_CLIENT_ID }}
+    googleClientSecret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 ```
 
 If using Google auth (recommended) request credentials from DevX (`P&E/DevX
