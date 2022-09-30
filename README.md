@@ -1,6 +1,11 @@
 # @guardian/actions-static-site
 
-TODO: verify email is .guardian.co.uk and also validate JWT token in lambda. See:
+TODO:
+
+- verify email is .guardian.co.uk and also validate JWT token in lambda.
+- also consider switching to EC2 as Lambda has a 1mb limit. :(
+
+See:
 
 - https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html#user-claims-encoding
 - https://jwt.io/introduction/
