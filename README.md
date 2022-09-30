@@ -1,15 +1,8 @@
 # @guardian/actions-static-site
 
-TODO:
-
-- verify email is .guardian.co.uk and also validate JWT token in lambda.
-- also consider switching to EC2 as Lambda has a 1mb limit. :(
-
-See:
-
-- https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html#user-claims-encoding
-- https://jwt.io/introduction/
-- https://github.com/golang-jwt/jwt
+*Note, the current architecture means that page sizes (initial load) must be
+less than 1mb. This is an AWS limitation with lambdas and ALBs. We're looking at
+alternative architectures to improve this story.*
 
 Github Action for a Guardian static site. The action takes static files (which
 you generate in an earlier workflow step) and creates a Riffraff deployment for
@@ -21,7 +14,7 @@ artifact in an earlier workflow step.
 Example usage:
 
 ```
-# First upload your site as an artifact e.g. with:
+# First upload your site as an artifact:
 - uses: actions/upload-artifact@v3
   with:
     path: path/to/site-dir
@@ -29,12 +22,29 @@ Example usage:
 # Then call this action:
 - uses: guardian/actions-static-site@v1
   with:
-    app: string
-    stack: string
-    domain: string
+    app: 'example-app'
+    domain: 'example-app.gutools.co.uk'
+    auth: 'google'
+    googleClientId: ${secret.GOOGLE_CLIENT_ID}
+    googleClientSecret: ${secret.GOOGLE_CLIENT_SECRET}
 ```
 
-(There are some additional optional arguments too - see below for details.)
+If using Google auth (recommended) request credentials from DevX (`P&E/DevX
+Stream).
+
+*Note, if using Google auth the client ID and client secret must be passed as
+Github Action secrets rather than inlined.*
+
+The following secrets must also be available in your repository:
+
+    GU_RIFF_RAFF_ROLE_ARN
+    GU_ACTIONS_STATIC_SITE_ROLE_ARN
+
+These are required for AWS API calls and should be automatically available to
+your repository as [organisational
+secrets](https://docs.github.com/en/actions/using-workflows/sharing-workflows-secrets-and-runners-with-your-organization#sharing-secrets-within-an-organization).
+
+See Inputs below for further details.
 
 ## Inputs
 
@@ -46,39 +56,27 @@ deployed into.
 ### **domain** `string` (required):
 
 The domain should be a Guardian-owned domain. For internal tools,
-`[app].gutools.co.uk` is recommended.
+`[app].gutools.co.uk` is recommended but check it is free first!
 
-### **auth** `'google' | 'none'` (optional - default='google'):
+### **auth** `'google' | 'none'` (required):
 
 The auth mechanism to use for access.
 
 'none' means that your application will be completely public. It is therefore
-not a good choice for most applications.
+*not* a good choice for most applications.
 
 If 'google' is selected access users will need to authenticate with a Guardian
 (Google) email address in order to access the site.
 
-You will therefore need to create a new Google Cloud project and generate Oauth
-credentials for it. For more info, see
-[here](https://developers.google.com/identity/protocols/oauth2/openid-connect#getcredentials).
+### **googleClientId** (required if auth='google')
 
-Once the Google Cloud project is created and Oauth credentials generate you will
-need to do the following:
+See 'auth' for how to obtain this. You should pass this as a secret rather than
+inlining into your workflow file directly.
 
-1. Add the Google Client ID in Parameter Store
+### **googleSecretId** (required if auth='google')
 
-`/PROD/:stack/:app/googleClientID`
-
-E.g. '/PROD/deploy/the-coolest-static-site/googleClientID'.
-
-2. Add the Google Client Secret in Secret Manager
-
-`/PROD/:stack/:app/googleClientSecret`
-
-E.g. '/PROD/deploy/the-coolest-static-site/googleClientSecret'.
-
-In both cases `:app` and `:stack` should match the inputs you use when
-configuring the action in your workflow file.
+See 'auth' for how to obtain this. You should pass this as a secret rather than
+inlining into your workflow file directly.
 
 ### **artifact** `string` (optional - default='artifact')
 

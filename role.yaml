@@ -1,0 +1,39 @@
+Parameters:
+  GitHubOidcArn:
+    Type: String
+    Description: ARN of existing Github Open ID Connect Provider
+
+Resources:
+  # Resources to provide SSM Parameter store write permissions.
+  Policy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ActionsStaticSitePutParameterPolicy
+      PolicyDocument:
+        Statement:
+          Action:
+            - ssm:PutParameter
+          Effect: Allow
+          Resource:
+            - !Sub arn:aws:ssm:eu-west-1:${AWS::AccountId}:parameter/actions-static-site/*
+      Roles:
+        - Ref: Role
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Ref GitHubOidcArn
+            Condition:
+              StringLike:
+                # All GitHub Actions running in repositories within the Guardian GitHub organisation.
+                token.actions.githubusercontent.com:sub: repo:guardian/*
+
+Outputs:
+  Role:
+    # To be set as an organisational secret in GitHub Actions (`GU_ACTIONS_STATIC_SITE_ROLE_ARN`).
+    Value: !GetAtt Role.Arn

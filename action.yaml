@@ -9,8 +9,7 @@ inputs:
     required: true
   auth:
     description: Auth mechanism to use.
-    required: false
-    default: "google"
+    required: true
   artifact:
     description: "Name of artifact containing the static site. Should be uploaded in an earlier workflow step."
     required: false
@@ -23,6 +22,11 @@ runs:
   # env) so need to be passed them explicitly :(. Sad times I know.
   using: "composite"
   steps:
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: eu-west-1
+        role-to-assume: ${{ secret.GU_ACTIONS_STATIC_SITE_ROLE_ARN }}
+
     - name: CDK synth
       shell: bash
       run: |
@@ -52,7 +56,10 @@ runs:
       shell: bash
       run: zip -r site.zip site
 
-    # TODO credentials stuff!
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: eu-west-1
+        role-to-assume: ${{ secret.GU_RIFF_RAFF_ROLE_ARN }}
 
     - uses: guardian/actions-riff-raff@v1
       with:
