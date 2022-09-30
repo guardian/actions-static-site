@@ -13,7 +13,17 @@ export const main = async (): Promise<void> => {
   const googleClientSecret = core.getInput("googleClientSecret");
   const stack = "deploy";
 
-  core.info("Inputs are: " + JSON.stringify({ app, stack, domain, auth }));
+  core.info(
+    "Inputs are: " +
+      JSON.stringify({
+        app,
+        stack,
+        domain,
+        auth,
+        googleClientId,
+        googleClientSecret: googleClientSecret !== "" ? "******" : "",
+      })
+  );
 
   if (auth === "google") {
     if (googleClientId === "" || googleClientSecret === "") {
