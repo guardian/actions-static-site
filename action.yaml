@@ -14,6 +14,12 @@ inputs:
     description: "Name of artifact containing the static site. Should be uploaded in an earlier workflow step."
     required: false
     default: "artifact"
+  GU_ACTIONS_STATIC_SITE_ROLE_ARN:
+    description: "Role to use for writing to SSM Parameter store (typically org secret of same name)."
+    required: true
+  GU_RIFF_RAFF_ROLE_ARN:
+    description: "Role to use for writing to Riffraff's AWS bucket (typically org secret of same name)."
+    required: true
   dryRun:
     description: "If set to true, will not upload Riffraff artifact."
     default: false
@@ -25,7 +31,7 @@ runs:
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: eu-west-1
-        role-to-assume: ${{ secrets.GU_ACTIONS_STATIC_SITE_ROLE_ARN }}
+        role-to-assume: ${{ inputs.GU_ACTIONS_STATIC_SITE_ROLE_ARN }}
 
     - name: CDK synth
       shell: bash
@@ -59,7 +65,7 @@ runs:
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: eu-west-1
-        role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+        role-to-assume: ${{ inputs.GU_RIFF_RAFF_ROLE_ARN }}
 
     - uses: guardian/actions-riff-raff@v1
       with:
