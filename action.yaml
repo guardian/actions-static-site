@@ -44,7 +44,6 @@ runs:
       run: |
         cd ${{github.action_path}}
         ls -hal
-        tree .
         node index.js
       env:
         INPUT_APP: ${{ inputs.app }}
@@ -53,6 +52,8 @@ runs:
         INPUT_ARTIFACT: ${{ inputs.artifact }}
         INPUT_DRYRUN: ${{ inputs.dryRun}}
         INPUT_ACTIONS_RUNTIME_TOKEN: ${ github.token }
+        INPUT_GOOGLECLIENTID: ${{ inputs.googleClientId }}
+        INPUT_GOOGLECLIENTSECRET: ${{ inputs.googleClientSecret }}
 
     - uses: actions/download-artifact@v3
       with:
