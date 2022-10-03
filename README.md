@@ -27,6 +27,9 @@ Example usage:
     auth: 'google'
     googleClientId: ${{ secrets.GOOGLE_CLIENT_ID }}
     googleClientSecret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+    guActionsStaticSiteRoleArn: ${{ secrets.GU_ACTIONS_STATIC_SITE_ROLE_ARN }}
+    guActionsRiffRaffRoleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+
 ```
 
 If using Google auth (recommended) request credentials from DevX (`P&E/DevX

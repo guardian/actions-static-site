@@ -60,5 +60,5 @@ jobs:
           auth: "google"
           googleClientId: ${{ secrets.GOOGLE_CLIENT_ID }}
           googleClientSecret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          GU_ACTIONS_STATIC_SITE_ROLE_ARN: ${{ secrets.GU_ACTIONS_STATIC_SITE_ROLE_ARN }}
-          GU_RIFF_RAFF_ROLE_ARN: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          guActionsStaticSiteRoleArn: ${{ secrets.GU_ACTIONS_STATIC_SITE_ROLE_ARN }}
+          guActionsRiffRaffRoleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}

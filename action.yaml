@@ -20,10 +20,10 @@ inputs:
   googleClientSecret:
     description: "DO NOT INLINE - pass as a secret."
     required: false
-  GU_ACTIONS_STATIC_SITE_ROLE_ARN:
+  guActionsStaticSiteRoleArn:
     description: "Role to use for writing to SSM Parameter store (typically org secret of same name)."
     required: true
-  GU_RIFF_RAFF_ROLE_ARN:
+  guActionsRiffRaffRoleArn:
     description: "Role to use for writing to Riffraff's AWS bucket (typically org secret of same name)."
     required: true
   dryRun:
@@ -37,7 +37,7 @@ runs:
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: eu-west-1
-        role-to-assume: ${{ inputs.GU_ACTIONS_STATIC_SITE_ROLE_ARN }}
+        role-to-assume: ${{ inputs.guActionsStaticSiteRoleArn }}
 
     - name: CDK synth
       shell: bash
@@ -72,7 +72,7 @@ runs:
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: eu-west-1
-        role-to-assume: ${{ inputs.GU_RIFF_RAFF_ROLE_ARN }}
+        role-to-assume: ${{ inputs.guActionsRiffRaffRoleArn }}
 
     - uses: guardian/actions-riff-raff@v1
       with:
