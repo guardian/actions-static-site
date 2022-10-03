@@ -41,6 +41,7 @@ export const main = async (): Promise<void> => {
       Name: `/actions-static-site/${app}/googleClientId`,
       Value: googleClientId,
       Type: "String",
+      Overwrite: true,
     });
     await client.send(setClientId);
 
@@ -48,6 +49,7 @@ export const main = async (): Promise<void> => {
       Name: `/actions-static-site/${app}/googleClientSecret`,
       Value: googleClientSecret,
       Type: "SecureString",
+      Overwrite: true,
     });
 
     await client.send(setSecret);
