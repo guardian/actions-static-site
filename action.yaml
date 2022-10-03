@@ -9,12 +9,23 @@ inputs:
     required: true
   auth:
     description: Auth mechanism to use.
-    required: false
-    default: "google"
+    required: true
   artifact:
     description: "Name of artifact containing the static site. Should be uploaded in an earlier workflow step."
     required: false
     default: "artifact"
+  googleClientId:
+    description: "Google (oauth) client ID"
+    required: false
+  googleClientSecret:
+    description: "DO NOT INLINE - pass as a secret."
+    required: false
+  guActionsStaticSiteRoleArn:
+    description: "Role to use for writing to SSM Parameter store (typically org secret of same name)."
+    required: true
+  guActionsRiffRaffRoleArn:
+    description: "Role to use for writing to Riffraff's AWS bucket (typically org secret of same name)."
+    required: true
   dryRun:
     description: "If set to true, will not upload Riffraff artifact."
     default: false
@@ -23,12 +34,16 @@ runs:
   # env) so need to be passed them explicitly :(. Sad times I know.
   using: "composite"
   steps:
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: eu-west-1
+        role-to-assume: ${{ inputs.guActionsStaticSiteRoleArn }}
+
     - name: CDK synth
       shell: bash
       run: |
         cd ${{github.action_path}}
         ls -hal
-        tree .
         node index.js
       env:
         INPUT_APP: ${{ inputs.app }}
@@ -37,6 +52,8 @@ runs:
         INPUT_ARTIFACT: ${{ inputs.artifact }}
         INPUT_DRYRUN: ${{ inputs.dryRun}}
         INPUT_ACTIONS_RUNTIME_TOKEN: ${ github.token }
+        INPUT_GOOGLECLIENTID: ${{ inputs.googleClientId }}
+        INPUT_GOOGLECLIENTSECRET: ${{ inputs.googleClientSecret }}
 
     - uses: actions/download-artifact@v3
       with:
@@ -52,7 +69,10 @@ runs:
       shell: bash
       run: zip -r site.zip site
 
-    # TODO credentials stuff!
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: eu-west-1
+        role-to-assume: ${{ inputs.guActionsRiffRaffRoleArn }}
 
     - uses: guardian/actions-riff-raff@v1
       with:
