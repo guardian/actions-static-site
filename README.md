@@ -13,7 +13,7 @@ artifact in an earlier workflow step.
 
 Example usage:
 
-```
+```yaml
 # First upload your site as an artifact:
 - uses: actions/upload-artifact@v3
   with:
