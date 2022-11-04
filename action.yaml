@@ -40,13 +40,13 @@ runs:
         role-to-assume: ${{ inputs.guActionsStaticSiteRoleArn }}
 
     - uses: actions/setup-go@v3
-        with:
-          go-version: "1.18"
-      - name: Run tests
-        run: |
-          cd lambda
-          GOOS=linux GOARCH=amd64 go build main.go
-          zip lambda.zip main
+      with:
+        go-version: "1.18"
+    - name: Build lambda
+      run: |
+        cd lambda
+        GOOS=linux GOARCH=amd64 go build main.go
+        zip lambda.zip main
 
     - name: CDK synth
       shell: bash
