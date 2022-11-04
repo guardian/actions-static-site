@@ -257,6 +257,11 @@ Object {
           },
           "S3Key": "stack/PROD/app/lambda.zip",
         },
+        "Environment": Object {
+          "Variables": Object {
+            "AUTH": "google",
+          },
+        },
         "Handler": "main",
         "Layers": Array [
           Object {

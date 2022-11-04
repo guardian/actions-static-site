@@ -22,9 +22,14 @@ func (ie InvalidEmail) Error() string {
 }
 
 func main() {
-
+	isGoogleAuth := os.Getenv("AUTH") == "google"
 	fs := http.FileServer(http.Dir("/opt/site"))
-	http.Handle("/", withAuth(fs))
+
+	if isGoogleAuth {
+		http.Handle("/", withAuth(fs))
+	} else {
+		http.Handle("/", fs)
+	}
 
 	// http.ListenAndServe("localhost:3030", nil)
 	algnhsa.ListenAndServe(nil, nil)
