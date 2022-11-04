@@ -64,6 +64,9 @@ export class StaticSite extends GuStack {
       handler: "main",
       code: Code.fromBucket(bucket, `${s3Prefix}/lambda.zip`),
       layers: [siteLayer],
+      environment: {
+        AUTH: props.auth ? "google" : "none"
+      }
     });
 
     const vpc = GuVpc.fromIdParameter(this, "vpc-id");
