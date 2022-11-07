@@ -43,6 +43,7 @@ runs:
       with:
         go-version: "1.18"
     - name: Build lambda
+      shell: bash
       run: |
         cd lambda
         GOOS=linux GOARCH=amd64 go build main.go
