@@ -2,24 +2,24 @@
 
 exports[`static site should match snapshot 1`] = `
 Object {
+  "Metadata": Object {
+    "gu:cdk:constructs": Array [
+      "GuStringParameter",
+      "GuStringParameter",
+      "GuCname",
+      "GuCertificate",
+    ],
+    "gu:cdk:version": "48.5.1",
+  },
   "Parameters": Object {
-    "DistributionBucketName": Object {
-      "Default": "/account/services/artifact.bucket",
-      "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
+    "listenerArn": Object {
+      "Default": "/INFRA/deploy/actions-static-site-infra/listenerArn",
+      "Description": "ARN of shared ALB listener for this action.",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
-    "VpcId": Object {
-      "Default": "/account/vpc/primary/id",
-      "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
-      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
-    },
-    "appPublicSubnets": Object {
-      "Default": "/account/vpc/primary/subnets/public",
-      "Description": "A list of public subnets",
-      "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
-    },
-    "clientIDParameter": Object {
-      "Default": "/PROD/stack/app/googleClientID",
+    "loadBalancerDnsName": Object {
+      "Default": "/INFRA/deploy/actions-static-site-infra/loadBalancerDnsName",
+      "Description": "DNS name of shared ALB for this action.",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
   },
@@ -35,11 +35,15 @@ Object {
           },
           Object {
             "Key": "gu:cdk:version",
-            "Value": "46.0.1",
+            "Value": "48.5.1",
           },
           Object {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "static-site/CertificateApp",
           },
           Object {
             "Key": "Stack",
@@ -55,94 +59,7 @@ Object {
       "Type": "AWS::CertificateManager::Certificate",
       "UpdateReplacePolicy": "Retain",
     },
-    "alb8A8B13C2": Object {
-      "Properties": Object {
-        "LoadBalancerAttributes": Array [
-          Object {
-            "Key": "deletion_protection.enabled",
-            "Value": "false",
-          },
-        ],
-        "Scheme": "internet-facing",
-        "SecurityGroups": Array [
-          Object {
-            "Fn::GetAtt": Array [
-              "albSecurityGroup49866104",
-              "GroupId",
-            ],
-          },
-        ],
-        "Subnets": Object {
-          "Ref": "appPublicSubnets",
-        },
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "46.0.1",
-          },
-          Object {
-            "Key": "gu:repo",
-            "Value": "guardian/actions-static-site",
-          },
-          Object {
-            "Key": "Stack",
-            "Value": "stack",
-          },
-          Object {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-        "Type": "application",
-      },
-      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
-    },
-    "albSecurityGroup49866104": Object {
-      "Properties": Object {
-        "GroupDescription": "Automatically created Security Group for ELB staticsitealb4CA23368",
-        "SecurityGroupEgress": Array [
-          Object {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "from 0.0.0.0/0:443",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-        ],
-        "SecurityGroupIngress": Array [
-          Object {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "Allow from anyone on port 443",
-            "FromPort": 443,
-            "IpProtocol": "tcp",
-            "ToPort": 443,
-          },
-        ],
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "46.0.1",
-          },
-          Object {
-            "Key": "gu:repo",
-            "Value": "guardian/actions-static-site",
-          },
-          Object {
-            "Key": "Stack",
-            "Value": "stack",
-          },
-          Object {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-        "VpcId": Object {
-          "Ref": "VpcId",
-        },
-      },
-      "Type": "AWS::EC2::SecurityGroup",
-    },
-    "alblistenerC508FBF5": Object {
+    "certlistener": Object {
       "Properties": Object {
         "Certificates": Array [
           Object {
@@ -151,83 +68,11 @@ Object {
             },
           },
         ],
-        "DefaultActions": Array [
-          Object {
-            "AuthenticateOidcConfig": Object {
-              "AuthenticationRequestExtraParams": Object {
-                "hd": "guardian.co.uk",
-              },
-              "AuthorizationEndpoint": "https://accounts.google.com/o/oauth2/v2/auth",
-              "ClientId": Object {
-                "Ref": "clientIDParameter",
-              },
-              "ClientSecret": "{{resolve:secretsmanager:PROD/stack/app/googleClientSecret:SecretString:::}}",
-              "Issuer": "https://accounts.google.com",
-              "Scope": "openid email",
-              "TokenEndpoint": "https://oauth2.googleapis.com/token",
-              "UserInfoEndpoint": "https://openidconnect.googleapis.com/v1/userinfo",
-            },
-            "Order": 1,
-            "Type": "authenticate-oidc",
-          },
-          Object {
-            "Order": 2,
-            "TargetGroupArn": Object {
-              "Ref": "alblistenertargetGroup2F1EE73B",
-            },
-            "Type": "forward",
-          },
-        ],
-        "LoadBalancerArn": Object {
-          "Ref": "alb8A8B13C2",
+        "ListenerArn": Object {
+          "Ref": "listenerArn",
         },
-        "Port": 443,
-        "Protocol": "HTTPS",
       },
-      "Type": "AWS::ElasticLoadBalancingV2::Listener",
-    },
-    "alblistenertargetGroup2F1EE73B": Object {
-      "DependsOn": Array [
-        "lambdaInvoke2UTWxhlfyqbT5FTn5jvgbLgjFfJwzswGk55DU1HY67C4BB0E",
-      ],
-      "Properties": Object {
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "46.0.1",
-          },
-          Object {
-            "Key": "gu:repo",
-            "Value": "guardian/actions-static-site",
-          },
-          Object {
-            "Key": "Stack",
-            "Value": "stack",
-          },
-          Object {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-        "TargetGroupAttributes": Array [
-          Object {
-            "Key": "lambda.multi_value_headers.enabled",
-            "Value": "true",
-          },
-        ],
-        "TargetType": "lambda",
-        "Targets": Array [
-          Object {
-            "Id": Object {
-              "Fn::GetAtt": Array [
-                "lambda8B5974B5",
-                "Arn",
-              ],
-            },
-          },
-        ],
-      },
-      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Type": "AWS::ElasticLoadBalancingV2::ListenerCertificate",
     },
     "cname": Object {
       "Properties": Object {
@@ -235,141 +80,13 @@ Object {
         "RecordType": "CNAME",
         "ResourceRecords": Array [
           Object {
-            "Fn::GetAtt": Array [
-              "alb8A8B13C2",
-              "DNSName",
-            ],
+            "Ref": "loadBalancerDnsName",
           },
         ],
         "Stage": "PROD",
-        "TTL": 60,
+        "TTL": 86400,
       },
       "Type": "Guardian::DNS::RecordSet",
-    },
-    "lambda8B5974B5": Object {
-      "DependsOn": Array [
-        "lambdaServiceRole494E4CA6",
-      ],
-      "Properties": Object {
-        "Code": Object {
-          "S3Bucket": Object {
-            "Ref": "DistributionBucketName",
-          },
-          "S3Key": "stack/PROD/app/lambda.zip",
-        },
-        "Environment": Object {
-          "Variables": Object {
-            "AUTH": "google",
-          },
-        },
-        "Handler": "main",
-        "Layers": Array [
-          Object {
-            "Ref": "sitelayerD1248BA7",
-          },
-        ],
-        "Role": Object {
-          "Fn::GetAtt": Array [
-            "lambdaServiceRole494E4CA6",
-            "Arn",
-          ],
-        },
-        "Runtime": "go1.x",
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "46.0.1",
-          },
-          Object {
-            "Key": "gu:repo",
-            "Value": "guardian/actions-static-site",
-          },
-          Object {
-            "Key": "Stack",
-            "Value": "stack",
-          },
-          Object {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "lambdaInvoke2UTWxhlfyqbT5FTn5jvgbLgjFfJwzswGk55DU1HY67C4BB0E": Object {
-      "Properties": Object {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": Object {
-          "Fn::GetAtt": Array [
-            "lambda8B5974B5",
-            "Arn",
-          ],
-        },
-        "Principal": "elasticloadbalancing.amazonaws.com",
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "lambdaServiceRole494E4CA6": Object {
-      "Properties": Object {
-        "AssumeRolePolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": Object {
-                "Service": "lambda.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "ManagedPolicyArns": Array [
-          Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                "arn:",
-                Object {
-                  "Ref": "AWS::Partition",
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-              ],
-            ],
-          },
-        ],
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "46.0.1",
-          },
-          Object {
-            "Key": "gu:repo",
-            "Value": "guardian/actions-static-site",
-          },
-          Object {
-            "Key": "Stack",
-            "Value": "stack",
-          },
-          Object {
-            "Key": "Stage",
-            "Value": "PROD",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "sitelayerD1248BA7": Object {
-      "Properties": Object {
-        "Content": Object {
-          "S3Bucket": Object {
-            "Ref": "DistributionBucketName",
-          },
-          "S3Key": "stack/PROD/app/site.zip",
-        },
-        "Description": "layer for static site",
-        "LayerName": "layer",
-      },
-      "Type": "AWS::Lambda::LayerVersion",
     },
   },
 }

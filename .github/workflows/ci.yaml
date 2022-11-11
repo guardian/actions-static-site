@@ -14,4 +14,61 @@ jobs:
       contents: read
 
     steps:
-      - run: echo 'hello, world'
+      - uses: actions/checkout@v2
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+      - name: Build Go service
+        run: |
+          cd service
+          GOOS=linux GOARCH=arm64 go build -o static-site-service main.go
+
+      - name: CDK Synth
+        run: |
+          npm ci
+          npm test -- --passWithNoTests
+          npm run synth-infra
+
+      - uses: guardian/actions-riff-raff@v2
+        with:
+          app: actions-static-site-infra
+          config: |
+            stacks:
+              - deploy
+            regions:
+              - eu-west-1
+            allowedStages:
+              - INFRA
+            deployments:
+              cfn:
+                app: actions-static-site-infra
+                type: cloud-formation
+                parameters:
+                  templatePath: Static-Site-INFRA.template.json
+                  amiParameter: AMIActionsstaticsiteinfra
+                  amiTags:
+                    BuiltBy: amigo
+                    Recipe: arm64-bionic-java11-deploy-infrastructure
+                    AmigoStage: PROD
+              app:
+                app: actions-static-site-infra
+                type: autoscaling
+                parameters:
+                  bucketSsmLookup: true
+                  prefixApp: true
+                dependencies:
+                  - cfn
+          contentDirectories: |
+            cfn: [cdk.out/Static-Site-INFRA.template.json]
+            app: [service/static-site-service]

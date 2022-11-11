@@ -1,5 +1,37 @@
 # @guardian/actions-static-site
 
+Proposed new architecture:
+
+(Always require auth!)
+
+Infra stack:
+
+* shared ALB
+* shared EC2 instance
+
+(So Google login is universal here.)
+
+Each static site:
+
+* domain + registers cert on ALB
+* uploads files to sub-part of bucket
+
+Suggest bundling any dependencies at build time.
+
+Steps:
+
+* setup infra
+* convert lambda to ec2 app
+* deploy - workflow file
+
+* fix action + test
+
+## TODOs
+
+* update CDK and fix Google-auth stuff.
+
+---
+
 *Note, the current architecture means that page sizes (initial load) must be
 less than 1mb. This is an AWS limitation with lambdas and ALBs. We're looking at
 alternative architectures to improve this story.*
