@@ -152,5 +152,11 @@ systemctl start ${app}
       stringValue: ec2.loadBalancer.loadBalancerDnsName,
     });
 
+    new StringParameter(this, 'static-site-lisener-arn', {
+      description: 'Listener ARN for static sites.',
+      parameterName: `${configPrefix}/listenerArn}`,
+      stringValue: ec2.listener.listenerArn,
+    });
+
   }
 }

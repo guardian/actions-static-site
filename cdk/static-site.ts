@@ -8,6 +8,7 @@ import {
 import { GuCname } from "@guardian/cdk/lib/constructs/dns/";
 import type { App} from "aws-cdk-lib";
 import { Duration } from "aws-cdk-lib";
+import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import {
   CfnListenerCertificate,
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
@@ -25,13 +26,13 @@ export class StaticSite extends GuStack {
     const listenerArn = new GuStringParameter(this, "listenerArn", {
       description: "ARN of shared ALB listener for this action.",
       fromSSM: true,
-      default: "TODO",
+      default: '/PROD/deploy/static-site-infra/listenerArn',
     })
 
-    const albDnsName = new GuStringParameter(this, "listenerArn", {
+    const albDnsName = new GuStringParameter(this, "loadBalancerDnsName", {
       description: "DNS name of shared ALB for this action.",
       fromSSM: true,
-      default: "TODO",
+      default: "/PROD/deploy/static-site-infra/loadBalancerDnsName",
     })
 
     new GuCname(this, "cname", {
@@ -46,9 +47,9 @@ export class StaticSite extends GuStack {
       domainName: props.domainName,
     });
 
-    new CfnListenerCertificate(this, "cert", {
+    new CfnListenerCertificate(this, "cert-listener", {
       listenerArn: listenerArn.valueAsString,
-      certificates: [cert],
+      certificates: [{ certificateArn: cert.certificateArn }],
     })
   }
 }
