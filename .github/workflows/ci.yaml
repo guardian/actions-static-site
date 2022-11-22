@@ -6,7 +6,6 @@ on:
     branches:
       - main
 jobs:
-
   ci:
     runs-on: ubuntu-latest
 
@@ -33,7 +32,7 @@ jobs:
     - name: Build Go service
       run: |
         cd service
-        GOOS=linux GOARCH=arm64 go build main.go -o static-site-service
+        GOOS=linux GOARCH=arm64 go build -o static-site-service main.go
 
     - name: CDK Synth
       run: |
@@ -43,7 +42,7 @@ jobs:
 
     - uses: guardian/actions-riff-raff@v2
       with:
-        app: static-site-infra
+        app: actions-static-site-infra
         config: |
           stacks:
             - deploy
@@ -53,17 +52,17 @@ jobs:
             - INFRA
           deployments:
             cfn:
+              app: actions-static-site-infra
               type: cloud-formation
-              contentDirectory: cdk.out
               parameters:
                 templatePath: Static-Site-INFRA.template.json
             app:
+              app: actions-static-site-infra
               type: autoscaling
-              contentDirectory: app
               parameters:
                 bucketSsmLookup: true
               dependencies:
                 - cfn
         contentDirectories: |
-          cdk.out: cdk.out/Static-Site-INFRA.template.json
+          cfn: cdk.out/Static-Site-INFRA.template.json
           app: static-site-service

@@ -26,6 +26,10 @@ Steps:
 
 * fix action + test
 
+## TODOs
+
+* update CDK and fix Google-auth stuff.
+
 ---
 
 *Note, the current architecture means that page sizes (initial load) must be

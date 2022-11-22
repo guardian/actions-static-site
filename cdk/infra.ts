@@ -46,35 +46,6 @@ export class Infra extends GuStack {
     const bucket = new Bucket(this, "static", {
       websiteIndexDocument: 'index.html',
     })
-/*
-    const vpc = GuVpc.fromIdParameter(this, "vpc-id");
-    const publicSubnets = GuVpc.subnetsFromParameter(this, {
-      type: SubnetType.PUBLIC,
-      app: props.app,
-    }); */
-
-
-    // Required for the cert unfortunately.
-/*     new GuCname(this, "cname", {
-      app: props.app,
-      domainName: props.domainName,
-      ttl: Duration.days(1),
-      resourceRecord: alb.loadBalancerDnsName,
-    });
-
-    // A placeholder cert, required but won't be used.
-    const cert = new GuCertificate(this, {
-      app: props.app,
-      domainName: props.domainName,
-    });
-
-    // We need a default listener. The cert here will be unused - as sites will
-    // register their own ones.
-    const listener = alb.addListener("listener", {
-      protocol: ApplicationProtocol.HTTPS,
-      port: 443,
-      certificates: [cert],
-    }); */
 
 		const app = props.app;
 		const keyPrefix = `${this.stack}/${this.stage}/${app}`;
@@ -120,12 +91,44 @@ systemctl start ${app}
 			userData: userData,
 			imageRecipe: 'arm64-bionic-java11-deploy-infrastructure',
 			applicationLogging: { enabled: true },
-      googleAuth: {
-        clientId: 'TODO',
-      }
 		});
 
     bucket.grantRead(ec2.autoScalingGroup)
+
+    // Google Auth stuff...
+
+    const configPrefix = `/${this.stage}/${this.stack}/${app}`;
+    const clientIdPath = `${configPrefix}/googleClientID`;
+
+    const clientId = StringParameter.fromStringParameterAttributes(this, "clientID", {
+      parameterName: clientIdPath,
+    }).stringValue;
+
+    // Unfortunately, Cloudformation doesn't support directly using secret
+    // Parameter Store values. But it is possible to use Secrets Manager.
+    const secretPath = `${configPrefix}/clientSecret`;
+    const clientSecret = SecretValue.secretsManager(secretPath);
+
+    const authAction = ListenerAction.authenticateOidc({
+      next: ListenerAction.forward([ec2.targetGroup]),
+      clientId: clientId,
+      clientSecret: clientSecret,
+      scope: "openid email",
+
+      // See the `hd` section of
+      // https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters.
+      // Note, this is NOT sufficient to ensure access is limited to Guardian
+      // emails. Users should also validate the token and check the domain in
+      // their app.
+      authenticationRequestExtraParams: { hd: "guardian.co.uk" },
+
+      authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
+      issuer: "https://accounts.google.com",
+      tokenEndpoint: "https://oauth2.googleapis.com/token",
+      userInfoEndpoint: "https://openidconnect.googleapis.com/v1/userinfo",
+    });
+
+    ec2.listener.addAction("auth", { action: authAction });
 
 		new GuCname(this, 'DNS', {
 			app: app,
@@ -134,18 +137,18 @@ systemctl start ${app}
 			ttl: Duration.hours(1),
 		});
 
-    const ssmPrefix = `${this.stage}/${this.stack}/${props.app}`;
-
-    // TODO set ALB and bucket as SSM parameters
+    // Used in the riff-raff.yaml of static sites to determine the bucket to
+    // upload resources to.
     new StringParameter(this, 'static-site-bucket', {
       description: 'Bucket for static sites.',
-      parameterName: `${ssmPrefix}/bucket}`,
+      parameterName: `${configPrefix}/bucket}`,
       stringValue: bucket.bucketName,
     });
 
+    // Used by static site Cloudformations to attach certs.
     new StringParameter(this, 'static-site-alb-dns-name', {
       description: 'ALB DNS name for static sites.',
-      parameterName: `${ssmPrefix}/loadBalancerDnsName}`,
+      parameterName: `${configPrefix}/loadBalancerDnsName}`,
       stringValue: ec2.loadBalancer.loadBalancerDnsName,
     });
 
