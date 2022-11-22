@@ -120,6 +120,9 @@ systemctl start ${app}
 			userData: userData,
 			imageRecipe: 'arm64-bionic-java11-deploy-infrastructure',
 			applicationLogging: { enabled: true },
+      googleAuth: {
+        clientId: 'TODO',
+      }
 		});
 
     bucket.grantRead(ec2.autoScalingGroup)
@@ -132,38 +135,6 @@ systemctl start ${app}
 		});
 
     const ssmPrefix = `${this.stage}/${this.stack}/${props.app}`;
-    const clientId = StringParameter.fromStringParameterAttributes(
-      this,
-      "clientID",
-      { parameterName: `/${ssmPrefix}/googleClientID` }
-    ).stringValue;
-
-    // Secure SSM Parameters here aren't possible unfortunately
-    // (Cloudformation only provides narrow support for them at the time of
-    // writing). See:
-    // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html#template-parameters-dynamic-patterns-resources.
-    const clientSecret = SecretValue.secretsManager(
-      `${ssmPrefix}/googleClientSecret`
-    );
-
-    const authAction = ListenerAction.authenticateOidc({
-      next: ListenerAction.forward([ec2.targetGroup]),
-
-      clientId: clientId,
-      clientSecret: clientSecret,
-
-      scope: "openid email",
-
-      // See the `hd` section of https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters.
-      authenticationRequestExtraParams: { hd: "guardian.co.uk" },
-
-      authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-      issuer: "https://accounts.google.com",
-      tokenEndpoint: "https://oauth2.googleapis.com/token",
-      userInfoEndpoint: "https://openidconnect.googleapis.com/v1/userinfo",
-    });
-
-    ec2.listener.addAction("auth", { action: authAction });
 
     // TODO set ALB and bucket as SSM parameters
     new StringParameter(this, 'static-site-bucket', {

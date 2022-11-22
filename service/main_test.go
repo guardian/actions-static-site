@@ -1,10 +1,15 @@
 package main
 
 import (
+	"fmt"
+	"io"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/guardian/actions-static-site/service/store"
 )
 
 func TestAuth(t *testing.T) {
@@ -39,5 +44,40 @@ func TestAuth(t *testing.T) {
 				t.Fatalf("%s - error did not match: got %v; expected %s", test.Name, err, test.ErrorMsg)
 			}
 		}
+	}
+}
+
+func TestWithDomainPrefix(t *testing.T) {
+	host := "example.gutools.co.uk"
+	store := store.MemoryStore{}
+	want := "foo"
+
+	store[host+"/foo.txt"] = []byte(want)
+
+	var testHandler http.HandlerFunc = func(resp http.ResponseWriter, req *http.Request) {
+		fmt.Fprint(resp, string(store[req.URL.Path]))
+	}
+
+	server := httptest.NewServer(withDomainPrefix(testHandler))
+	defer server.Close()
+
+	req, _ := http.NewRequest(http.MethodGet, server.URL+"/foo.txt", nil)
+	req.Host = host + ":8080"
+
+	resp, err := http.DefaultClient.Do(req)
+	check(t, err, "unable to fetch from test server")
+	defer resp.Body.Close()
+
+	got, err := io.ReadAll(resp.Body)
+	check(t, err, "unable to read body")
+
+	if string(got) != want {
+		t.Fatalf("got %s; want %s", string(got), want)
+	}
+}
+
+func check(t *testing.T, err error, msg string) {
+	if err != nil {
+		t.Fatalf("%s: %v", msg, err)
 	}
 }

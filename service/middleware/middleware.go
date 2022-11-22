@@ -1,4 +1,4 @@
-package main
+package middleware
 
 import (
 	"errors"
@@ -9,7 +9,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/akrylysov/algnhsa"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -21,21 +20,24 @@ func (ie InvalidEmail) Error() string {
 	return "unsupported email: " + ie.Email
 }
 
-func main() {
-	isGoogleAuth := os.Getenv("AUTH") == "google"
-	fs := http.FileServer(http.Dir("/opt/site"))
+// withDomainPrefix adds the value of req.Host as a prefix to the path. The idea
+// is that files for a specific static site (host) like in the same S3 bucket
+// but prefixed by host. E.g.
+// s3://the-static-bucket/example.gutools.co.uk/index.html.
+func WithDomainPrefix(h http.Handler) http.HandlerFunc {
+	return func(resp http.ResponseWriter, req *http.Request) {
+		host, _, _ := strings.Cut(req.Host, ":")
+		req.URL.Path = host + req.URL.Path
 
-	if isGoogleAuth {
-		http.Handle("/", withAuth(fs))
-	} else {
-		http.Handle("/", fs)
+		h.ServeHTTP(resp, req)
 	}
-
-	// http.ListenAndServe("localhost:3030", nil)
-	algnhsa.ListenAndServe(nil, nil)
 }
 
-func withAuth(h http.Handler) http.HandlerFunc {
+// withAuth handles token validation and ensures the contained email is a
+// @guardian.co.uk one. Note, the actual Open Auth flow is handled at the ALB,
+// but this is required both to confirm the email domain and as an extra
+// security step in case the EC2 instance is somehow accessed not via the ALB.
+func WithAuth(h http.Handler) http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
 		// See https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html#user-claims-encoding
 		tokenString := req.Header.Get("x-amzn-oidc-data")
