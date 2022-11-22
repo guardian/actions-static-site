@@ -7,5 +7,5 @@ The expectation is that the static site is loaded as a layer.
 
 To rebuild the binary run:
 
-    $ go build
-
+    $ GOOS=linux GOARCH=amd64 go build main.go
+    $ zip lambda.zip main
