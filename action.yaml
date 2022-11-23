@@ -39,16 +39,6 @@ runs:
         aws-region: eu-west-1
         role-to-assume: ${{ inputs.guActionsStaticSiteRoleArn }}
 
-    - uses: actions/setup-go@v3
-      with:
-        go-version: "1.18"
-    - name: Build lambda
-      shell: bash
-      run: |
-        cd lambda
-        GOOS=linux GOARCH=amd64 go build main.go
-        zip lambda.zip main
-
     - name: CDK synth
       shell: bash
       run: |
