@@ -43,7 +43,7 @@ func WithDomainPrefix(h http.Handler) http.HandlerFunc {
 		path := req.URL.Path
 		req.URL.Path = host + path
 
-		if path == "/" {
+		if strings.HasSuffix(path, "/") {
 			req.URL.Path += "index.html"
 		}
 
