@@ -1,49 +1,15 @@
-# @guardian/actions-static-site
+# @guardian/actions-static-site V2
 
-Proposed new architecture:
+Action to provision and serve a static site with Google Auth and a custom
+domain.
 
-(Always require auth!)
+Behind the scenes the action outputs Cloudformation and RiffRaff configuration
+for your project. The marginal cost of a site is minimal - just the storage of
+your files in S3 and data transfer costs - as the core infrastructure is shared.
 
-Infra stack:
-
-* shared ALB
-* shared EC2 instance
-
-(So Google login is universal here.)
-
-Each static site:
-
-* domain + registers cert on ALB
-* uploads files to sub-part of bucket
-
-Suggest bundling any dependencies at build time.
-
-Steps:
-
-* setup infra
-* convert lambda to ec2 app
-* deploy - workflow file
-
-* fix action + test
-
-## TODOs
-
-* update CDK and fix Google-auth stuff.
-
----
-
-*Note, the current architecture means that page sizes (initial load) must be
-less than 1mb. This is an AWS limitation with lambdas and ALBs. We're looking at
-alternative architectures to improve this story.*
-
-Github Action for a Guardian static site. The action takes static files (which
-you generate in an earlier workflow step) and creates a Riffraff deployment for
-your static site. Access is (optionally) controlled via Google Auth.
-
-To use this action, you must upload your static site as a Github Actions
-artifact in an earlier workflow step.
-
-Example usage:
+**Note: your domain must be registered with the Google project for the Google
+auth callback to work - ping it on the `DevX Stream` channel and we can quickly
+add this for you.**
 
 ```yaml
 # First upload your site as an artifact:
@@ -51,69 +17,41 @@ Example usage:
   with:
     path: path/to/site-dir
 
-# Then call this action:
-- uses: guardian/actions-static-site@v1
+# Then invoke this action (replacing app and domain)
+- uses: guardian/actions-static-site@v2
   with:
-    app: 'example-app'
-    domain: 'example-app.gutools.co.uk'
-    auth: 'google'
-    googleClientId: ${{ secrets.GOOGLE_CLIENT_ID }}
-    googleClientSecret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-    guActionsStaticSiteRoleArn: ${{ secrets.GU_ACTIONS_STATIC_SITE_ROLE_ARN }}
+    app: devx-docs
+    domain: devx.gutools.co.uk
     guActionsRiffRaffRoleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-
 ```
 
-If using Google auth (recommended) request credentials from DevX (`P&E/DevX
-Stream).
-
-*Note, if using Google auth the client ID and client secret must be passed as
-Github Action secrets rather than inlined.*
-
-The following secrets must also be available in your repository:
-
-    GU_RIFF_RAFF_ROLE_ARN
-    GU_ACTIONS_STATIC_SITE_ROLE_ARN
-
-These are required for AWS API calls and should be automatically available to
-your repository as [organisational
-secrets](https://docs.github.com/en/actions/using-workflows/sharing-workflows-secrets-and-runners-with-your-organization#sharing-secrets-within-an-organization).
-
-See Inputs below for further details.
-
 ## Inputs
-
-### **stack** `string` (required):
-
-A Riffraff stack. This determines which AWS account your static site will be
-deployed into.
 
 ### **domain** `string` (required):
 
 The domain should be a Guardian-owned domain. For internal tools,
 `[app].gutools.co.uk` is recommended but check it is free first!
 
-### **auth** `'google' | 'none'` (required):
-
-The auth mechanism to use for access.
-
-'none' means that your application will be completely public. It is therefore
-*not* a good choice for most applications.
-
-If 'google' is selected access users will need to authenticate with a Guardian
-(Google) email address in order to access the site.
-
-### **googleClientId** (required if auth='google')
-
-See 'auth' for how to obtain this. You should pass this as a secret rather than
-inlining into your workflow file directly.
-
-### **googleSecretId** (required if auth='google')
-
-See 'auth' for how to obtain this. You should pass this as a secret rather than
-inlining into your workflow file directly.
-
 ### **artifact** `string` (optional - default='artifact')
 
 Name of the artifact containing the static resources. Should be uploaded in
 an earlier workflow step.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[Shared ALB] -->B(EC2) -->C(S3)
+```
+
+A shared ALB is used for all static site instances. The action uploads your
+files to the shared S3 bucket with your domain as the key prefix on files, and
+also creates a CNAME record and cert, and connects those to the ALB.
+
+The EC2 instance checks the auth token and serves files for the site by reading
+the HOST header and amending the path in S3 as appropriate.
+
+E.g.
+
+    GET devx.gutools.co.uk/css/main.css
+    -> S3:[bucket-name]/devx.gutools.co.uk/css/main.css
