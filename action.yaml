@@ -22,11 +22,6 @@ runs:
   # env) so need to be passed them explicitly :(. Sad times I know.
   using: 'composite'
   steps:
-    - uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-region: eu-west-1
-        role-to-assume: ${{ inputs.guActionsStaticSiteRoleArn }}
-
     - name: CDK synth
       shell: bash
       run: |

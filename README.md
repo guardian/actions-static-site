@@ -29,12 +29,6 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: npm
-
       # ... (Buiild your static site.)
 
       # Then upload it as an artifact
@@ -45,8 +39,8 @@ jobs:
       # Then invoke this action (replacing app and domain)
       - uses: guardian/actions-static-site@v2
         with:
-          app: devx-docs
-          domain: devx.gutools.co.uk
+          app: example
+          domain: example.gutools.co.uk
           guActionsRiffRaffRoleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
 ```
 
