@@ -1,38 +1,26 @@
-name: "guardian/actions-static-site"
-description: "Deploy a Guardian static site."
+name: 'guardian/actions-static-site'
+description: 'Deploy a Guardian static site.'
 inputs:
   app:
-    description: "App name (pattern: [a-zA-Z-]+)."
+    description: 'App name (pattern: [a-zA-Z-]+).'
     required: true
   domain:
     description: A Guardian-owned domain. [name].gutools.co.uk is recommended.
     required: true
-  auth:
-    description: Auth mechanism to use.
-    required: true
   artifact:
-    description: "Name of artifact containing the static site. Should be uploaded in an earlier workflow step."
+    description: 'Name of artifact containing the static site. Should be uploaded in an earlier workflow step.'
     required: false
-    default: "artifact"
-  googleClientId:
-    description: "Google (oauth) client ID"
-    required: false
-  googleClientSecret:
-    description: "DO NOT INLINE - pass as a secret."
-    required: false
-  guActionsStaticSiteRoleArn:
-    description: "Role to use for writing to SSM Parameter store (typically org secret of same name)."
-    required: true
+    default: 'artifact'
   guActionsRiffRaffRoleArn:
     description: "Role to use for writing to Riffraff's AWS bucket (typically org secret of same name)."
     required: true
   dryRun:
-    description: "If set to true, will not upload Riffraff artifact."
+    description: 'If set to true, will not upload Riffraff artifact.'
     default: false
 runs:
   # Note composite steps do not have direct access to secrets, or inputs (via
   # env) so need to be passed them explicitly :(. Sad times I know.
-  using: "composite"
+  using: 'composite'
   steps:
     - uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -48,12 +36,9 @@ runs:
       env:
         INPUT_APP: ${{ inputs.app }}
         INPUT_DOMAIN: ${{ inputs.domain }}
-        INPUT_AUTH: ${{ inputs.auth }}
         INPUT_ARTIFACT: ${{ inputs.artifact }}
         INPUT_DRYRUN: ${{ inputs.dryRun}}
         INPUT_ACTIONS_RUNTIME_TOKEN: ${ github.token }
-        INPUT_GOOGLECLIENTID: ${{ inputs.googleClientId }}
-        INPUT_GOOGLECLIENTSECRET: ${{ inputs.googleClientSecret }}
 
     - uses: actions/download-artifact@v3
       with:
@@ -65,19 +50,18 @@ runs:
       run: ls -R
       working-directory: site
 
-    - name: ZIP site
-      shell: bash
-      run: zip -r site.zip site
-
     - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-region: eu-west-1
         role-to-assume: ${{ inputs.guActionsRiffRaffRoleArn }}
 
-    - uses: guardian/actions-riff-raff@v1
+    - uses: guardian/actions-riff-raff@v2
       with:
         app: ${{ inputs.app }}
         dryRun: ${{ inputs.dryRun }}
+        contentDirectories: |
+          cfn: [${{github.action_path}}/cfn.json]
+          static-site-assets: [site]
         config: |
           stacks:
             - deploy
@@ -86,34 +70,20 @@ runs:
           allowedStages:
             - PROD
           deployments:
-            lambda-to-s3:
-              type: aws-s3
-              app: ${{ inputs.app }}
-              sources:
-                - site.zip
-                - ${{github.action_path}}/lambda/lambda.zip
-              parameters:
-                bucket: deploy-tools-dist
-                cacheControl: no-cache
-                publicReadAcl: false
-                prefixApp: true
             cfn:
               type: cloud-formation
               app: ${{ inputs.app }}
-              sources:
-                - ${{github.action_path}}/cfn.json
               parameters:
                 templatePath: cfn.json
-              dependencies:
-                - lambda-to-s3
-            lambda:
-              type: aws-lambda
-              app: ${{ inputs.app }}
+            static-site-assets:
+              type: aws-s3
+              app: ${{ inputs.domain }} # A hack to prefix uploads with the domain.
               parameters:
-                fileName: lambda.zip
-                lookupByTags: true
-                bucket: deploy-tools-dist
-              actions:
-                - updateLambda
+                cacheControl: private
+                publicReadAcl: false
+                bucket: deploy-infra-actions-static-site-i-staticd8c87b36-jyufgyb0llkj # TODO replace with SSM param once possible.
+                prefixApp: true # See comment on `app` above.
+                prefixStack: false
+                prefixStage: false
               dependencies:
                 - cfn
