@@ -12,17 +12,42 @@ auth callback to work - ping it on the `DevX Stream` channel and we can quickly
 add this for you.**
 
 ```yaml
-# First upload your site as an artifact:
-- uses: actions/upload-artifact@v3
-  with:
-    path: path/to/site-dir
+name: example
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  example:
+    runs-on: ubuntu-latest
 
-# Then invoke this action (replacing app and domain)
-- uses: guardian/actions-static-site@v2
-  with:
-    app: devx-docs
-    domain: devx.gutools.co.uk
-    guActionsRiffRaffRoleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+    # Required for Riffraff upload (which writes to AWS)
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      # ... (Buiild your static site.)
+
+      # Then upload it as an artifact
+      - uses: actions/upload-artifact@v3
+        with:
+          path: my-site
+
+      # Then invoke this action (replacing app and domain)
+      - uses: guardian/actions-static-site@v2
+        with:
+          app: devx-docs
+          domain: devx.gutools.co.uk
+          guActionsRiffRaffRoleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
 ```
 
 ## Inputs
