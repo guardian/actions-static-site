@@ -46,6 +46,11 @@ jobs:
 
 ## Inputs
 
+### **app** `string` (required):
+
+The app name. Used for the Riffraff deployment name and also to tag AWS
+resources. Typically this would be the first part of your domain name - e.g.
+'example' for 'example.gutools.co.uk'.
 ### **domain** `string` (required):
 
 The domain should be a Guardian-owned domain. For internal tools,
