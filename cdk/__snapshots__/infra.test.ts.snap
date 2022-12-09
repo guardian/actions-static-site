@@ -1174,6 +1174,75 @@ systemctl start app
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
+    "staticPolicy36384B58": Object {
+      "Properties": Object {
+        "Bucket": Object {
+          "Ref": "staticD8C87B36",
+        },
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "s3:PutObject",
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "staticD8C87B36",
+                        "Arn",
+                      ],
+                    },
+                    "/galaxies.gutools.co.uk/data/*",
+                  ],
+                ],
+              },
+            },
+            Object {
+              "Action": "s3:PutObject",
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Array [
+                  Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":iam::000000000016:root",
+                      ],
+                    ],
+                  },
+                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
+                ],
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "staticD8C87B36",
+                        "Arn",
+                      ],
+                    },
+                    "/galaxies.code.dev-gutools.co.uk/data/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
     "staticsitealbdnsname7E2D6E36": Object {
       "Properties": Object {
         "Description": "ALB DNS name for static sites.",

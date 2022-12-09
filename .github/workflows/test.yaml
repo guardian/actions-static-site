@@ -16,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: guardian/actions-read-private-repos@v0.1.0
+        with:
+          private-ssh-keys: ${{ secrets.PRIVATE_INFRASTRUCTURE_CONFIG_DEPLOY_KEY }}
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'

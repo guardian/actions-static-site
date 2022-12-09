@@ -21,6 +21,10 @@ jobs:
           aws-region: eu-west-1
           role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
 
+      - uses: guardian/actions-read-private-repos@v0.1.0
+        with:
+          private-ssh-keys: ${{ secrets.PRIVATE_INFRASTRUCTURE_CONFIG_DEPLOY_KEY }}
+
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
