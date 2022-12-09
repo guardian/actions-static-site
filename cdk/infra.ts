@@ -15,6 +15,7 @@ import { InstanceClass, InstanceSize, InstanceType, SecurityGroup } from "aws-cd
 import {
   ListenerAction,
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { ArnPrincipal, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { ParameterTier, StringParameter } from "aws-cdk-lib/aws-ssm";
 
@@ -167,6 +168,28 @@ systemctl start ${app}
       parameterName: `${configPrefix}/listenerArn`,
       stringValue: ec2.listener.listenerArn,
     });
+
+    // Create IAM role to allow Galaxies data-refresher-lambda to write to relevant portion of the bucket
+    // https://github.com/guardian/galaxies
+    const devPlaygroundAccountId = StringParameter.fromStringParameterAttributes(this, "devPlaygroundAccountId", {
+      parameterName: `${configPrefix}/developerPlaygroundAccountId`,
+    }).stringValue;
+
+    new Role(this, 'galaxies-data-refresher-write-role', {
+      roleName: "GalaxiesDataRefresherWriteRole",
+      description: 'Role that allows the Galaxies data refresher lambda to write JSON to relevant part of actions-static-site bucket.',
+      assumedBy: new ArnPrincipal(`arn:aws:lambda:eu-west-1:${devPlaygroundAccountId}:function:galaxies-data-refresher-lambda-PROD`),
+      inlinePolicies: {
+        galaxiesWrite: new PolicyDocument({
+          statements: [
+            new PolicyStatement({
+              actions: ['s3:PutObject', 's3:ListObjectsV2'],
+              resources: [`${bucket.bucketArn}/galaxies*.gutools.co.uk/data`]
+            })
+        ]
+        })
+      }
+    })
 
   }
 }
