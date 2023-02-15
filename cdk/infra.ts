@@ -16,7 +16,7 @@ import {
   ListenerAction,
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { Bucket } from "aws-cdk-lib/aws-s3";
-import { ParameterTier, StringParameter } from "aws-cdk-lib/aws-ssm";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 interface InfraProps extends GuStackProps {
   app: string;
