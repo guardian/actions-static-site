@@ -9,12 +9,14 @@ import {
 } from "@guardian/cdk/lib/constructs/core";
 import { GuCname } from "@guardian/cdk/lib/constructs/dns/";
 import { GuVpc} from "@guardian/cdk/lib/constructs/ec2";
+import { GuardianAwsAccounts } from "@guardian/private-infrastructure-config";
 import type { App} from "aws-cdk-lib";
 import { Duration, SecretValue } from "aws-cdk-lib";
 import { InstanceClass, InstanceSize, InstanceType, SecurityGroup } from "aws-cdk-lib/aws-ec2";
 import {
   ListenerAction,
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { AccountPrincipal, ArnPrincipal, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
@@ -168,5 +170,27 @@ systemctl start ${app}
       stringValue: ec2.listener.listenerArn,
     });
 
+    // Grant access to allow Galaxies data-refresher-lambda to write to relevant portion of the bucket
+    // https://github.com/guardian/galaxies
+    bucket.addToResourcePolicy(
+      new PolicyStatement({
+        resources: [bucket.arnForObjects("galaxies.gutools.co.uk/data/*")],
+        actions: ["s3:PutObject"],
+        principals: [new ArnPrincipal(
+          `arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-PROD`
+        )]
+      })
+    )
+    bucket.addToResourcePolicy(
+      new PolicyStatement({
+        resources: [bucket.arnForObjects("galaxies.code.dev-gutools.co.uk/data/*")],
+        actions: ["s3:PutObject"],
+        principals: [
+          new AccountPrincipal(GuardianAwsAccounts.DeveloperPlayground), // for local development
+          new ArnPrincipal(
+          `arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-CODE`
+        )]
+      })
+    )
   }
 }
