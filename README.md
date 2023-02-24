@@ -8,8 +8,9 @@ for your project. The marginal cost of a site is minimal - just the storage of
 your files in S3 and data transfer costs - as the core infrastructure is shared.
 
 **Note: your domain must be registered with the Google project for the Google
-auth callback to work - ping it on the `DevX Stream` channel and we can quickly
-add this for you.**
+auth callback to work - ping it on the `DevX Stream` channel and we can quickly add this for you.**
+
+Any paths ending in `/_prout` will skip authentication, so feel free to add the git hash as a file called `_prout` and then wire it up to [PRout](https://github.com/guardian/prout) - for example [guardian/galaxies#102](https://github.com/guardian/galaxies/pull/102).
 
 ```yaml
 name: example

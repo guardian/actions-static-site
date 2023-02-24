@@ -59,6 +59,12 @@ func WithDomainPrefix(h http.Handler) http.HandlerFunc {
 // security step in case the EC2 instance is somehow accessed not via the ALB.
 func WithAuth(h http.Handler) http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
+	  if strings.HasSuffix(req.URL.Path, "/_prout") {
+	    // https://github.com/guardian/prout needs no auth, so we skip it for **/_prout
+	    h.ServeHTTP(resp, req)
+	    return
+	  }
+
 		// See https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html#user-claims-encoding
 		tokenString := req.Header.Get("x-amzn-oidc-data")
 		err := auth(tokenString, keyFunc, []string{"ES256"})
