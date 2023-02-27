@@ -7,6 +7,7 @@ import { StaticSite } from "./cdk/static-site";
 export const main = (): void => {
   const app = core.getInput("app", { required: true });
   const domain = core.getInput("domain", { required: true });
+  const codeDomain = core.getInput("codeDomain", { required: false });
 
   const stack = "deploy";
 
@@ -25,6 +26,19 @@ export const main = (): void => {
 
   const cfn = Template.fromStack(cdkStack).toJSON();
   fs.writeFileSync("cfn.json", JSON.stringify(cfn, undefined, 2));
+
+  if (codeDomain) {
+    const cdkAppCODE = new App();
+    const cdkStackCODE = new StaticSite(cdkAppCODE, "static-site-code", {
+      app,
+      stack,
+      stage: "CODE",
+      domainName: codeDomain,
+    });
+
+    const cfnCODE = Template.fromStack(cdkStackCODE).toJSON();
+    fs.writeFileSync("cfn-CODE.json", JSON.stringify(cfnCODE, undefined, 2));
+  }
 };
 
 try {

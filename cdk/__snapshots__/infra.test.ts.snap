@@ -203,6 +203,11 @@ Environment=\\"BUCKET=",
                   "Ref": "staticD8C87B36",
                 },
                 "\\"
+Environment=\\"CODE_BUCKET=",
+                Object {
+                  "Ref": "codestaticB41DF3D7",
+                },
+                "\\"
 Environment=\\"PORT=9000\\"
 ExecStart=/app
 
@@ -643,6 +648,36 @@ systemctl start app
                       Object {
                         "Fn::GetAtt": Array [
                           "staticD8C87B36",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            Object {
+              "Action": Array [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "codestaticB41DF3D7",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      Object {
+                        "Fn::GetAtt": Array [
+                          "codestaticB41DF3D7",
                           "Arn",
                         ],
                       },
@@ -1139,6 +1174,99 @@ systemctl start app
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
+    "codestaticB41DF3D7": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "gu:cdk:version",
+            "Value": "48.5.1",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/actions-static-site",
+          },
+          Object {
+            "Key": "Stack",
+            "Value": "stack",
+          },
+          Object {
+            "Key": "Stage",
+            "Value": "INFRA",
+          },
+        ],
+        "WebsiteConfiguration": Object {
+          "IndexDocument": "index.html",
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "codestaticPolicy56B5E7C1": Object {
+      "Properties": Object {
+        "Bucket": Object {
+          "Ref": "codestaticB41DF3D7",
+        },
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "s3:PutObject",
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Array [
+                  Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":iam::000000000016:root",
+                      ],
+                    ],
+                  },
+                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
+                ],
+              },
+              "Resource": Object {
+                "Fn::Join": Array [
+                  "",
+                  Array [
+                    Object {
+                      "Fn::GetAtt": Array [
+                        "codestaticB41DF3D7",
+                        "Arn",
+                      ],
+                    },
+                    "/galaxies.code.dev-gutools.co.uk/data/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "codestaticsitebucketCDD8A031": Object {
+      "Properties": Object {
+        "Description": "Bucket for CODE static sites.",
+        "Name": "/INFRA/stack/app/codeBucket",
+        "Tags": Object {
+          "Stack": "stack",
+          "Stage": "INFRA",
+          "gu:cdk:version": "48.5.1",
+          "gu:repo": "guardian/actions-static-site",
+        },
+        "Type": "String",
+        "Value": Object {
+          "Ref": "codestaticB41DF3D7",
+        },
+      },
+      "Type": "AWS::SSM::Parameter",
+    },
     "ldpaccess567AC006": Object {
       "Properties": Object {
         "GroupDescription": "static-site-INFRA/ldp-access",
@@ -1226,95 +1354,6 @@ systemctl start app
                     },
                     "/galaxies.gutools.co.uk/data/*",
                   ],
-                ],
-              },
-            },
-            Object {
-              "Action": "s3:ListBucket",
-              "Condition": Object {
-                "StringLike": Object {
-                  "s3:prefix": Array [
-                    "galaxies.gutools.co.uk/data/*",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Principal": Object {
-                "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
-              },
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "staticD8C87B36",
-                  "Arn",
-                ],
-              },
-            },
-            Object {
-              "Action": "s3:PutObject",
-              "Effect": "Allow",
-              "Principal": Object {
-                "AWS": Array [
-                  Object {
-                    "Fn::Join": Array [
-                      "",
-                      Array [
-                        "arn:",
-                        Object {
-                          "Ref": "AWS::Partition",
-                        },
-                        ":iam::000000000016:root",
-                      ],
-                    ],
-                  },
-                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
-                ],
-              },
-              "Resource": Object {
-                "Fn::Join": Array [
-                  "",
-                  Array [
-                    Object {
-                      "Fn::GetAtt": Array [
-                        "staticD8C87B36",
-                        "Arn",
-                      ],
-                    },
-                    "/galaxies.code.dev-gutools.co.uk/data/*",
-                  ],
-                ],
-              },
-            },
-            Object {
-              "Action": "s3:ListBucket",
-              "Condition": Object {
-                "StringLike": Object {
-                  "s3:prefix": Array [
-                    "galaxies.code.dev-gutools.co.uk/data/*",
-                  ],
-                },
-              },
-              "Effect": "Allow",
-              "Principal": Object {
-                "AWS": Array [
-                  Object {
-                    "Fn::Join": Array [
-                      "",
-                      Array [
-                        "arn:",
-                        Object {
-                          "Ref": "AWS::Partition",
-                        },
-                        ":iam::000000000016:root",
-                      ],
-                    ],
-                  },
-                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
-                ],
-              },
-              "Resource": Object {
-                "Fn::GetAtt": Array [
-                  "staticD8C87B36",
-                  "Arn",
                 ],
               },
             },

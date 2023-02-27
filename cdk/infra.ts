@@ -45,7 +45,10 @@ export class Infra extends GuStack {
   constructor(scope: App, id: string, props: InfraProps) {
     super(scope, id, props);
 
-    const bucket = new Bucket(this, "static", {
+    const prodBucket = new Bucket(this, "static", {
+      websiteIndexDocument: 'index.html',
+    })
+    const codeBucket = new Bucket(this, "code-static", {
       websiteIndexDocument: 'index.html',
     })
 
@@ -60,7 +63,8 @@ cat << EOF > /etc/systemd/system/${app}.service
 Description=Static Site service
 
 [Service]
-Environment="BUCKET=${bucket.bucketName}"
+Environment="BUCKET=${prodBucket.bucketName}"
+Environment="CODE_BUCKET=${codeBucket.bucketName}"
 Environment="PORT=${port}"
 ExecStart=/${app}
 
@@ -104,7 +108,8 @@ systemctl start ${app}
 
     ec2.loadBalancer.addSecurityGroup(sg)
 
-    bucket.grantRead(ec2.autoScalingGroup)
+    prodBucket.grantRead(ec2.autoScalingGroup)
+    codeBucket.grantRead(ec2.autoScalingGroup)
 
     // Google Auth stuff...
 
@@ -158,7 +163,12 @@ systemctl start ${app}
     new StringParameter(this, 'static-site-bucket', {
       description: 'Bucket for static sites.',
       parameterName: `${configPrefix}/bucket`,
-      stringValue: bucket.bucketName,
+      stringValue: prodBucket.bucketName,
+    });
+    new StringParameter(this, 'code-static-site-bucket', {
+      description: 'Bucket for CODE static sites.',
+      parameterName: `${configPrefix}/codeBucket`,
+      stringValue: codeBucket.bucketName,
     });
 
     // Used by static site Cloudformations to attach certs.
@@ -178,12 +188,14 @@ systemctl start ${app}
     // https://github.com/guardian/galaxies
     Object.values({
       PROD: {
+        bucket: prodBucket,
         prefix: "galaxies.gutools.co.uk/data/*",
         principals: [new ArnPrincipal(
           `arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-PROD`
         )]
       },
       CODE: {
+        bucket: codeBucket,
         prefix: "galaxies.code.dev-gutools.co.uk/data/*",
         principals: [
           new AccountPrincipal(GuardianAwsAccounts.DeveloperPlayground), // for local development
@@ -191,7 +203,7 @@ systemctl start ${app}
             `arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-CODE`
           )]
       }
-    }).forEach(({ principals, prefix }) => {
+    }).forEach(({ bucket, principals, prefix }) => {
       bucket.addToResourcePolicy(
         new PolicyStatement({
           resources: [bucket.arnForObjects(prefix)],
