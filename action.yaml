@@ -77,17 +77,20 @@ runs:
                 templatePath:
                 templateStagePaths:
                   PROD: cfn.json
-                  ${{ inputs.codeDomain && 'CODE: cfn-CODE.json' || '' }}
+                  CODE: cfn-CODE.json
             static-site-assets:
               type: aws-s3
-              app: ${{ inputs.domain }} # A hack to prefix uploads with the domain.
+              app: ${{ inputs.app }}
               parameters:
                 cacheControl: private
                 publicReadAcl: false
                 bucketSsmKeyStageParam:
                   PROD: /INFRA/deploy/actions-static-site-infra/bucket
                   CODE: /INFRA/deploy/actions-static-site-infra/codeBucket
-                prefixApp: true # See comment on `app` above.
+                prefixStagePaths:
+                  PROD: ${{ inputs.domain }}
+                  CODE: ${{ inputs.codeDomain }}
+                prefixApp: false
                 prefixStack: false
                 prefixStage: false
               dependencies:
