@@ -1,16 +1,17 @@
 import { GuEc2App } from '@guardian/cdk';
 import { AccessScope } from "@guardian/cdk/lib/constants";
 import type {
-  GuStackProps} from "@guardian/cdk/lib/constructs/core";
+  GuStackProps
+} from "@guardian/cdk/lib/constructs/core";
 import {
   GuAnghammaradTopicParameter,
   GuDistributionBucketParameter,
   GuStack
 } from "@guardian/cdk/lib/constructs/core";
 import { GuCname } from "@guardian/cdk/lib/constructs/dns/";
-import { GuVpc} from "@guardian/cdk/lib/constructs/ec2";
+import { GuVpc } from "@guardian/cdk/lib/constructs/ec2";
 import { GuardianAwsAccounts } from "@guardian/private-infrastructure-config";
-import type { App} from "aws-cdk-lib";
+import type { App } from "aws-cdk-lib";
 import { Duration, SecretValue } from "aws-cdk-lib";
 import { InstanceClass, InstanceSize, InstanceType, SecurityGroup } from "aws-cdk-lib/aws-ec2";
 import {
@@ -50,12 +51,12 @@ export class Infra extends GuStack {
       websiteIndexDocument: 'index.html',
     })
 
-		const app = props.app;
-		const keyPrefix = `${this.stack}/${this.stage}/${app}`;
+    const app = props.app;
+    const keyPrefix = `${this.stack}/${this.stage}/${app}`;
     const port = 9000;
-		const distBucket = GuDistributionBucketParameter.getInstance(this).valueAsString;
+    const distBucket = GuDistributionBucketParameter.getInstance(this).valueAsString;
 
-		const userData = `#!/bin/bash -ev
+    const userData = `#!/bin/bash -ev
 cat << EOF > /etc/systemd/system/${app}.service
 [Unit]
 Description=Static Site service
@@ -74,28 +75,28 @@ chmod +x /${app}
 systemctl start ${app}
 `;
 
-		const ec2 = new GuEc2App(this, {
-			app: app,
-			access: {
-				scope: AccessScope.PUBLIC, // But note, Google auth required.
-			},
-			instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.NANO),
-			applicationPort: port,
-			monitoringConfiguration: {
-				snsTopicName:
-					GuAnghammaradTopicParameter.getInstance(this).valueAsString,
-				unhealthyInstancesAlarm: true,
-				http5xxAlarm: {
-					tolerated5xxPercentage: 1,
-					numberOfMinutesAboveThresholdBeforeAlarm: 60,
-				},
-			},
-			certificateProps: { domainName: props.domainName },
-			scaling: { minimumInstances: 1, maximumInstances: 2 },
-			userData: userData,
-			imageRecipe: 'arm64-bionic-java11-deploy-infrastructure',
-			applicationLogging: { enabled: true },
-		});
+    const ec2 = new GuEc2App(this, {
+      app: app,
+      access: {
+        scope: AccessScope.PUBLIC, // But note, Google auth required.
+      },
+      instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.NANO),
+      applicationPort: port,
+      monitoringConfiguration: {
+        snsTopicName:
+          GuAnghammaradTopicParameter.getInstance(this).valueAsString,
+        unhealthyInstancesAlarm: true,
+        http5xxAlarm: {
+          tolerated5xxPercentage: 1,
+          numberOfMinutesAboveThresholdBeforeAlarm: 60,
+        },
+      },
+      certificateProps: { domainName: props.domainName },
+      scaling: { minimumInstances: 1, maximumInstances: 2 },
+      userData: userData,
+      imageRecipe: 'arm64-bionic-java11-deploy-infrastructure',
+      applicationLogging: { enabled: true },
+    });
 
     // Need to give the ALB outbound access on 443 for the IdP endpoints.
     const sg = new SecurityGroup(this, 'ldp-access', {
@@ -142,12 +143,12 @@ systemctl start ${app}
 
     ec2.listener.addAction("auth", { action: authAction });
 
-		new GuCname(this, 'DNS', {
-			app: app,
-			domainName: props.domainName,
-			resourceRecord: ec2.loadBalancer.loadBalancerDnsName,
-			ttl: Duration.hours(1),
-		});
+    new GuCname(this, 'DNS', {
+      app: app,
+      domainName: props.domainName,
+      resourceRecord: ec2.loadBalancer.loadBalancerDnsName,
+      ttl: Duration.hours(1),
+    });
 
     // Used in the riff-raff.yaml of static sites to determine the bucket to
     // upload resources to.
@@ -172,25 +173,41 @@ systemctl start ${app}
 
     // Grant access to allow Galaxies data-refresher-lambda to write to relevant portion of the bucket
     // https://github.com/guardian/galaxies
-    bucket.addToResourcePolicy(
-      new PolicyStatement({
-        resources: [bucket.arnForObjects("galaxies.gutools.co.uk/data/*")],
-        actions: ["s3:PutObject"],
+    Object.values({
+      PROD: {
+        prefix: "galaxies.gutools.co.uk/data/*",
         principals: [new ArnPrincipal(
           `arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-PROD`
         )]
-      })
-    )
-    bucket.addToResourcePolicy(
-      new PolicyStatement({
-        resources: [bucket.arnForObjects("galaxies.code.dev-gutools.co.uk/data/*")],
-        actions: ["s3:PutObject"],
+      },
+      CODE: {
+        prefix: "galaxies.code.dev-gutools.co.uk/data/*",
         principals: [
           new AccountPrincipal(GuardianAwsAccounts.DeveloperPlayground), // for local development
           new ArnPrincipal(
-          `arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-CODE`
-        )]
-      })
-    )
+            `arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-CODE`
+          )]
+      }
+    }).forEach(({ principals, prefix }) => {
+      bucket.addToResourcePolicy(
+        new PolicyStatement({
+          resources: [bucket.arnForObjects(prefix)],
+          actions: ["s3:PutObject"],
+          principals: principals
+        })
+      )
+      bucket.addToResourcePolicy(
+        new PolicyStatement({
+          resources: [bucket.bucketArn],
+          actions: ["s3:ListBucket"],
+          principals: principals,
+          conditions: {
+            StringLike: {
+              "s3:prefix": [prefix]
+            }
+          }
+        })
+      )
+    })
   }
 }
