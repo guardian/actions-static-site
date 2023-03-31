@@ -1203,6 +1203,26 @@ systemctl start app
               },
             },
             Object {
+              "Action": "s3:ListBucket",
+              "Condition": Object {
+                "StringLike": Object {
+                  "s3:prefix": Array [
+                    "galaxies.gutools.co.uk/data/*",
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
+              },
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "staticD8C87B36",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
               "Action": "s3:PutObject",
               "Effect": "Allow",
               "Principal": Object {
@@ -1234,6 +1254,40 @@ systemctl start app
                     },
                     "/galaxies.code.dev-gutools.co.uk/data/*",
                   ],
+                ],
+              },
+            },
+            Object {
+              "Action": "s3:ListBucket",
+              "Condition": Object {
+                "StringLike": Object {
+                  "s3:prefix": Array [
+                    "galaxies.code.dev-gutools.co.uk/data/*",
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Array [
+                  Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":iam::000000000016:root",
+                      ],
+                    ],
+                  },
+                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
+                ],
+              },
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "staticD8C87B36",
+                  "Arn",
                 ],
               },
             },
