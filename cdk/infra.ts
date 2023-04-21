@@ -14,9 +14,7 @@ import { GuardianAwsAccounts } from "@guardian/private-infrastructure-config";
 import type { App } from "aws-cdk-lib";
 import { Duration, SecretValue } from "aws-cdk-lib";
 import { InstanceClass, InstanceSize, InstanceType, SecurityGroup } from "aws-cdk-lib/aws-ec2";
-import {
-  ListenerAction,
-} from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import { ListenerAction, ListenerCondition } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import { AccountPrincipal, ArnPrincipal, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
@@ -141,6 +139,11 @@ systemctl start ${app}
       userInfoEndpoint: "https://openidconnect.googleapis.com/v1/userinfo",
     });
 
+    ec2.listener.addTargetGroups("PRout", {
+      priority: 1,
+      conditions: [ListenerCondition.pathPatterns(["**/_prout"])],
+      targetGroups: [ec2.targetGroup],
+    });
     ec2.listener.addAction("auth", { action: authAction });
 
     new GuCname(this, 'DNS', {
