@@ -708,6 +708,33 @@ systemctl start app
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
     },
+    "ListenerAppPRoutRule52A1A63F": Object {
+      "Properties": Object {
+        "Actions": Array [
+          Object {
+            "TargetGroupArn": Object {
+              "Ref": "TargetGroupAppC3FDB286",
+            },
+            "Type": "forward",
+          },
+        ],
+        "Conditions": Array [
+          Object {
+            "Field": "path-pattern",
+            "PathPatternConfig": Object {
+              "Values": Array [
+                "**/_prout",
+              ],
+            },
+          },
+        ],
+        "ListenerArn": Object {
+          "Ref": "ListenerApp55D0EA9B",
+        },
+        "Priority": 1,
+      },
+      "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
+    },
     "LoadBalancerApp94515990": Object {
       "Properties": Object {
         "LoadBalancerAttributes": Array [
