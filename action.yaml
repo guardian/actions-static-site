@@ -7,6 +7,9 @@ inputs:
   domain:
     description: A Guardian-owned domain. [name].gutools.co.uk is recommended.
     required: true
+  codeDomain:
+    description: OPTIONAL Guardian-owned domain for CODE environment. [name].code.dev-gutools.co.uk is recommended.
+    required: false
   artifact:
     description: 'Name of artifact containing the static site. Should be uploaded in an earlier workflow step.'
     required: false
@@ -31,6 +34,7 @@ runs:
       env:
         INPUT_APP: ${{ inputs.app }}
         INPUT_DOMAIN: ${{ inputs.domain }}
+        INPUT_CODE_DOMAIN: ${{ inputs.codeDomain }}
         INPUT_ARTIFACT: ${{ inputs.artifact }}
         INPUT_DRYRUN: ${{ inputs.dryRun}}
         INPUT_ACTIONS_RUNTIME_TOKEN: ${ github.token }
@@ -64,20 +68,29 @@ runs:
             - eu-west-1
           allowedStages:
             - PROD
+            ${{ inputs.codeDomain && '- CODE' || '' }}
           deployments:
             cfn:
               type: cloud-formation
               app: ${{ inputs.app }}
               parameters:
-                templatePath: cfn.json
+                templatePath:
+                templateStagePaths:
+                  PROD: cfn.json
+                  CODE: cfn-CODE.json
             static-site-assets:
               type: aws-s3
-              app: ${{ inputs.domain }} # A hack to prefix uploads with the domain.
+              app: ${{ inputs.app }}
               parameters:
                 cacheControl: private
                 publicReadAcl: false
-                bucket: deploy-infra-actions-static-site-i-staticd8c87b36-jyufgyb0llkj # TODO replace with SSM param once possible.
-                prefixApp: true # See comment on `app` above.
+                bucketSsmKeyStageParam:
+                  PROD: /INFRA/deploy/actions-static-site-infra/bucket
+                  CODE: /INFRA/deploy/actions-static-site-infra/codeBucket
+                prefixStagePaths:
+                  PROD: ${{ inputs.domain }}
+                  CODE: ${{ inputs.codeDomain }}
+                prefixApp: false
                 prefixStack: false
                 prefixStage: false
               dependencies:

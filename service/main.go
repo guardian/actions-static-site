@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"strings"
 	"time"
 
 	"github.com/guardian/actions-static-site/service/middleware"
@@ -15,7 +16,9 @@ import (
 )
 
 type Config struct {
-	Port, Bucket string
+	Port, ProdBucket, CodeBucket string
+
+	ValidCodeDomainSuffixes []string
 
 	// Override when local for easier testing.
 	RequireAuth bool
@@ -42,23 +45,28 @@ func optional(key, fallback string) string {
 
 func getConfig() Config {
 	return Config{
-		Bucket:      required("BUCKET"),
-		Port:        optional("PORT", "3333"),
-		RequireAuth: optional("REQUIRE_AUTH", "true") != "false",
-		Profile:     optional("PROFILE", ""),
+		ProdBucket:              required("PROD_BUCKET"),
+		CodeBucket:              required("CODE_BUCKET"),
+		ValidCodeDomainSuffixes: strings.Split(required("VALID_CODE_DOMAIN_SUFFIXES"), ","),
+		Port:                    optional("PORT", "3333"),
+		RequireAuth:             optional("REQUIRE_AUTH", "true") != "false",
+		Profile:                 optional("PROFILE", ""),
 	}
 }
 
 func main() {
 	config := getConfig()
-	store := s3.New(config.Bucket, config.Profile)
+	prodStore := s3.New(config.ProdBucket, config.Profile)
+	codeStore := s3.New(config.CodeBucket, config.Profile)
 
 	http.HandleFunc("/healthcheck", middleware.WithRequestLog(http.HandlerFunc(ok)))
 
+	handler := middleware.WithDomainPrefix(storeServer(prodStore, codeStore, config.ValidCodeDomainSuffixes))
+
 	if config.RequireAuth {
-		http.Handle("/", middleware.WithRequestLog(middleware.WithAuth(middleware.WithDomainPrefix(storeServer(store)))))
+		http.Handle("/", middleware.WithRequestLog(middleware.WithAuth(handler)))
 	} else {
-		http.Handle("/", middleware.WithRequestLog(middleware.WithDomainPrefix(storeServer(store))))
+		http.Handle("/", middleware.WithRequestLog(handler))
 	}
 
 	log.Printf("Server starting on http://localhost:%s.", config.Port)
@@ -70,18 +78,32 @@ func ok(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "OK")
 }
 
-func storeServer(store store.Store) http.HandlerFunc {
+func storeServer(prodStore store.Store, codeStore store.Store, validCodeDomainSuffixes []string) http.HandlerFunc {
 	return func(resp http.ResponseWriter, req *http.Request) {
 		key := req.URL.Path
-		got, err := store.Get(key)
+		host, _, _ := strings.Cut(req.Host, ":")
+
+		stageSpecificStore := getStageSpecificStore(host, prodStore, codeStore, validCodeDomainSuffixes)
+
+		got, err := stageSpecificStore.Get(key)
+
 		if err != nil {
-			log.Printf("unable to fetch from store for path %s and host %s: %v", req.URL.Path, req.Host, err)
+			log.Printf("unable to fetch from prodStore for path %s and host %s: %v", req.URL.Path, req.Host, err)
 			statusNotFound(resp)
 		}
 
 		_, name := path.Split(key)
 		http.ServeContent(resp, req, name, time.Time{}, bytes.NewReader(got))
 	}
+}
+
+func getStageSpecificStore(host string, prodStore store.Store, codeStore store.Store, validCodeDomainSuffixes []string) store.Store {
+	for _, validCodeDomainSuffix := range validCodeDomainSuffixes {
+		if strings.HasSuffix(host, validCodeDomainSuffix) {
+			return codeStore
+		}
+	}
+	return prodStore
 }
 
 func statusNotFound(w http.ResponseWriter) {

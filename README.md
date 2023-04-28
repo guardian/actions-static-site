@@ -48,17 +48,20 @@ jobs:
 ## Inputs
 
 ### **app** `string` (required):
-
 The app name. Used for the Riffraff deployment name and also to tag AWS
 resources. Typically this would be the first part of your domain name - e.g.
 'example' for 'example.gutools.co.uk'.
-### **domain** `string` (required):
 
+### **domain** `string` (required):
 The domain should be a Guardian-owned domain. For internal tools,
 `[app].gutools.co.uk` is recommended but check it is free first!
 
-### **artifact** `string` (optional - default='artifact')
+### **codeDomain** `string` (optional):
+The domain should be a Guardian-owned domain. For internal tools,
+`[name].code.dev-gutools.co.uk` is recommended but check it is free first!
+Only use this option if your project really needs a lower envionment.
 
+### **artifact** `string` (optional - default='artifact')
 Name of the artifact containing the static resources. Should be uploaded in
 an earlier workflow step.
 
