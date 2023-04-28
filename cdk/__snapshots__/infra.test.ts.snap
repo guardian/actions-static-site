@@ -198,7 +198,7 @@ cat << EOF > /etc/systemd/system/app.service
 Description=Static Site service
 
 [Service]
-Environment=\\"BUCKET=",
+Environment=\\"PROD_BUCKET=",
                 Object {
                   "Ref": "staticD8C87B36",
                 },
@@ -208,6 +208,7 @@ Environment=\\"CODE_BUCKET=",
                   "Ref": "codestaticB41DF3D7",
                 },
                 "\\"
+Environment=\\"VALID_CODE_DOMAIN_SUFFIXES=.code.dev-gutools.co.uk\\"
 Environment=\\"PORT=9000\\"
 ExecStart=/app
 
@@ -1244,6 +1245,40 @@ systemctl start app
                 ],
               },
             },
+            Object {
+              "Action": "s3:ListBucket",
+              "Condition": Object {
+                "StringLike": Object {
+                  "s3:prefix": Array [
+                    "galaxies.code.dev-gutools.co.uk/data/*",
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Array [
+                  Object {
+                    "Fn::Join": Array [
+                      "",
+                      Array [
+                        "arn:",
+                        Object {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":iam::000000000016:root",
+                      ],
+                    ],
+                  },
+                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
+                ],
+              },
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "codestaticB41DF3D7",
+                  "Arn",
+                ],
+              },
+            },
           ],
           "Version": "2012-10-17",
         },
@@ -1354,6 +1389,26 @@ systemctl start app
                     },
                     "/galaxies.gutools.co.uk/data/*",
                   ],
+                ],
+              },
+            },
+            Object {
+              "Action": "s3:ListBucket",
+              "Condition": Object {
+                "StringLike": Object {
+                  "s3:prefix": Array [
+                    "galaxies.gutools.co.uk/data/*",
+                  ],
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
+              },
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "staticD8C87B36",
+                  "Arn",
                 ],
               },
             },

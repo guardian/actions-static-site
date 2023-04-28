@@ -18,6 +18,7 @@ import { ListenerAction, ListenerCondition } from 'aws-cdk-lib/aws-elasticloadba
 import { AccountPrincipal, ArnPrincipal, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
+import {validCodeDomainSuffixes} from "../validCodeDomainSuffixes";
 
 interface InfraProps extends GuStackProps {
   app: string;
@@ -63,8 +64,9 @@ cat << EOF > /etc/systemd/system/${app}.service
 Description=Static Site service
 
 [Service]
-Environment="BUCKET=${prodBucket.bucketName}"
+Environment="PROD_BUCKET=${prodBucket.bucketName}"
 Environment="CODE_BUCKET=${codeBucket.bucketName}"
+Environment="VALID_CODE_DOMAIN_SUFFIXES=${validCodeDomainSuffixes.join(',')}"
 Environment="PORT=${port}"
 ExecStart=/${app}
 
