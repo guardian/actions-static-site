@@ -29,7 +29,7 @@ export const main = (): void => {
 
 try {
   // execute only if invoked as main script (rather than test)
-  if (require.main === module) main()
+  if (require.main === module) {main()}
 } catch (e) {
   const error = e as Error;
   core.error(error);

@@ -1,19 +1,15 @@
 {
-  "version": "21.0.0",
+  "version": "36.0.0",
   "artifacts": {
-    "Tree": {
-      "type": "cdk:tree",
-      "properties": {
-        "file": "tree.json"
-      }
-    },
     "Static-Site-INFRA": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/eu-west-1",
       "properties": {
         "templateFile": "Static-Site-INFRA.template.json",
+        "terminationProtection": false,
         "tags": {
-          "gu:cdk:version": "48.5.1",
+          "App": "actions-static-site-infra",
+          "gu:cdk:version": "58.0.0",
           "gu:repo": "guardian/actions-static-site",
           "Stack": "deploy",
           "Stage": "INFRA"
@@ -26,148 +22,152 @@
             "type": "aws:cdk:info",
             "data": "Stack reads the SSM Parameter '/account/services/artifact.bucket'. Ensure it exists prior to deployment.",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addInfo (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:682)",
-              "CfnParameterReporter.visit (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1799)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "invokeAspects (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1425)",
-              "Object.synthesize (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:493)",
-              "App.synth (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:1883)",
-              "process.<anonymous> (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1208)",
-              "Object.onceWrapper (node:events:510:26)",
-              "process.emit (node:events:390:28)",
-              "process.emit (node:domain:475:12)",
-              "process.emit.sharedData.processEmitHook.installedValue [as emit] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/@cspotcode/source-map-support/source-map-support.js:745:40)"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "CfnParameterReporter.visit (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2282)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "invokeAspects (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:1906)",
+              "synthesize (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1388)",
+              "App.synth (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:2201)",
+              "process.<anonymous> (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1683)",
+              "Object.onceWrapper (node:events:633:26)",
+              "process.emit (node:events:518:28)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/tsx/dist/suppress-warnings.cjs:1:410)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/source-map-support/source-map-support.js:465:21)"
             ]
           },
           {
             "type": "aws:cdk:info",
             "data": "Stack reads the SSM Parameter '/account/services/anghammarad.topic.arn'. Ensure it exists prior to deployment.",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addInfo (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:682)",
-              "CfnParameterReporter.visit (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1799)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "invokeAspects (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1425)",
-              "Object.synthesize (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:493)",
-              "App.synth (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:1883)",
-              "process.<anonymous> (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1208)",
-              "Object.onceWrapper (node:events:510:26)",
-              "process.emit (node:events:390:28)",
-              "process.emit (node:domain:475:12)",
-              "process.emit.sharedData.processEmitHook.installedValue [as emit] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/@cspotcode/source-map-support/source-map-support.js:745:40)"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "CfnParameterReporter.visit (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2282)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "invokeAspects (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:1906)",
+              "synthesize (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1388)",
+              "App.synth (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:2201)",
+              "process.<anonymous> (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1683)",
+              "Object.onceWrapper (node:events:633:26)",
+              "process.emit (node:events:518:28)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/tsx/dist/suppress-warnings.cjs:1:410)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/source-map-support/source-map-support.js:465:21)"
             ]
           },
           {
             "type": "aws:cdk:info",
             "data": "Stack reads the SSM Parameter '/account/vpc/primary/id'. Ensure it exists prior to deployment.",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addInfo (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:682)",
-              "CfnParameterReporter.visit (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1799)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "invokeAspects (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1425)",
-              "Object.synthesize (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:493)",
-              "App.synth (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:1883)",
-              "process.<anonymous> (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1208)",
-              "Object.onceWrapper (node:events:510:26)",
-              "process.emit (node:events:390:28)",
-              "process.emit (node:domain:475:12)",
-              "process.emit.sharedData.processEmitHook.installedValue [as emit] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/@cspotcode/source-map-support/source-map-support.js:745:40)"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "CfnParameterReporter.visit (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2282)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "invokeAspects (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:1906)",
+              "synthesize (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1388)",
+              "App.synth (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:2201)",
+              "process.<anonymous> (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1683)",
+              "Object.onceWrapper (node:events:633:26)",
+              "process.emit (node:events:518:28)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/tsx/dist/suppress-warnings.cjs:1:410)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/source-map-support/source-map-support.js:465:21)"
             ]
           },
           {
             "type": "aws:cdk:info",
             "data": "Stack reads the SSM Parameter '/account/vpc/primary/subnets/private'. Ensure it exists prior to deployment.",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addInfo (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:682)",
-              "CfnParameterReporter.visit (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1799)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "invokeAspects (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1425)",
-              "Object.synthesize (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:493)",
-              "App.synth (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:1883)",
-              "process.<anonymous> (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1208)",
-              "Object.onceWrapper (node:events:510:26)",
-              "process.emit (node:events:390:28)",
-              "process.emit (node:domain:475:12)",
-              "process.emit.sharedData.processEmitHook.installedValue [as emit] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/@cspotcode/source-map-support/source-map-support.js:745:40)"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "CfnParameterReporter.visit (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2282)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "invokeAspects (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:1906)",
+              "synthesize (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1388)",
+              "App.synth (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:2201)",
+              "process.<anonymous> (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1683)",
+              "Object.onceWrapper (node:events:633:26)",
+              "process.emit (node:events:518:28)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/tsx/dist/suppress-warnings.cjs:1:410)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/source-map-support/source-map-support.js:465:21)"
             ]
           },
           {
             "type": "aws:cdk:info",
             "data": "Stack reads the SSM Parameter '/account/vpc/primary/subnets/public'. Ensure it exists prior to deployment.",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addInfo (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:682)",
-              "CfnParameterReporter.visit (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1799)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "invokeAspects (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1425)",
-              "Object.synthesize (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:493)",
-              "App.synth (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:1883)",
-              "process.<anonymous> (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1208)",
-              "Object.onceWrapper (node:events:510:26)",
-              "process.emit (node:events:390:28)",
-              "process.emit (node:domain:475:12)",
-              "process.emit.sharedData.processEmitHook.installedValue [as emit] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/@cspotcode/source-map-support/source-map-support.js:745:40)"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "CfnParameterReporter.visit (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2282)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "invokeAspects (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:1906)",
+              "synthesize (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1388)",
+              "App.synth (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:2201)",
+              "process.<anonymous> (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1683)",
+              "Object.onceWrapper (node:events:633:26)",
+              "process.emit (node:events:518:28)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/tsx/dist/suppress-warnings.cjs:1:410)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/source-map-support/source-map-support.js:465:21)"
             ]
           },
           {
             "type": "aws:cdk:info",
             "data": "Stack reads the SSM Parameter '/account/services/logging.stream.name'. Ensure it exists prior to deployment.",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addInfo (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:682)",
-              "CfnParameterReporter.visit (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1799)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "invokeAspects (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1425)",
-              "Object.synthesize (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:493)",
-              "App.synth (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:1883)",
-              "process.<anonymous> (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1208)",
-              "Object.onceWrapper (node:events:510:26)",
-              "process.emit (node:events:390:28)",
-              "process.emit (node:domain:475:12)",
-              "process.emit.sharedData.processEmitHook.installedValue [as emit] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/@cspotcode/source-map-support/source-map-support.js:745:40)"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "CfnParameterReporter.visit (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2282)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "invokeAspects (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:1906)",
+              "synthesize (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1388)",
+              "App.synth (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:2201)",
+              "process.<anonymous> (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1683)",
+              "Object.onceWrapper (node:events:633:26)",
+              "process.emit (node:events:518:28)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/tsx/dist/suppress-warnings.cjs:1:410)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/source-map-support/source-map-support.js:465:21)"
             ]
           },
           {
             "type": "aws:cdk:info",
             "data": "Stack reads the SSM Parameter '/INFRA/deploy/actions-static-site-infra/googleClientID'. Ensure it exists prior to deployment.",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addInfo (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:682)",
-              "CfnParameterReporter.visit (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1799)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "recurse (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:2127)",
-              "invokeAspects (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1425)",
-              "Object.synthesize (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:493)",
-              "App.synth (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:1883)",
-              "process.<anonymous> (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1208)",
-              "Object.onceWrapper (node:events:510:26)",
-              "process.emit (node:events:390:28)",
-              "process.emit (node:domain:475:12)",
-              "process.emit.sharedData.processEmitHook.installedValue [as emit] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/@cspotcode/source-map-support/source-map-support.js:745:40)"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "CfnParameterReporter.visit (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/aspects/cfn-parameter-reporter.ts:16:36)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2282)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "recurse (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:2646)",
+              "invokeAspects (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:2:1906)",
+              "synthesize (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1388)",
+              "App.synth (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/stage.js:1:2201)",
+              "process.<anonymous> (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/app.js:1:1683)",
+              "Object.onceWrapper (node:events:633:26)",
+              "process.emit (node:events:518:28)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/tsx/dist/suppress-warnings.cjs:1:410)",
+              "process.emit (/Users/mchv/Code/actions-static-site/node_modules/source-map-support/source-map-support.js:465:21)"
             ]
           },
           {
             "type": "aws:cdk:stack-tags",
             "data": [
               {
+                "Key": "App",
+                "Value": "actions-static-site-infra"
+              },
+              {
                 "Key": "gu:cdk:version",
-                "Value": "48.5.1"
+                "Value": "58.0.0"
               },
               {
                 "Key": "gu:repo",
@@ -184,10 +184,33 @@
             ]
           }
         ],
-        "/Static-Site-INFRA/static/Resource": [
+        "/Static-Site-INFRA/staticActionsstaticsiteinfra": [
+          {
+            "type": "aws:cdk:info",
+            "data": "Setting logical ID for staticActionsstaticsiteinfra to staticD8C87B36. Reason: Retaining a stateful resource previously defined as a Bucket, not a GuS3Bucket",
+            "trace": [
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "Infra.overrideLogicalId (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/constructs/core/stack.ts:237:31)",
+              "new Infra (file:///Users/mchv/Code/actions-static-site/cdk/infra.ts:1:1051)",
+              "file:///Users/mchv/Code/actions-static-site/cdk/bin/cdk.ts:1:50",
+              "ModuleJob.run (node:internal/modules/esm/module_job:222:25)",
+              "ModuleLoader.import (node:internal/modules/esm/loader:323:24)",
+              "loadESM (node:internal/process/esm_loader:28:7)",
+              "handleMainPromise (node:internal/modules/run_main:113:12)"
+            ]
+          }
+        ],
+        "/Static-Site-INFRA/staticActionsstaticsiteinfra/Resource": [
           {
             "type": "aws:cdk:logicalId",
             "data": "staticD8C87B36"
+          }
+        ],
+        "/Static-Site-INFRA/staticActionsstaticsiteinfra/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "staticActionsstaticsiteinfraPolicy3E624F96"
           }
         ],
         "/Static-Site-INFRA/DistributionBucketName": [
@@ -238,10 +261,10 @@
             "data": "InstanceRoleActionsstaticsiteinfraDefaultPolicy4DA1DF9E"
           }
         ],
-        "/Static-Site-INFRA/SSMRunCommandPolicy/Resource": [
+        "/Static-Site-INFRA/SsmSshPolicy/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "SSMRunCommandPolicy244E1613"
+            "data": "SsmSshPolicy4CFC977E"
           }
         ],
         "/Static-Site-INFRA/DescribeEC2Policy/Resource": [
@@ -298,22 +321,16 @@
             "data": "GuHttpsEgressSecurityGroupActionsstaticsiteinfrafromStaticSiteINFRAldpaccess94C4FBAC9000C735E21C"
           }
         ],
-        "/Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra/InstanceProfile": [
+        "/Static-Site-INFRA/deploy-INFRA-actions-static-site-infra/Profile": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AutoScalingGroupActionsstaticsiteinfraInstanceProfileFFD49CA1"
+            "data": "deployINFRAactionsstaticsiteinfraProfileF5A0DA62"
           }
         ],
-        "/Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra/LaunchConfig": [
+        "/Static-Site-INFRA/deploy-INFRA-actions-static-site-infra/Resource": [
           {
             "type": "aws:cdk:logicalId",
-            "data": "AutoScalingGroupActionsstaticsiteinfraLaunchConfig42A40D8F"
-          }
-        ],
-        "/Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra/ASG": [
-          {
-            "type": "aws:cdk:logicalId",
-            "data": "AutoScalingGroupActionsstaticsiteinfraASG1999C556"
+            "data": "deployINFRAactionsstaticsiteinfraDF8767E8"
           }
         ],
         "/Static-Site-INFRA/WazuhSecurityGroup": [
@@ -321,32 +338,19 @@
             "type": "aws:cdk:info",
             "data": "Setting logical ID for WazuhSecurityGroup to WazuhSecurityGroup. Reason: Avoid tricky security group replacement during a YAML to GuCDK migration.",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addInfo (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:682)",
-              "Infra.overrideLogicalId (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/constructs/core/stack.ts:236:31)",
-              "new GuWazuhAccess (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/constructs/ec2/security-groups/wazuh.ts:87:11)",
-              "Function.getInstance (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/constructs/ec2/security-groups/wazuh.ts:107:23)",
-              "new GuAutoScalingGroup (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/constructs/autoscaling/asg.ts:117:20)",
-              "new GuEc2App (/Users/nicolas_long/code/actions-static-site/node_modules/@guardian/cdk/src/patterns/ec2-app/base.ts:398:30)",
-              "new Infra (/Users/nicolas_long/code/actions-static-site/cdk/infra.ts:75:15)",
-              "Object.<anonymous> (/Users/nicolas_long/code/actions-static-site/cdk/bin/cdk.ts:7:1)",
-              "Module._compile (node:internal/modules/cjs/loader:1101:14)",
-              "Module.m._compile (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:1618:23)",
-              "Module._extensions..js (node:internal/modules/cjs/loader:1153:10)",
-              "Object.require.extensions.<computed> [as .ts] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:1621:12)",
-              "Module.load (node:internal/modules/cjs/loader:981:32)",
-              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
-              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
-              "phase4 (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/bin.ts:649:14)",
-              "bootstrap (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/bin.ts:95:10)",
-              "main (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/bin.ts:55:10)",
-              "Object.<anonymous> (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/bin.ts:800:3)",
-              "Module._compile (node:internal/modules/cjs/loader:1101:14)",
-              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1153:10)",
-              "Module.load (node:internal/modules/cjs/loader:981:32)",
-              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
-              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
-              "node:internal/main/run_main_module:17:47"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addInfo (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:953)",
+              "Infra.overrideLogicalId (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/constructs/core/stack.ts:237:31)",
+              "new GuWazuhAccess (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/constructs/ec2/security-groups/wazuh.ts:87:11)",
+              "Function.getInstance (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/constructs/ec2/security-groups/wazuh.ts:107:23)",
+              "new GuAutoScalingGroup (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/constructs/autoscaling/asg.ts:133:20)",
+              "new GuEc2App (/Users/mchv/Code/actions-static-site/node_modules/@guardian/cdk/src/patterns/ec2-app/base.ts:389:30)",
+              "new Infra (file:///Users/mchv/Code/actions-static-site/cdk/infra.ts:18:13)",
+              "file:///Users/mchv/Code/actions-static-site/cdk/bin/cdk.ts:1:50",
+              "ModuleJob.run (node:internal/modules/esm/module_job:222:25)",
+              "ModuleLoader.import (node:internal/modules/esm/loader:323:24)",
+              "loadESM (node:internal/process/esm_loader:28:7)",
+              "handleMainPromise (node:internal/modules/run_main:113:12)"
             ]
           }
         ],
@@ -354,6 +358,24 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "WazuhSecurityGroup"
+          }
+        ],
+        "/Static-Site-INFRA/WazuhSecurityGroup/from StaticSiteINFRALoadBalancerActionsstaticsiteinfraSecurityGroupD29867F4:9000": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WazuhSecurityGroupfromStaticSiteINFRALoadBalancerActionsstaticsiteinfraSecurityGroupD29867F49000745E41BC"
+          }
+        ],
+        "/Static-Site-INFRA/WazuhSecurityGroup/from StaticSiteINFRAldpaccess94C4FBAC:9000": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "WazuhSecurityGroupfromStaticSiteINFRAldpaccess94C4FBAC900073A60783"
+          }
+        ],
+        "/Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra/ASG": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AutoScalingGroupActionsstaticsiteinfraASG1999C556"
           }
         ],
         "/Static-Site-INFRA/LoadBalancerActionsstaticsiteinfra/Resource": [
@@ -374,6 +396,12 @@
             "data": "LoadBalancerActionsstaticsiteinfraSecurityGrouptoStaticSiteINFRAGuHttpsEgressSecurityGroupActionsstaticsiteinfraB063E18F9000C039E2DF"
           }
         ],
+        "/Static-Site-INFRA/LoadBalancerActionsstaticsiteinfra/SecurityGroup/to StaticSiteINFRAWazuhSecurityGroup1D5A0DEE:9000": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LoadBalancerActionsstaticsiteinfraSecurityGrouptoStaticSiteINFRAWazuhSecurityGroup1D5A0DEE9000CB04740E"
+          }
+        ],
         "/Static-Site-INFRA/LoadBalancerActionsstaticsiteinfra/LoadBalancerActionsstaticsiteinfra-DnsName": [
           {
             "type": "aws:cdk:logicalId",
@@ -389,32 +417,19 @@
         "/Static-Site-INFRA/ListenerActionsstaticsiteinfra": [
           {
             "type": "aws:cdk:warning",
-            "data": "A default Action already existed on this Listener and was replaced. Configure exactly one default Action.",
+            "data": "A default Action already existed on this Listener and was replaced. Configure exactly one default Action. [ack: @aws-cdk/aws-elbv2:listenerExistingDefaultActionReplaced]",
             "trace": [
-              "Annotations.addMessage (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1213)",
-              "Annotations.addWarning (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:600)",
-              "GuHttpsApplicationListener._setDefaultAction (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/shared/base-listener.js:1:2030)",
-              "GuHttpsApplicationListener.setDefaultAction (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:8439)",
-              "GuHttpsApplicationListener.addAction (/Users/nicolas_long/code/actions-static-site/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:4874)",
-              "new Infra (/Users/nicolas_long/code/actions-static-site/cdk/infra.ts:141:18)",
-              "Object.<anonymous> (/Users/nicolas_long/code/actions-static-site/cdk/bin/cdk.ts:7:1)",
-              "Module._compile (node:internal/modules/cjs/loader:1101:14)",
-              "Module.m._compile (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:1618:23)",
-              "Module._extensions..js (node:internal/modules/cjs/loader:1153:10)",
-              "Object.require.extensions.<computed> [as .ts] (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:1621:12)",
-              "Module.load (node:internal/modules/cjs/loader:981:32)",
-              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
-              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
-              "phase4 (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/bin.ts:649:14)",
-              "bootstrap (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/bin.ts:95:10)",
-              "main (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/bin.ts:55:10)",
-              "Object.<anonymous> (/Users/nicolas_long/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/bin.ts:800:3)",
-              "Module._compile (node:internal/modules/cjs/loader:1101:14)",
-              "Object.Module._extensions..js (node:internal/modules/cjs/loader:1153:10)",
-              "Module.load (node:internal/modules/cjs/loader:981:32)",
-              "Function.Module._load (node:internal/modules/cjs/loader:822:12)",
-              "Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)",
-              "node:internal/main/run_main_module:17:47"
+              "Annotations.addMessage (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:1546)",
+              "Annotations.addWarningV2 (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/core/lib/annotations.js:1:763)",
+              "GuHttpsApplicationListener._setDefaultAction (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/shared/base-listener.js:1:2187)",
+              "GuHttpsApplicationListener.setDefaultAction (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:9082)",
+              "GuHttpsApplicationListener.addAction (/Users/mchv/Code/actions-static-site/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/lib/alb/application-listener.js:1:5487)",
+              "new Infra (file:///Users/mchv/Code/actions-static-site/cdk/infra.ts:18:1664)",
+              "file:///Users/mchv/Code/actions-static-site/cdk/bin/cdk.ts:1:50",
+              "ModuleJob.run (node:internal/modules/esm/module_job:222:25)",
+              "ModuleLoader.import (node:internal/modules/esm/loader:323:24)",
+              "loadESM (node:internal/process/esm_loader:28:7)",
+              "handleMainPromise (node:internal/modules/run_main:113:12)"
             ]
           }
         ],
@@ -422,6 +437,12 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "ListenerActionsstaticsiteinfraB38E4E8D"
+          }
+        ],
+        "/Static-Site-INFRA/ListenerActionsstaticsiteinfra/PRoutRule/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ListenerActionsstaticsiteinfraPRoutRuleD8174B2D"
           }
         ],
         "/Static-Site-INFRA/High5xxPercentageAlarmActionsstaticsiteinfra/Resource": [
@@ -474,6 +495,12 @@
         ]
       },
       "displayName": "Static-Site-INFRA"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
     }
   }
 }
