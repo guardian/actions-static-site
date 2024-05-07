@@ -11,8 +11,11 @@ inputs:
     description: 'Name of artifact containing the static site. Should be uploaded in an earlier workflow step.'
     required: false
     default: 'artifact'
-  guActionsRiffRaffRoleArn:
+  roleArn:
     description: "Role to use for writing to Riffraff's AWS bucket (typically org secret of same name)."
+    required: true
+  githubToken:
+    description: "Plop"
     required: true
   dryRun:
     description: 'If set to true, will not upload Riffraff artifact.'
@@ -48,8 +51,8 @@ runs:
     - uses: guardian/actions-riff-raff@v4
       with:
         app: ${{ inputs.app }}
-        roleArn: ${{ inputs.guActionsRiffRaffRoleArn }}
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
+        roleArn: ${{ inputs.roleArn }}
+        githubToken: ${{ inputs.githubToken }}
         dryRun: ${{ inputs.dryRun }}
         contentDirectories: |
           cfn: [${{github.action_path}}/cfn.json]
