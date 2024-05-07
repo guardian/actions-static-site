@@ -4,32 +4,34 @@
     "id": "App",
     "path": "",
     "children": {
-      "Tree": {
-        "id": "Tree",
-        "path": "Tree",
-        "constructInfo": {
-          "fqn": "constructs.Construct",
-          "version": "10.1.155"
-        }
-      },
       "Static-Site-INFRA": {
         "id": "Static-Site-INFRA",
         "path": "Static-Site-INFRA",
         "children": {
-          "static": {
-            "id": "static",
-            "path": "Static-Site-INFRA/static",
+          "staticActionsstaticsiteinfra": {
+            "id": "staticActionsstaticsiteinfra",
+            "path": "Static-Site-INFRA/staticActionsstaticsiteinfra",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "Static-Site-INFRA/static/Resource",
+                "path": "Static-Site-INFRA/staticActionsstaticsiteinfra/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
                   "aws:cdk:cloudformation:props": {
+                    "publicAccessBlockConfiguration": {
+                      "blockPublicAcls": true,
+                      "blockPublicPolicy": true,
+                      "ignorePublicAcls": true,
+                      "restrictPublicBuckets": true
+                    },
                     "tags": [
                       {
+                        "key": "App",
+                        "value": "actions-static-site-infra"
+                      },
+                      {
                         "key": "gu:cdk:version",
-                        "value": "48.5.1"
+                        "value": "58.0.0"
                       },
                       {
                         "key": "gu:repo",
@@ -51,13 +53,154 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "Static-Site-INFRA/staticActionsstaticsiteinfra/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "Static-Site-INFRA/staticActionsstaticsiteinfra/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "staticD8C87B36"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "s3:PutObject",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-PROD"
+                              },
+                              "Resource": {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "staticD8C87B36",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "/galaxies.gutools.co.uk/data/*"
+                                  ]
+                                ]
+                              }
+                            },
+                            {
+                              "Action": "s3:ListBucket",
+                              "Condition": {
+                                "StringLike": {
+                                  "s3:prefix": [
+                                    "galaxies.gutools.co.uk/data/*"
+                                  ]
+                                }
+                              },
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-PROD"
+                              },
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "staticD8C87B36",
+                                  "Arn"
+                                ]
+                              }
+                            },
+                            {
+                              "Action": "s3:PutObject",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": [
+                                  {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":iam::702972749545:root"
+                                      ]
+                                    ]
+                                  },
+                                  "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-CODE"
+                                ]
+                              },
+                              "Resource": {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "staticD8C87B36",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "/galaxies.code.dev-gutools.co.uk/data/*"
+                                  ]
+                                ]
+                              }
+                            },
+                            {
+                              "Action": "s3:ListBucket",
+                              "Condition": {
+                                "StringLike": {
+                                  "s3:prefix": [
+                                    "galaxies.code.dev-gutools.co.uk/data/*"
+                                  ]
+                                }
+                              },
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": [
+                                  {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":iam::702972749545:root"
+                                      ]
+                                    ]
+                                  },
+                                  "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-CODE"
+                                ]
+                              },
+                              "Resource": {
+                                "Fn::GetAtt": [
+                                  "staticD8C87B36",
+                                  "Arn"
+                                ]
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                      "version": "2.136.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_s3.Bucket",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "DistributionBucketName": {
@@ -65,7 +208,7 @@
             "path": "Static-Site-INFRA/DistributionBucketName",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "AnghammaradSnsArn": {
@@ -73,7 +216,7 @@
             "path": "Static-Site-INFRA/AnghammaradSnsArn",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "VpcId": {
@@ -81,7 +224,7 @@
             "path": "Static-Site-INFRA/VpcId",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "VPCActionsstaticsiteinfra": {
@@ -89,7 +232,7 @@
             "path": "Static-Site-INFRA/VPCActionsstaticsiteinfra",
             "constructInfo": {
               "fqn": "aws-cdk-lib.Resource",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "actions-static-site-infraPrivateSubnets": {
@@ -97,15 +240,15 @@
             "path": "Static-Site-INFRA/actions-static-site-infraPrivateSubnets",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
-          "subnet-#{Token[TOKEN.375]}": {
-            "id": "subnet-#{Token[TOKEN.375]}",
-            "path": "Static-Site-INFRA/subnet-#{Token[TOKEN.375]}",
+          "subnet-#{Token[TOKEN.843]}": {
+            "id": "subnet-#{Token[TOKEN.843]}",
+            "path": "Static-Site-INFRA/subnet-#{Token[TOKEN.843]}",
             "constructInfo": {
               "fqn": "aws-cdk-lib.Resource",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "actions-static-site-infraPublicSubnets": {
@@ -113,15 +256,15 @@
             "path": "Static-Site-INFRA/actions-static-site-infraPublicSubnets",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
-          "subnet-#{Token[TOKEN.378]}": {
-            "id": "subnet-#{Token[TOKEN.378]}",
-            "path": "Static-Site-INFRA/subnet-#{Token[TOKEN.378]}",
+          "subnet-#{Token[TOKEN.846]}": {
+            "id": "subnet-#{Token[TOKEN.846]}",
+            "path": "Static-Site-INFRA/subnet-#{Token[TOKEN.846]}",
             "constructInfo": {
               "fqn": "aws-cdk-lib.Resource",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "actions-static-site-infra": {
@@ -129,7 +272,7 @@
             "path": "Static-Site-INFRA/actions-static-site-infra",
             "constructInfo": {
               "fqn": "constructs.Construct",
-              "version": "10.1.155"
+              "version": "10.3.0"
             }
           },
           "CertificateActionsstaticsiteinfra": {
@@ -150,7 +293,7 @@
                       },
                       {
                         "key": "gu:cdk:version",
-                        "value": "48.5.1"
+                        "value": "58.0.0"
                       },
                       {
                         "key": "gu:repo",
@@ -174,19 +317,27 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_certificatemanager.CfnCertificate",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_certificatemanager.Certificate",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "InstanceRoleActionsstaticsiteinfra": {
             "id": "InstanceRoleActionsstaticsiteinfra",
             "path": "Static-Site-INFRA/InstanceRoleActionsstaticsiteinfra",
             "children": {
+              "ImportInstanceRoleActionsstaticsiteinfra": {
+                "id": "ImportInstanceRoleActionsstaticsiteinfra",
+                "path": "Static-Site-INFRA/InstanceRoleActionsstaticsiteinfra/ImportInstanceRoleActionsstaticsiteinfra",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.136.1"
+                }
+              },
               "Resource": {
                 "id": "Resource",
                 "path": "Static-Site-INFRA/InstanceRoleActionsstaticsiteinfra/Resource",
@@ -213,7 +364,7 @@
                       },
                       {
                         "key": "gu:cdk:version",
-                        "value": "48.5.1"
+                        "value": "58.0.0"
                       },
                       {
                         "key": "gu:repo",
@@ -232,7 +383,7 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_iam.CfnRole",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               },
               "DefaultPolicy": {
@@ -290,28 +441,28 @@
                     },
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                      "version": "2.50.0"
+                      "version": "2.136.1"
                     }
                   }
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_iam.Policy",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_iam.Role",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
-          "SSMRunCommandPolicy": {
-            "id": "SSMRunCommandPolicy",
-            "path": "Static-Site-INFRA/SSMRunCommandPolicy",
+          "SsmSshPolicy": {
+            "id": "SsmSshPolicy",
+            "path": "Static-Site-INFRA/SsmSshPolicy",
             "children": {
               "Resource": {
                 "id": "Resource",
-                "path": "Static-Site-INFRA/SSMRunCommandPolicy/Resource",
+                "path": "Static-Site-INFRA/SsmSshPolicy/Resource",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
                   "aws:cdk:cloudformation:props": {
@@ -340,7 +491,7 @@
                       ],
                       "Version": "2012-10-17"
                     },
-                    "policyName": "ssm-run-command-policy",
+                    "policyName": "ssm-ssh-policy",
                     "roles": [
                       {
                         "Ref": "InstanceRoleActionsstaticsiteinfraD51E27A3"
@@ -350,13 +501,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_iam.Policy",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "DescribeEC2Policy": {
@@ -394,13 +545,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_iam.Policy",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "LoggingStreamName": {
@@ -408,7 +559,7 @@
             "path": "Static-Site-INFRA/LoggingStreamName",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "GuLogShippingPolicy": {
@@ -458,13 +609,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_iam.Policy",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "GetDistributablePolicyActionsstaticsiteinfra": {
@@ -508,13 +659,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_iam.Policy",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "ParameterStoreReadActionsstaticsiteinfra": {
@@ -577,13 +728,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_iam.Policy",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "AMIActionsstaticsiteinfra": {
@@ -591,7 +742,7 @@
             "path": "Static-Site-INFRA/AMIActionsstaticsiteinfra",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "GuHttpsEgressSecurityGroupActionsstaticsiteinfra": {
@@ -621,7 +772,7 @@
                       },
                       {
                         "key": "gu:cdk:version",
-                        "value": "48.5.1"
+                        "value": "58.0.0"
                       },
                       {
                         "key": "gu:repo",
@@ -643,7 +794,7 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               },
               "from StaticSiteINFRALoadBalancerActionsstaticsiteinfraSecurityGroupD29867F4:9000": {
@@ -652,7 +803,6 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
                   "aws:cdk:cloudformation:props": {
-                    "ipProtocol": "tcp",
                     "description": "Load balancer to target",
                     "fromPort": 9000,
                     "groupId": {
@@ -661,6 +811,7 @@
                         "GroupId"
                       ]
                     },
+                    "ipProtocol": "tcp",
                     "sourceSecurityGroupId": {
                       "Fn::GetAtt": [
                         "LoadBalancerActionsstaticsiteinfraSecurityGroupA0EF5325",
@@ -672,7 +823,7 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               },
               "from StaticSiteINFRAldpaccess94C4FBAC:9000": {
@@ -681,7 +832,6 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
                   "aws:cdk:cloudformation:props": {
-                    "ipProtocol": "tcp",
                     "description": "Load balancer to target",
                     "fromPort": 9000,
                     "groupId": {
@@ -690,6 +840,7 @@
                         "GroupId"
                       ]
                     },
+                    "ipProtocol": "tcp",
                     "sourceSecurityGroupId": {
                       "Fn::GetAtt": [
                         "ldpaccess567AC006",
@@ -701,22 +852,22 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
-          "AutoScalingGroupActionsstaticsiteinfra": {
-            "id": "AutoScalingGroupActionsstaticsiteinfra",
-            "path": "Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra",
+          "deploy-INFRA-actions-static-site-infra": {
+            "id": "deploy-INFRA-actions-static-site-infra",
+            "path": "Static-Site-INFRA/deploy-INFRA-actions-static-site-infra",
             "children": {
-              "InstanceProfile": {
-                "id": "InstanceProfile",
-                "path": "Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra/InstanceProfile",
+              "Profile": {
+                "id": "Profile",
+                "path": "Static-Site-INFRA/deploy-INFRA-actions-static-site-infra/Profile",
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::IAM::InstanceProfile",
                   "aws:cdk:cloudformation:props": {
@@ -729,140 +880,166 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_iam.CfnInstanceProfile",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               },
-              "LaunchConfig": {
-                "id": "LaunchConfig",
-                "path": "Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra/LaunchConfig",
+              "Resource": {
+                "id": "Resource",
+                "path": "Static-Site-INFRA/deploy-INFRA-actions-static-site-infra/Resource",
                 "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::LaunchConfiguration",
+                  "aws:cdk:cloudformation:type": "AWS::EC2::LaunchTemplate",
                   "aws:cdk:cloudformation:props": {
-                    "imageId": {
-                      "Ref": "AMIActionsstaticsiteinfra"
-                    },
-                    "instanceType": "t4g.nano",
-                    "iamInstanceProfile": {
-                      "Ref": "AutoScalingGroupActionsstaticsiteinfraInstanceProfileFFD49CA1"
-                    },
-                    "metadataOptions": {
-                      "httpTokens": "required"
-                    },
-                    "securityGroups": [
-                      {
-                        "Fn::GetAtt": [
-                          "GuHttpsEgressSecurityGroupActionsstaticsiteinfra8D91B5B4",
-                          "GroupId"
-                        ]
-                      },
-                      {
-                        "Fn::GetAtt": [
-                          "WazuhSecurityGroup",
-                          "GroupId"
-                        ]
-                      }
-                    ],
-                    "userData": {
-                      "Fn::Base64": {
-                        "Fn::Join": [
-                          "",
-                          [
-                            "#!/bin/bash -ev\ncat << EOF > /etc/systemd/system/actions-static-site-infra.service\n[Unit]\nDescription=Static Site service\n\n[Service]\nEnvironment=\"BUCKET=",
-                            {
-                              "Ref": "staticD8C87B36"
-                            },
-                            "\"\nEnvironment=\"PORT=9000\"\nExecStart=/actions-static-site-infra\n\n[Install]\nWantedBy=multi-user.target\nEOF\n\naws s3 cp s3://",
-                            {
-                              "Ref": "DistributionBucketName"
-                            },
-                            "/deploy/INFRA/actions-static-site-infra/static-site-service /actions-static-site-infra\nchmod +x /actions-static-site-infra\nsystemctl start actions-static-site-infra\n"
+                    "launchTemplateData": {
+                      "iamInstanceProfile": {
+                        "arn": {
+                          "Fn::GetAtt": [
+                            "deployINFRAactionsstaticsiteinfraProfileF5A0DA62",
+                            "Arn"
                           ]
+                        }
+                      },
+                      "imageId": {
+                        "Ref": "AMIActionsstaticsiteinfra"
+                      },
+                      "instanceType": "t4g.nano",
+                      "securityGroupIds": [
+                        {
+                          "Fn::GetAtt": [
+                            "GuHttpsEgressSecurityGroupActionsstaticsiteinfra8D91B5B4",
+                            "GroupId"
+                          ]
+                        },
+                        {
+                          "Fn::GetAtt": [
+                            "WazuhSecurityGroup",
+                            "GroupId"
+                          ]
+                        }
+                      ],
+                      "tagSpecifications": [
+                        {
+                          "resourceType": "instance",
+                          "tags": [
+                            {
+                              "key": "App",
+                              "value": "actions-static-site-infra"
+                            },
+                            {
+                              "key": "gu:cdk:version",
+                              "value": "58.0.0"
+                            },
+                            {
+                              "key": "gu:repo",
+                              "value": "guardian/actions-static-site"
+                            },
+                            {
+                              "key": "Name",
+                              "value": "Static-Site-INFRA/deploy-INFRA-actions-static-site-infra"
+                            },
+                            {
+                              "key": "Stack",
+                              "value": "deploy"
+                            },
+                            {
+                              "key": "Stage",
+                              "value": "INFRA"
+                            }
+                          ]
+                        },
+                        {
+                          "resourceType": "volume",
+                          "tags": [
+                            {
+                              "key": "App",
+                              "value": "actions-static-site-infra"
+                            },
+                            {
+                              "key": "gu:cdk:version",
+                              "value": "58.0.0"
+                            },
+                            {
+                              "key": "gu:repo",
+                              "value": "guardian/actions-static-site"
+                            },
+                            {
+                              "key": "Name",
+                              "value": "Static-Site-INFRA/deploy-INFRA-actions-static-site-infra"
+                            },
+                            {
+                              "key": "Stack",
+                              "value": "deploy"
+                            },
+                            {
+                              "key": "Stage",
+                              "value": "INFRA"
+                            }
+                          ]
+                        }
+                      ],
+                      "userData": {
+                        "Fn::Base64": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              "#!/bin/bash -ev\ncat << EOF > /etc/systemd/system/actions-static-site-infra.service\n[Unit]\nDescription=Static Site service\n\n[Service]\nEnvironment=\"BUCKET=",
+                              {
+                                "Ref": "staticD8C87B36"
+                              },
+                              "\"\nEnvironment=\"PORT=9000\"\nExecStart=/actions-static-site-infra\n\n[Install]\nWantedBy=multi-user.target\nEOF\n\naws s3 cp s3://",
+                              {
+                                "Ref": "DistributionBucketName"
+                              },
+                              "/deploy/INFRA/actions-static-site-infra/static-site-service /actions-static-site-infra\nchmod +x /actions-static-site-infra\nsystemctl start actions-static-site-infra\n"
+                            ]
+                          ]
+                        }
+                      },
+                      "metadataOptions": {
+                        "httpTokens": "required"
+                      }
+                    },
+                    "tagSpecifications": [
+                      {
+                        "resourceType": "launch-template",
+                        "tags": [
+                          {
+                            "key": "App",
+                            "value": "actions-static-site-infra"
+                          },
+                          {
+                            "key": "gu:cdk:version",
+                            "value": "58.0.0"
+                          },
+                          {
+                            "key": "gu:repo",
+                            "value": "guardian/actions-static-site"
+                          },
+                          {
+                            "key": "Name",
+                            "value": "Static-Site-INFRA/deploy-INFRA-actions-static-site-infra"
+                          },
+                          {
+                            "key": "Stack",
+                            "value": "deploy"
+                          },
+                          {
+                            "key": "Stage",
+                            "value": "INFRA"
+                          }
                         ]
                       }
-                    }
+                    ]
                   }
                 },
                 "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnLaunchConfiguration",
-                  "version": "2.50.0"
-                }
-              },
-              "ASG": {
-                "id": "ASG",
-                "path": "Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra/ASG",
-                "attributes": {
-                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
-                  "aws:cdk:cloudformation:props": {
-                    "maxSize": "2",
-                    "minSize": "1",
-                    "healthCheckGracePeriod": 120,
-                    "healthCheckType": "ELB",
-                    "launchConfigurationName": {
-                      "Ref": "AutoScalingGroupActionsstaticsiteinfraLaunchConfig42A40D8F"
-                    },
-                    "tags": [
-                      {
-                        "key": "App",
-                        "value": "actions-static-site-infra",
-                        "propagateAtLaunch": true
-                      },
-                      {
-                        "key": "gu:cdk:version",
-                        "value": "48.5.1",
-                        "propagateAtLaunch": true
-                      },
-                      {
-                        "key": "gu:repo",
-                        "value": "guardian/actions-static-site",
-                        "propagateAtLaunch": true
-                      },
-                      {
-                        "key": "LogKinesisStreamName",
-                        "value": {
-                          "Ref": "LoggingStreamName"
-                        },
-                        "propagateAtLaunch": true
-                      },
-                      {
-                        "key": "Name",
-                        "value": "Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra",
-                        "propagateAtLaunch": true
-                      },
-                      {
-                        "key": "Stack",
-                        "value": "deploy",
-                        "propagateAtLaunch": true
-                      },
-                      {
-                        "key": "Stage",
-                        "value": "INFRA",
-                        "propagateAtLaunch": true
-                      },
-                      {
-                        "key": "SystemdUnit",
-                        "value": "actions-static-site-infra.service",
-                        "propagateAtLaunch": true
-                      }
-                    ],
-                    "targetGroupArns": [
-                      {
-                        "Ref": "TargetGroupActionsstaticsiteinfra15D19638"
-                      }
-                    ],
-                    "vpcZoneIdentifier": {
-                      "Ref": "actionsstaticsiteinfraPrivateSubnets"
-                    }
-                  }
-                },
-                "constructInfo": {
-                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnAutoScalingGroup",
-                  "version": "2.50.0"
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnLaunchTemplate",
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
-              "fqn": "aws-cdk-lib.aws_autoscaling.AutoScalingGroup",
-              "version": "2.50.0"
+              "fqn": "aws-cdk-lib.aws_ec2.LaunchTemplate",
+              "version": "2.136.1"
             }
           },
           "WazuhSecurityGroup": {
@@ -894,8 +1071,12 @@
                     ],
                     "tags": [
                       {
+                        "key": "App",
+                        "value": "actions-static-site-infra"
+                      },
+                      {
                         "key": "gu:cdk:version",
-                        "value": "48.5.1"
+                        "value": "58.0.0"
                       },
                       {
                         "key": "gu:repo",
@@ -917,13 +1098,156 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
+                }
+              },
+              "from StaticSiteINFRALoadBalancerActionsstaticsiteinfraSecurityGroupD29867F4:9000": {
+                "id": "from StaticSiteINFRALoadBalancerActionsstaticsiteinfraSecurityGroupD29867F4:9000",
+                "path": "Static-Site-INFRA/WazuhSecurityGroup/from StaticSiteINFRALoadBalancerActionsstaticsiteinfraSecurityGroupD29867F4:9000",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Load balancer to target",
+                    "fromPort": 9000,
+                    "groupId": {
+                      "Fn::GetAtt": [
+                        "WazuhSecurityGroup",
+                        "GroupId"
+                      ]
+                    },
+                    "ipProtocol": "tcp",
+                    "sourceSecurityGroupId": {
+                      "Fn::GetAtt": [
+                        "LoadBalancerActionsstaticsiteinfraSecurityGroupA0EF5325",
+                        "GroupId"
+                      ]
+                    },
+                    "toPort": 9000
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                  "version": "2.136.1"
+                }
+              },
+              "from StaticSiteINFRAldpaccess94C4FBAC:9000": {
+                "id": "from StaticSiteINFRAldpaccess94C4FBAC:9000",
+                "path": "Static-Site-INFRA/WazuhSecurityGroup/from StaticSiteINFRAldpaccess94C4FBAC:9000",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Load balancer to target",
+                    "fromPort": 9000,
+                    "groupId": {
+                      "Fn::GetAtt": [
+                        "WazuhSecurityGroup",
+                        "GroupId"
+                      ]
+                    },
+                    "ipProtocol": "tcp",
+                    "sourceSecurityGroupId": {
+                      "Fn::GetAtt": [
+                        "ldpaccess567AC006",
+                        "GroupId"
+                      ]
+                    },
+                    "toPort": 9000
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
-              "version": "2.50.0"
+              "version": "2.136.1"
+            }
+          },
+          "AutoScalingGroupActionsstaticsiteinfra": {
+            "id": "AutoScalingGroupActionsstaticsiteinfra",
+            "path": "Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra",
+            "children": {
+              "ASG": {
+                "id": "ASG",
+                "path": "Static-Site-INFRA/AutoScalingGroupActionsstaticsiteinfra/ASG",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "healthCheckGracePeriod": 120,
+                    "healthCheckType": "ELB",
+                    "launchTemplate": {
+                      "launchTemplateId": {
+                        "Ref": "deployINFRAactionsstaticsiteinfraDF8767E8"
+                      },
+                      "version": {
+                        "Fn::GetAtt": [
+                          "deployINFRAactionsstaticsiteinfraDF8767E8",
+                          "LatestVersionNumber"
+                        ]
+                      }
+                    },
+                    "maxSize": "2",
+                    "minSize": "1",
+                    "tags": [
+                      {
+                        "key": "App",
+                        "value": "actions-static-site-infra",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.0.0",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/actions-static-site",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "LogKinesisStreamName",
+                        "value": {
+                          "Ref": "LoggingStreamName"
+                        },
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "deploy",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "INFRA",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "SystemdUnit",
+                        "value": "actions-static-site-infra.service",
+                        "propagateAtLaunch": true
+                      }
+                    ],
+                    "targetGroupArns": [
+                      {
+                        "Ref": "TargetGroupActionsstaticsiteinfra15D19638"
+                      }
+                    ],
+                    "vpcZoneIdentifier": {
+                      "Ref": "actionsstaticsiteinfraPrivateSubnets"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnAutoScalingGroup",
+                  "version": "2.136.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_autoscaling.AutoScalingGroup",
+              "version": "2.136.1"
             }
           },
           "LoadBalancerActionsstaticsiteinfra": {
@@ -939,6 +1263,14 @@
                     "loadBalancerAttributes": [
                       {
                         "key": "deletion_protection.enabled",
+                        "value": "true"
+                      },
+                      {
+                        "key": "routing.http.x_amzn_tls_version_and_cipher_suite.enabled",
+                        "value": "true"
+                      },
+                      {
+                        "key": "routing.http.drop_invalid_header_fields.enabled",
                         "value": "true"
                       }
                     ],
@@ -967,7 +1299,7 @@
                       },
                       {
                         "key": "gu:cdk:version",
-                        "value": "48.5.1"
+                        "value": "58.0.0"
                       },
                       {
                         "key": "gu:repo",
@@ -987,7 +1319,7 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               },
               "SecurityGroup": {
@@ -1001,6 +1333,15 @@
                       "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
                       "aws:cdk:cloudformation:props": {
                         "groupDescription": "Automatically created Security Group for ELB StaticSiteINFRALoadBalancerActionsstaticsiteinfraA0CD502C",
+                        "securityGroupEgress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "ipProtocol": "tcp",
+                            "fromPort": 443,
+                            "toPort": 443,
+                            "description": "Allow to IdP endpoint"
+                          }
+                        ],
                         "securityGroupIngress": [
                           {
                             "cidrIp": "0.0.0.0/0",
@@ -1017,7 +1358,7 @@
                           },
                           {
                             "key": "gu:cdk:version",
-                            "value": "48.5.1"
+                            "value": "58.0.0"
                           },
                           {
                             "key": "gu:repo",
@@ -1039,7 +1380,7 @@
                     },
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
-                      "version": "2.50.0"
+                      "version": "2.136.1"
                     }
                   },
                   "to StaticSiteINFRAGuHttpsEgressSecurityGroupActionsstaticsiteinfraB063E18F:9000": {
@@ -1048,13 +1389,6 @@
                     "attributes": {
                       "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupEgress",
                       "aws:cdk:cloudformation:props": {
-                        "groupId": {
-                          "Fn::GetAtt": [
-                            "LoadBalancerActionsstaticsiteinfraSecurityGroupA0EF5325",
-                            "GroupId"
-                          ]
-                        },
-                        "ipProtocol": "tcp",
                         "description": "Load balancer to target",
                         "destinationSecurityGroupId": {
                           "Fn::GetAtt": [
@@ -1063,18 +1397,54 @@
                           ]
                         },
                         "fromPort": 9000,
+                        "groupId": {
+                          "Fn::GetAtt": [
+                            "LoadBalancerActionsstaticsiteinfraSecurityGroupA0EF5325",
+                            "GroupId"
+                          ]
+                        },
+                        "ipProtocol": "tcp",
                         "toPort": 9000
                       }
                     },
                     "constructInfo": {
                       "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupEgress",
-                      "version": "2.50.0"
+                      "version": "2.136.1"
+                    }
+                  },
+                  "to StaticSiteINFRAWazuhSecurityGroup1D5A0DEE:9000": {
+                    "id": "to StaticSiteINFRAWazuhSecurityGroup1D5A0DEE:9000",
+                    "path": "Static-Site-INFRA/LoadBalancerActionsstaticsiteinfra/SecurityGroup/to StaticSiteINFRAWazuhSecurityGroup1D5A0DEE:9000",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupEgress",
+                      "aws:cdk:cloudformation:props": {
+                        "description": "Load balancer to target",
+                        "destinationSecurityGroupId": {
+                          "Fn::GetAtt": [
+                            "WazuhSecurityGroup",
+                            "GroupId"
+                          ]
+                        },
+                        "fromPort": 9000,
+                        "groupId": {
+                          "Fn::GetAtt": [
+                            "LoadBalancerActionsstaticsiteinfraSecurityGroupA0EF5325",
+                            "GroupId"
+                          ]
+                        },
+                        "ipProtocol": "tcp",
+                        "toPort": 9000
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupEgress",
+                      "version": "2.136.1"
                     }
                   }
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               },
               "LoadBalancerActionsstaticsiteinfra-DnsName": {
@@ -1082,13 +1452,13 @@
                 "path": "Static-Site-INFRA/LoadBalancerActionsstaticsiteinfra/LoadBalancerActionsstaticsiteinfra-DnsName",
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.CfnOutput",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "TargetGroupActionsstaticsiteinfra": {
@@ -1115,7 +1485,7 @@
                       },
                       {
                         "key": "gu:cdk:version",
-                        "value": "48.5.1"
+                        "value": "58.0.0"
                       },
                       {
                         "key": "gu:repo",
@@ -1149,13 +1519,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationTargetGroup",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "ListenerActionsstaticsiteinfra": {
@@ -1168,6 +1538,13 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
                   "aws:cdk:cloudformation:props": {
+                    "certificates": [
+                      {
+                        "certificateArn": {
+                          "Ref": "CertificateActionsstaticsiteinfraCE4B6BA6"
+                        }
+                      }
+                    ],
                     "defaultActions": [
                       {
                         "type": "authenticate-oidc",
@@ -1198,26 +1575,64 @@
                     "loadBalancerArn": {
                       "Ref": "LoadBalancerActionsstaticsiteinfra153C4C62"
                     },
-                    "certificates": [
-                      {
-                        "certificateArn": {
-                          "Ref": "CertificateActionsstaticsiteinfraCE4B6BA6"
-                        }
-                      }
-                    ],
                     "port": 443,
                     "protocol": "HTTPS"
                   }
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
+                }
+              },
+              "PRoutRule": {
+                "id": "PRoutRule",
+                "path": "Static-Site-INFRA/ListenerActionsstaticsiteinfra/PRoutRule",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "Static-Site-INFRA/ListenerActionsstaticsiteinfra/PRoutRule/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::ListenerRule",
+                      "aws:cdk:cloudformation:props": {
+                        "actions": [
+                          {
+                            "type": "forward",
+                            "targetGroupArn": {
+                              "Ref": "TargetGroupActionsstaticsiteinfra15D19638"
+                            }
+                          }
+                        ],
+                        "conditions": [
+                          {
+                            "field": "path-pattern",
+                            "pathPatternConfig": {
+                              "values": [
+                                "**/_prout"
+                              ]
+                            }
+                          }
+                        ],
+                        "listenerArn": {
+                          "Ref": "ListenerActionsstaticsiteinfraB38E4E8D"
+                        },
+                        "priority": 1
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListenerRule",
+                      "version": "2.136.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListenerRule",
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "High5xxPercentageAlarmActionsstaticsiteinfra": {
@@ -1230,8 +1645,6 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
                   "aws:cdk:cloudformation:props": {
-                    "comparisonOperator": "GreaterThanThreshold",
-                    "evaluationPeriods": 60,
                     "actionsEnabled": true,
                     "alarmActions": [
                       {
@@ -1251,7 +1664,9 @@
                       }
                     ],
                     "alarmDescription": "actions-static-site-infra exceeded 1% error rate",
-                    "alarmName": "High 5XX error % from actions-static-site-infra in INFRA",
+                    "alarmName": "High 5XX error percentage from actions-static-site-infra in INFRA",
+                    "comparisonOperator": "GreaterThanThreshold",
+                    "evaluationPeriods": 60,
                     "metrics": [
                       {
                         "expression": "100*(m1+m2)/m3",
@@ -1334,13 +1749,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_cloudwatch.Alarm",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "SnsTopicForHigh5xxPercentageAlarmActionsstaticsiteinfra": {
@@ -1348,7 +1763,7 @@
             "path": "Static-Site-INFRA/SnsTopicForHigh5xxPercentageAlarmActionsstaticsiteinfra",
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_sns.TopicBase",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "UnhealthyInstancesAlarmActionsstaticsiteinfra": {
@@ -1361,8 +1776,6 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
                   "aws:cdk:cloudformation:props": {
-                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
-                    "evaluationPeriods": 60,
                     "actionsEnabled": true,
                     "alarmActions": [
                       {
@@ -1383,6 +1796,7 @@
                     ],
                     "alarmDescription": "actions-static-site-infra's instances have failed healthchecks several times over the last 1 hour.\n      This typically results in the AutoScaling Group cycling instances and can lead to problems with deployment,\n      scaling or handling traffic spikes.\n\n      Check actions-static-site-infra's application logs or ssh onto an unhealthy instance in order to debug these problems.",
                     "alarmName": "Unhealthy instances for actions-static-site-infra in INFRA",
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
                     "datapointsToAlarm": 30,
                     "dimensions": [
                       {
@@ -1446,6 +1860,7 @@
                         }
                       }
                     ],
+                    "evaluationPeriods": 60,
                     "metricName": "UnHealthyHostCount",
                     "namespace": "AWS/ApplicationELB",
                     "period": 60,
@@ -1456,13 +1871,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_cloudwatch.Alarm",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "SnsTopicForUnhealthyInstancesAlarmActionsstaticsiteinfra": {
@@ -1470,7 +1885,7 @@
             "path": "Static-Site-INFRA/SnsTopicForUnhealthyInstancesAlarmActionsstaticsiteinfra",
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_sns.TopicBase",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "vpc": {
@@ -1478,7 +1893,7 @@
             "path": "Static-Site-INFRA/vpc",
             "constructInfo": {
               "fqn": "aws-cdk-lib.Resource",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "ldp-access": {
@@ -1501,8 +1916,12 @@
                     ],
                     "tags": [
                       {
+                        "key": "App",
+                        "value": "actions-static-site-infra"
+                      },
+                      {
                         "key": "gu:cdk:version",
-                        "value": "48.5.1"
+                        "value": "58.0.0"
                       },
                       {
                         "key": "gu:repo",
@@ -1524,13 +1943,13 @@
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "clientID.Parameter": {
@@ -1538,7 +1957,7 @@
             "path": "Static-Site-INFRA/clientID.Parameter",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "clientID": {
@@ -1546,7 +1965,7 @@
             "path": "Static-Site-INFRA/clientID",
             "constructInfo": {
               "fqn": "aws-cdk-lib.Resource",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "static-site.gutools.co.uk-DnsRecordSet": {
@@ -1554,7 +1973,7 @@
             "path": "Static-Site-INFRA/static-site.gutools.co.uk-DnsRecordSet",
             "constructInfo": {
               "fqn": "constructs.Construct",
-              "version": "10.1.155"
+              "version": "10.3.0"
             }
           },
           "DNS": {
@@ -1562,7 +1981,7 @@
             "path": "Static-Site-INFRA/DNS",
             "constructInfo": {
               "fqn": "aws-cdk-lib.CfnResource",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "static-site-bucket": {
@@ -1575,29 +1994,30 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
                   "aws:cdk:cloudformation:props": {
-                    "type": "String",
-                    "value": {
-                      "Ref": "staticD8C87B36"
-                    },
                     "description": "Bucket for static sites.",
                     "name": "/INFRA/deploy/actions-static-site-infra/bucket",
                     "tags": {
-                      "gu:cdk:version": "48.5.1",
+                      "App": "actions-static-site-infra",
+                      "gu:cdk:version": "58.0.0",
                       "gu:repo": "guardian/actions-static-site",
                       "Stack": "deploy",
                       "Stage": "INFRA"
+                    },
+                    "type": "String",
+                    "value": {
+                      "Ref": "staticD8C87B36"
                     }
                   }
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "static-site-alb-dns-name": {
@@ -1610,32 +2030,33 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
                   "aws:cdk:cloudformation:props": {
+                    "description": "ALB DNS name for static sites.",
+                    "name": "/INFRA/deploy/actions-static-site-infra/loadBalancerDnsName",
+                    "tags": {
+                      "App": "actions-static-site-infra",
+                      "gu:cdk:version": "58.0.0",
+                      "gu:repo": "guardian/actions-static-site",
+                      "Stack": "deploy",
+                      "Stage": "INFRA"
+                    },
                     "type": "String",
                     "value": {
                       "Fn::GetAtt": [
                         "LoadBalancerActionsstaticsiteinfra153C4C62",
                         "DNSName"
                       ]
-                    },
-                    "description": "ALB DNS name for static sites.",
-                    "name": "/INFRA/deploy/actions-static-site-infra/loadBalancerDnsName",
-                    "tags": {
-                      "gu:cdk:version": "48.5.1",
-                      "gu:repo": "guardian/actions-static-site",
-                      "Stack": "deploy",
-                      "Stage": "INFRA"
                     }
                   }
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           },
           "static-site-lisener-arn": {
@@ -1648,41 +2069,50 @@
                 "attributes": {
                   "aws:cdk:cloudformation:type": "AWS::SSM::Parameter",
                   "aws:cdk:cloudformation:props": {
-                    "type": "String",
-                    "value": {
-                      "Ref": "ListenerActionsstaticsiteinfraB38E4E8D"
-                    },
                     "description": "Listener ARN for static sites.",
                     "name": "/INFRA/deploy/actions-static-site-infra/listenerArn",
                     "tags": {
-                      "gu:cdk:version": "48.5.1",
+                      "App": "actions-static-site-infra",
+                      "gu:cdk:version": "58.0.0",
                       "gu:repo": "guardian/actions-static-site",
                       "Stack": "deploy",
                       "Stage": "INFRA"
+                    },
+                    "type": "String",
+                    "value": {
+                      "Ref": "ListenerActionsstaticsiteinfraB38E4E8D"
                     }
                   }
                 },
                 "constructInfo": {
                   "fqn": "aws-cdk-lib.aws_ssm.CfnParameter",
-                  "version": "2.50.0"
+                  "version": "2.136.1"
                 }
               }
             },
             "constructInfo": {
               "fqn": "aws-cdk-lib.aws_ssm.StringParameter",
-              "version": "2.50.0"
+              "version": "2.136.1"
             }
           }
         },
         "constructInfo": {
           "fqn": "aws-cdk-lib.Stack",
-          "version": "2.50.0"
+          "version": "2.136.1"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.3.0"
         }
       }
     },
     "constructInfo": {
       "fqn": "aws-cdk-lib.App",
-      "version": "2.50.0"
+      "version": "2.136.1"
     }
   }
 }
