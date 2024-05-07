@@ -35,7 +35,7 @@ runs:
         INPUT_DRYRUN: ${{ inputs.dryRun}}
         INPUT_ACTIONS_RUNTIME_TOKEN: ${ github.token }
 
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.artifact }}
         path: site
@@ -45,14 +45,11 @@ runs:
       run: ls -R
       working-directory: site
 
-    - uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-region: eu-west-1
-        role-to-assume: ${{ inputs.guActionsRiffRaffRoleArn }}
-
-    - uses: guardian/actions-riff-raff@v2
+    - uses: guardian/actions-riff-raff@v4
       with:
         app: ${{ inputs.app }}
+        roleArn: ${{ inputs.guActionsRiffRaffRoleArn }}
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
         dryRun: ${{ inputs.dryRun }}
         contentDirectories: |
           cfn: [${{github.action_path}}/cfn.json]

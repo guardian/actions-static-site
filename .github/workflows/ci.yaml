@@ -12,25 +12,21 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      pull-requests: write # required since guardian/actions-riff-raff@v3
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-region: eu-west-1
-          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-
-      - uses: guardian/actions-read-private-repos@v0.1.0
+      - uses: guardian/actions-read-private-repos@v0.1.1
         with:
           private-ssh-keys: ${{ secrets.PRIVATE_INFRASTRUCTURE_CONFIG_DEPLOY_KEY }}
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: npm
 
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v5
         with:
           go-version: '1.18'
       - name: Build Go service
@@ -44,9 +40,11 @@ jobs:
           npm test -- --passWithNoTests
           npm run synth-infra
 
-      - uses: guardian/actions-riff-raff@v2
+      - uses: guardian/actions-riff-raff@v4
         with:
           app: actions-static-site-infra
+          roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
           config: |
             stacks:
               - deploy
