@@ -42,13 +42,13 @@ jobs:
               <meta charset="utf-8">
               <title>Test</title>
             </head>
-            <body>
+            <body> 
               <p>Hello, world!</p>
             </body>
           </html>
           EOF
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: my-site
 
