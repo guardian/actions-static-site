@@ -8,6 +8,7 @@ import {
 } from '@guardian/cdk/lib/constructs/core';
 import { GuCname } from '@guardian/cdk/lib/constructs/dns/';
 import { GuVpc } from '@guardian/cdk/lib/constructs/ec2';
+import { GuS3Bucket } from '@guardian/cdk/lib/constructs/s3';
 import { GuardianAwsAccounts } from '@guardian/private-infrastructure-config';
 import type { App } from 'aws-cdk-lib';
 import { Duration, SecretValue } from 'aws-cdk-lib';
@@ -26,7 +27,6 @@ import {
 	ArnPrincipal,
 	PolicyStatement,
 } from 'aws-cdk-lib/aws-iam';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 interface InfraProps extends GuStackProps {
@@ -55,11 +55,18 @@ export class Infra extends GuStack {
 	constructor(scope: App, id: string, props: InfraProps) {
 		super(scope, id, props);
 
-		const bucket = new Bucket(this, 'static', {
+		const app = props.app;
+		const bucket = new GuS3Bucket(this, 'static', {
 			websiteIndexDocument: 'index.html',
+			app,
 		});
 
-		const app = props.app;
+		this.overrideLogicalId(bucket, {
+			logicalId: 'staticD8C87B36',
+			reason:
+				'Retaining a stateful resource previously defined as a Bucket, not a GuS3Bucket',
+		});
+
 		const keyPrefix = `${this.stack}/${this.stage}/${app}`;
 		const port = 9000;
 		const distBucket =
