@@ -4,7 +4,7 @@
   "description": "A Github Action to deploy a Guardian static site.",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild index.ts --bundle --platform=node --target=node16 --outfile=index.js",
+    "build": "esbuild index.ts --bundle --platform=node --target=node20 --outfile=index.js",
     "test": "jest",
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts --no-error-on-unmatched-pattern --fix",
