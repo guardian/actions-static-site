@@ -56,4 +56,5 @@ jobs:
         with:
           app: the-coolest-static-site
           domain: test.devx.gutools.co.uk
-          guActionsRiffRaffRoleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
