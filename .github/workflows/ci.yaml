@@ -42,9 +42,9 @@ jobs:
 
       - uses: guardian/actions-riff-raff@v4
         with:
+          app: actions-static-site-infra
           roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          app: actions-static-site-infra
           config: |
             stacks:
               - deploy
