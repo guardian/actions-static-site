@@ -1,55 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`static site should match snapshot 1`] = `
-Object {
-  "Metadata": Object {
-    "gu:cdk:constructs": Array [
+{
+  "Metadata": {
+    "gu:cdk:constructs": [
       "GuStringParameter",
       "GuStringParameter",
       "GuCname",
       "GuCertificate",
     ],
-    "gu:cdk:version": "48.5.1",
+    "gu:cdk:version": "58.0.0",
   },
-  "Parameters": Object {
-    "listenerArn": Object {
+  "Parameters": {
+    "listenerArn": {
       "Default": "/INFRA/deploy/actions-static-site-infra/listenerArn",
       "Description": "ARN of shared ALB listener for this action.",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
-    "loadBalancerDnsName": Object {
+    "loadBalancerDnsName": {
       "Default": "/INFRA/deploy/actions-static-site-infra/loadBalancerDnsName",
       "Description": "DNS name of shared ALB for this action.",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
   },
-  "Resources": Object {
-    "CertificateAppCEE540C3": Object {
+  "Resources": {
+    "CertificateAppCEE540C3": {
       "DeletionPolicy": "Retain",
-      "Properties": Object {
+      "Properties": {
         "DomainName": "example.devx.gutools.co.uk",
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Name",
             "Value": "static-site/CertificateApp",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "PROD",
           },
@@ -59,27 +59,27 @@ Object {
       "Type": "AWS::CertificateManager::Certificate",
       "UpdateReplacePolicy": "Retain",
     },
-    "certlistener": Object {
-      "Properties": Object {
-        "Certificates": Array [
-          Object {
-            "CertificateArn": Object {
+    "certlistener": {
+      "Properties": {
+        "Certificates": [
+          {
+            "CertificateArn": {
               "Ref": "CertificateAppCEE540C3",
             },
           },
         ],
-        "ListenerArn": Object {
+        "ListenerArn": {
           "Ref": "listenerArn",
         },
       },
       "Type": "AWS::ElasticLoadBalancingV2::ListenerCertificate",
     },
-    "cname": Object {
-      "Properties": Object {
+    "cname": {
+      "Properties": {
         "Name": "example.devx.gutools.co.uk",
         "RecordType": "CNAME",
-        "ResourceRecords": Array [
-          Object {
+        "ResourceRecords": [
+          {
             "Ref": "loadBalancerDnsName",
           },
         ],

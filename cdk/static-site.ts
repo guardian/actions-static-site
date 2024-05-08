@@ -8,7 +8,6 @@ import {
 import { GuCname } from "@guardian/cdk/lib/constructs/dns/";
 import type { App} from "aws-cdk-lib";
 import { Duration } from "aws-cdk-lib";
-import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import {
   CfnListenerCertificate,
 } from "aws-cdk-lib/aws-elasticloadbalancingv2";
