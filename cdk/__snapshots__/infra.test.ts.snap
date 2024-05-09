@@ -4,6 +4,7 @@ exports[`static site INFRA should match snapshot 1`] = `
 Object {
   "Metadata": Object {
     "gu:cdk:constructs": Array [
+      "GuS3Bucket",
       "GuDistributionBucketParameter",
       "GuAnghammaradTopicParameter",
       "GuVpcParameter",
@@ -1173,35 +1174,7 @@ systemctl start app
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "staticD8C87B36": Object {
-      "DeletionPolicy": "Retain",
-      "Properties": Object {
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "48.5.1",
-          },
-          Object {
-            "Key": "gu:repo",
-            "Value": "guardian/actions-static-site",
-          },
-          Object {
-            "Key": "Stack",
-            "Value": "stack",
-          },
-          Object {
-            "Key": "Stage",
-            "Value": "INFRA",
-          },
-        ],
-        "WebsiteConfiguration": Object {
-          "IndexDocument": "index.html",
-        },
-      },
-      "Type": "AWS::S3::Bucket",
-      "UpdateReplacePolicy": "Retain",
-    },
-    "staticPolicy36384B58": Object {
+    "staticAppPolicy8865CD33": Object {
       "Properties": Object {
         "Bucket": Object {
           "Ref": "staticD8C87B36",
@@ -1323,6 +1296,44 @@ systemctl start app
         },
       },
       "Type": "AWS::S3::BucketPolicy",
+    },
+    "staticD8C87B36": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "PublicAccessBlockConfiguration": Object {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+        "Tags": Array [
+          Object {
+            "Key": "App",
+            "Value": "app",
+          },
+          Object {
+            "Key": "gu:cdk:version",
+            "Value": "48.5.1",
+          },
+          Object {
+            "Key": "gu:repo",
+            "Value": "guardian/actions-static-site",
+          },
+          Object {
+            "Key": "Stack",
+            "Value": "stack",
+          },
+          Object {
+            "Key": "Stage",
+            "Value": "INFRA",
+          },
+        ],
+        "WebsiteConfiguration": Object {
+          "IndexDocument": "index.html",
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Retain",
     },
     "staticsitealbdnsname7E2D6E36": Object {
       "Properties": Object {
