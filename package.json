@@ -17,14 +17,13 @@
   },
   "author": "nicolas.long@theguardian.com",
   "license": "ISC",
-	"eslintConfig": {
+  "eslintConfig": {
     "extends": "@guardian/eslint-config-typescript"
   },
   "eslintIgnore": [
     "packages/common/dist"
   ],
   "prettier": "@guardian/prettier",
-
   "dependencies": {
     "@actions/artifact": "^2.1.7",
     "@actions/core": "^1.10.1",
@@ -37,6 +36,7 @@
     "@guardian/eslint-config-typescript": "^10.0.0",
     "@guardian/prettier": "^8.0.0",
     "@guardian/private-infrastructure-config": "git+ssh://git@github.com/guardian/private-infrastructure-config.git#v2.4.0",
+    "@tsconfig/node20": "^20.1.4",
     "@types/jest": "^29.5.12",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.12.10",
