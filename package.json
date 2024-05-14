@@ -9,7 +9,8 @@
     "test": "jest",
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts --no-error-on-unmatched-pattern --fix",
-    "synth-infra": "cdk synth --path-metadata false --version-reporting false"
+    "synth-infra": "cdk synth --path-metadata false --version-reporting false",
+    "update-snapshot": "jest --updateSnapshot"
   },
   "repository": {
     "type": "git",
