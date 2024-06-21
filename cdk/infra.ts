@@ -203,16 +203,16 @@ systemctl start ${app}
 				prefix: 'galaxies.gutools.co.uk/data/*',
 				principals: [
 					new ArnPrincipal(
-						`arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-PROD`,
+						`arn:aws:iam::${GuardianAwsAccounts.HiringAndOnboarding}:role/galaxies-data-refresher-lambda-role-PROD`,
 					),
 				],
 			},
 			CODE: {
 				prefix: 'galaxies.code.dev-gutools.co.uk/data/*',
 				principals: [
-					new AccountPrincipal(GuardianAwsAccounts.DeveloperPlayground), // for local development
+					new AccountPrincipal(GuardianAwsAccounts.HiringAndOnboarding), // for local development
 					new ArnPrincipal(
-						`arn:aws:iam::${GuardianAwsAccounts.DeveloperPlayground}:role/galaxies-data-refresher-lambda-role-CODE`,
+						`arn:aws:iam::${GuardianAwsAccounts.HiringAndOnboarding}:role/galaxies-data-refresher-lambda-role-CODE`,
 					),
 				],
 			},
