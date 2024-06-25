@@ -30,7 +30,7 @@ jobs:
       contents: read
 
     steps:
-      # ... (Buiild your static site.)
+      # ... (Build your static site.)
 
       # Then upload it as an artifact
       - uses: actions/upload-artifact@v3
