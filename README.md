@@ -45,6 +45,14 @@ jobs:
           guActionsRiffRaffRoleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
 ```
 
+Each run of actions-static-site uses actions-riff-raff to create a new build in
+a Riff Raff project which deploys your static site. This allows you to configure
+deployment as usual using Riff Raff, for example by setting up continuous
+deployment to deploy any new builds on the main branch. It also means your
+repository needs to have the necessary access to write to that Riff Raff project
+(`deploy::<app>`).
+
+
 ## Inputs
 
 ### **app** `string` (required):
