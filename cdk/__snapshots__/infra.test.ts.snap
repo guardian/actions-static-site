@@ -1185,7 +1185,7 @@ systemctl start app
               "Action": "s3:PutObject",
               "Effect": "Allow",
               "Principal": Object {
-                "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
+                "AWS": "arn:aws:iam::000000000035:role/galaxies-data-refresher-lambda-role-PROD",
               },
               "Resource": Object {
                 "Fn::Join": Array [
@@ -1213,7 +1213,7 @@ systemctl start app
               },
               "Effect": "Allow",
               "Principal": Object {
-                "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
+                "AWS": "arn:aws:iam::000000000035:role/galaxies-data-refresher-lambda-role-PROD",
               },
               "Resource": Object {
                 "Fn::GetAtt": Array [
@@ -1235,11 +1235,11 @@ systemctl start app
                         Object {
                           "Ref": "AWS::Partition",
                         },
-                        ":iam::000000000016:root",
+                        ":iam::000000000035:root",
                       ],
                     ],
                   },
-                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
+                  "arn:aws:iam::000000000035:role/galaxies-data-refresher-lambda-role-CODE",
                 ],
               },
               "Resource": Object {
@@ -1277,11 +1277,11 @@ systemctl start app
                         Object {
                           "Ref": "AWS::Partition",
                         },
-                        ":iam::000000000016:root",
+                        ":iam::000000000035:root",
                       ],
                     ],
                   },
-                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
+                  "arn:aws:iam::000000000035:role/galaxies-data-refresher-lambda-role-CODE",
                 ],
               },
               "Resource": Object {
