@@ -35,7 +35,7 @@ runs:
         INPUT_DRYRUN: ${{ inputs.dryRun}}
         INPUT_ACTIONS_RUNTIME_TOKEN: ${ github.token }
 
-    - uses: actions/download-artifact@v3
+    - uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.artifact }}
         path: site

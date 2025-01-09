@@ -1,4 +1,4 @@
-# @guardian/actions-static-site V2
+# @guardian/actions-static-site V3
 
 Action to provision and serve a static site with Google Auth and a custom
 domain.
@@ -33,12 +33,12 @@ jobs:
       # ... (Build your static site.)
 
       # Then upload it as an artifact
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: my-site
 
       # Then invoke this action (replacing app and domain)
-      - uses: guardian/actions-static-site@v2
+      - uses: guardian/actions-static-site@v3
         with:
           app: example
           domain: example.gutools.co.uk
