@@ -15,7 +15,7 @@ inputs:
     description: "Role to use for writing to Riffraff's AWS bucket (typically org secret of same name)."
     required: true
   githubToken:
-    description: "Plop"
+    description: "A GitHub token scoped to allow pull request commenting"
     required: true
   dryRun:
     description: 'If set to true, will not upload Riffraff artifact.'
