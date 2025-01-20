@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`static site INFRA should match snapshot 1`] = `
-Object {
-  "Metadata": Object {
-    "gu:cdk:constructs": Array [
+{
+  "Metadata": {
+    "gu:cdk:constructs": [
       "GuS3Bucket",
       "GuDistributionBucketParameter",
       "GuAnghammaradTopicParameter",
@@ -13,7 +13,7 @@ Object {
       "GuEc2App",
       "GuCertificate",
       "GuInstanceRole",
-      "GuSSMRunCommandPolicy",
+      "GuSsmSshPolicy",
       "GuDescribeEC2Policy",
       "GuLoggingStreamNameParameter",
       "GuLogShippingPolicy",
@@ -21,8 +21,8 @@ Object {
       "GuParameterStoreReadPolicy",
       "GuAmiParameter",
       "GuHttpsEgressSecurityGroup",
-      "GuAutoScalingGroup",
       "GuWazuhAccess",
+      "GuAutoScalingGroup",
       "GuApplicationLoadBalancer",
       "GuApplicationTargetGroup",
       "GuHttpsApplicationListener",
@@ -30,228 +30,153 @@ Object {
       "GuUnhealthyInstancesAlarm",
       "GuCname",
     ],
-    "gu:cdk:version": "48.5.1",
+    "gu:cdk:version": "58.0.0",
   },
-  "Outputs": Object {
-    "LoadBalancerAppDnsName": Object {
+  "Outputs": {
+    "LoadBalancerAppDnsName": {
       "Description": "DNS entry for LoadBalancerApp",
-      "Value": Object {
-        "Fn::GetAtt": Array [
+      "Value": {
+        "Fn::GetAtt": [
           "LoadBalancerApp94515990",
           "DNSName",
         ],
       },
     },
   },
-  "Parameters": Object {
-    "AMIApp": Object {
+  "Parameters": {
+    "AMIApp": {
       "Description": "Amazon Machine Image ID for the app app. Use this in conjunction with AMIgo to keep AMIs up to date.",
       "Type": "AWS::EC2::Image::Id",
     },
-    "AnghammaradSnsArn": Object {
+    "AnghammaradSnsArn": {
       "Default": "/account/services/anghammarad.topic.arn",
       "Description": "SSM parameter containing the ARN of the Anghammarad SNS topic",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
-    "DistributionBucketName": Object {
+    "DistributionBucketName": {
       "Default": "/account/services/artifact.bucket",
       "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
-    "LoggingStreamName": Object {
+    "LoggingStreamName": {
       "Default": "/account/services/logging.stream.name",
       "Description": "SSM parameter containing the Name (not ARN) on the kinesis stream",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
-    "VpcId": Object {
+    "VpcId": {
       "Default": "/account/vpc/primary/id",
       "Description": "Virtual Private Cloud to run EC2 instances within. Should NOT be the account default VPC.",
       "Type": "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>",
     },
-    "appPrivateSubnets": Object {
+    "appPrivateSubnets": {
       "Default": "/account/vpc/primary/subnets/private",
       "Description": "A list of private subnets",
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
-    "appPublicSubnets": Object {
+    "appPublicSubnets": {
       "Default": "/account/vpc/primary/subnets/public",
       "Description": "A list of public subnets",
       "Type": "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>",
     },
-    "clientIDParameter": Object {
+    "clientIDParameter": {
       "Default": "/INFRA/stack/app/googleClientID",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
   },
-  "Resources": Object {
-    "AutoScalingGroupAppASG9C0442BD": Object {
-      "Properties": Object {
+  "Resources": {
+    "AutoScalingGroupAppASG9C0442BD": {
+      "Properties": {
         "HealthCheckGracePeriod": 120,
         "HealthCheckType": "ELB",
-        "LaunchConfigurationName": Object {
-          "Ref": "AutoScalingGroupAppLaunchConfig4CF0B189",
+        "LaunchTemplate": {
+          "LaunchTemplateId": {
+            "Ref": "stackINFRAappF7900B84",
+          },
+          "Version": {
+            "Fn::GetAtt": [
+              "stackINFRAappF7900B84",
+              "LatestVersionNumber",
+            ],
+          },
         },
         "MaxSize": "2",
         "MinSize": "1",
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "PropagateAtLaunch": true,
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
             "PropagateAtLaunch": true,
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "PropagateAtLaunch": true,
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "LogKinesisStreamName",
             "PropagateAtLaunch": true,
-            "Value": Object {
+            "Value": {
               "Ref": "LoggingStreamName",
             },
           },
-          Object {
-            "Key": "Name",
-            "PropagateAtLaunch": true,
-            "Value": "static-site-INFRA/AutoScalingGroupApp",
-          },
-          Object {
+          {
             "Key": "Stack",
             "PropagateAtLaunch": true,
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "PropagateAtLaunch": true,
             "Value": "INFRA",
           },
-          Object {
+          {
             "Key": "SystemdUnit",
             "PropagateAtLaunch": true,
             "Value": "app.service",
           },
         ],
-        "TargetGroupARNs": Array [
-          Object {
+        "TargetGroupARNs": [
+          {
             "Ref": "TargetGroupAppC3FDB286",
           },
         ],
-        "VPCZoneIdentifier": Object {
+        "VPCZoneIdentifier": {
           "Ref": "appPrivateSubnets",
         },
       },
       "Type": "AWS::AutoScaling::AutoScalingGroup",
     },
-    "AutoScalingGroupAppInstanceProfileC361EA9B": Object {
-      "Properties": Object {
-        "Roles": Array [
-          Object {
-            "Ref": "InstanceRoleApp706F3E68",
-          },
-        ],
-      },
-      "Type": "AWS::IAM::InstanceProfile",
-    },
-    "AutoScalingGroupAppLaunchConfig4CF0B189": Object {
-      "DependsOn": Array [
-        "InstanceRoleAppDefaultPolicy7C798473",
-        "InstanceRoleApp706F3E68",
-      ],
-      "Properties": Object {
-        "IamInstanceProfile": Object {
-          "Ref": "AutoScalingGroupAppInstanceProfileC361EA9B",
-        },
-        "ImageId": Object {
-          "Ref": "AMIApp",
-        },
-        "InstanceType": "t4g.nano",
-        "MetadataOptions": Object {
-          "HttpTokens": "required",
-        },
-        "SecurityGroups": Array [
-          Object {
-            "Fn::GetAtt": Array [
-              "GuHttpsEgressSecurityGroupApp026DFC83",
-              "GroupId",
-            ],
-          },
-          Object {
-            "Fn::GetAtt": Array [
-              "WazuhSecurityGroup",
-              "GroupId",
-            ],
-          },
-        ],
-        "UserData": Object {
-          "Fn::Base64": Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                "#!/bin/bash -ev
-cat << EOF > /etc/systemd/system/app.service
-[Unit]
-Description=Static Site service
-
-[Service]
-Environment=\\"BUCKET=",
-                Object {
-                  "Ref": "staticD8C87B36",
-                },
-                "\\"
-Environment=\\"PORT=9000\\"
-ExecStart=/app
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-aws s3 cp s3://",
-                Object {
-                  "Ref": "DistributionBucketName",
-                },
-                "/stack/INFRA/app/static-site-service /app
-chmod +x /app
-systemctl start app
-",
-              ],
-            ],
-          },
-        },
-      },
-      "Type": "AWS::AutoScaling::LaunchConfiguration",
-    },
-    "CertificateAppCEE540C3": Object {
+    "CertificateAppCEE540C3": {
       "DeletionPolicy": "Retain",
-      "Properties": Object {
+      "Properties": {
         "DomainName": "example.devx.gutools.co.uk",
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Name",
             "Value": "static-site-INFRA/CertificateApp",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
@@ -261,13 +186,13 @@ systemctl start app
       "Type": "AWS::CertificateManager::Certificate",
       "UpdateReplacePolicy": "Retain",
     },
-    "DNS": Object {
-      "Properties": Object {
+    "DNS": {
+      "Properties": {
         "Name": "example.devx.gutools.co.uk",
         "RecordType": "CNAME",
-        "ResourceRecords": Array [
-          Object {
-            "Fn::GetAtt": Array [
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
               "LoadBalancerApp94515990",
               "DNSName",
             ],
@@ -278,12 +203,12 @@ systemctl start app
       },
       "Type": "Guardian::DNS::RecordSet",
     },
-    "DescribeEC2PolicyFF5F9295": Object {
-      "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": Array [
+    "DescribeEC2PolicyFF5F9295": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
                 "autoscaling:DescribeAutoScalingInstances",
                 "autoscaling:DescribeAutoScalingGroups",
                 "ec2:DescribeTags",
@@ -296,27 +221,27 @@ systemctl start app
           "Version": "2012-10-17",
         },
         "PolicyName": "describe-ec2-policy",
-        "Roles": Array [
-          Object {
+        "Roles": [
+          {
             "Ref": "InstanceRoleApp706F3E68",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "GetDistributablePolicyApp3932E321": Object {
-      "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
+    "GetDistributablePolicyApp3932E321": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
               "Action": "s3:GetObject",
               "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
+              "Resource": {
+                "Fn::Join": [
                   "",
-                  Array [
+                  [
                     "arn:aws:s3:::",
-                    Object {
+                    {
                       "Ref": "DistributionBucketName",
                     },
                     "/stack/INFRA/app/*",
@@ -328,19 +253,19 @@ systemctl start app
           "Version": "2012-10-17",
         },
         "PolicyName": "GetDistributablePolicyApp3932E321",
-        "Roles": Array [
-          Object {
+        "Roles": [
+          {
             "Ref": "InstanceRoleApp706F3E68",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "GuHttpsEgressSecurityGroupApp026DFC83": Object {
-      "Properties": Object {
+    "GuHttpsEgressSecurityGroupApp026DFC83": {
+      "Properties": {
         "GroupDescription": "Allow all outbound HTTPS traffic",
-        "SecurityGroupEgress": Array [
-          Object {
+        "SecurityGroupEgress": [
+          {
             "CidrIp": "0.0.0.0/0",
             "Description": "Allow all outbound HTTPS traffic",
             "FromPort": 443,
@@ -348,47 +273,47 @@ systemctl start app
             "ToPort": 443,
           },
         ],
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
         ],
-        "VpcId": Object {
+        "VpcId": {
           "Ref": "VpcId",
         },
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "GuHttpsEgressSecurityGroupAppfromstaticsiteINFRALoadBalancerAppSecurityGroup35E6288E90003B3B2611": Object {
-      "Properties": Object {
+    "GuHttpsEgressSecurityGroupAppfromstaticsiteINFRALoadBalancerAppSecurityGroup35E6288E90003B3B2611": {
+      "Properties": {
         "Description": "Load balancer to target",
         "FromPort": 9000,
-        "GroupId": Object {
-          "Fn::GetAtt": Array [
+        "GroupId": {
+          "Fn::GetAtt": [
             "GuHttpsEgressSecurityGroupApp026DFC83",
             "GroupId",
           ],
         },
         "IpProtocol": "tcp",
-        "SourceSecurityGroupId": Object {
-          "Fn::GetAtt": Array [
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
             "LoadBalancerAppSecurityGroup25B85B40",
             "GroupId",
           ],
@@ -397,19 +322,19 @@ systemctl start app
       },
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
-    "GuHttpsEgressSecurityGroupAppfromstaticsiteINFRAldpaccess9458C77F900030A85163": Object {
-      "Properties": Object {
+    "GuHttpsEgressSecurityGroupAppfromstaticsiteINFRAldpaccess9458C77F900030A85163": {
+      "Properties": {
         "Description": "Load balancer to target",
         "FromPort": 9000,
-        "GroupId": Object {
-          "Fn::GetAtt": Array [
+        "GroupId": {
+          "Fn::GetAtt": [
             "GuHttpsEgressSecurityGroupApp026DFC83",
             "GroupId",
           ],
         },
         "IpProtocol": "tcp",
-        "SourceSecurityGroupId": Object {
-          "Fn::GetAtt": Array [
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
             "ldpaccess567AC006",
             "GroupId",
           ],
@@ -418,30 +343,30 @@ systemctl start app
       },
       "Type": "AWS::EC2::SecurityGroupIngress",
     },
-    "GuLogShippingPolicy981BFE5A": Object {
-      "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": Array [
+    "GuLogShippingPolicy981BFE5A": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
                 "kinesis:Describe*",
                 "kinesis:Put*",
               ],
               "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
+              "Resource": {
+                "Fn::Join": [
                   "",
-                  Array [
+                  [
                     "arn:aws:kinesis:",
-                    Object {
+                    {
                       "Ref": "AWS::Region",
                     },
                     ":",
-                    Object {
+                    {
                       "Ref": "AWS::AccountId",
                     },
                     ":stream/",
-                    Object {
+                    {
                       "Ref": "LoggingStreamName",
                     },
                   ],
@@ -452,32 +377,32 @@ systemctl start app
           "Version": "2012-10-17",
         },
         "PolicyName": "GuLogShippingPolicy981BFE5A",
-        "Roles": Array [
-          Object {
+        "Roles": [
+          {
             "Ref": "InstanceRoleApp706F3E68",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "High5xxPercentageAlarmAppBEBB1F03": Object {
-      "Properties": Object {
+    "High5xxPercentageAlarmAppBEBB1F03": {
+      "Properties": {
         "ActionsEnabled": true,
-        "AlarmActions": Array [
-          Object {
-            "Fn::Join": Array [
+        "AlarmActions": [
+          {
+            "Fn::Join": [
               "",
-              Array [
+              [
                 "arn:aws:sns:",
-                Object {
+                {
                   "Ref": "AWS::Region",
                 },
                 ":",
-                Object {
+                {
                   "Ref": "AWS::AccountId",
                 },
                 ":",
-                Object {
+                {
                   "Ref": "AnghammaradSnsArn",
                 },
               ],
@@ -485,24 +410,24 @@ systemctl start app
           },
         ],
         "AlarmDescription": "app exceeded 1% error rate",
-        "AlarmName": "High 5XX error % from app in INFRA",
+        "AlarmName": "High 5XX error percentage from app in INFRA",
         "ComparisonOperator": "GreaterThanThreshold",
         "EvaluationPeriods": 60,
-        "Metrics": Array [
-          Object {
+        "Metrics": [
+          {
             "Expression": "100*(m1+m2)/m3",
             "Id": "expr_1",
             "Label": "% of 5XX responses served for app (load balancer and instances combined)",
           },
-          Object {
+          {
             "Id": "m1",
-            "MetricStat": Object {
-              "Metric": Object {
-                "Dimensions": Array [
-                  Object {
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
                     "Name": "LoadBalancer",
-                    "Value": Object {
-                      "Fn::GetAtt": Array [
+                    "Value": {
+                      "Fn::GetAtt": [
                         "LoadBalancerApp94515990",
                         "LoadBalancerFullName",
                       ],
@@ -517,15 +442,15 @@ systemctl start app
             },
             "ReturnData": false,
           },
-          Object {
+          {
             "Id": "m2",
-            "MetricStat": Object {
-              "Metric": Object {
-                "Dimensions": Array [
-                  Object {
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
                     "Name": "LoadBalancer",
-                    "Value": Object {
-                      "Fn::GetAtt": Array [
+                    "Value": {
+                      "Fn::GetAtt": [
                         "LoadBalancerApp94515990",
                         "LoadBalancerFullName",
                       ],
@@ -540,15 +465,15 @@ systemctl start app
             },
             "ReturnData": false,
           },
-          Object {
+          {
             "Id": "m3",
-            "MetricStat": Object {
-              "Metric": Object {
-                "Dimensions": Array [
-                  Object {
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
                     "Name": "LoadBalancer",
-                    "Value": Object {
-                      "Fn::GetAtt": Array [
+                    "Value": {
+                      "Fn::GetAtt": [
                         "LoadBalancerApp94515990",
                         "LoadBalancerFullName",
                       ],
@@ -569,49 +494,39 @@ systemctl start app
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
-    "InstanceRoleApp706F3E68": Object {
-      "Properties": Object {
-        "AssumeRolePolicyDocument": Object {
-          "Statement": Array [
-            Object {
+    "InstanceRoleApp706F3E68": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
-              "Principal": Object {
-                "Service": Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      "ec2.",
-                      Object {
-                        "Ref": "AWS::URLSuffix",
-                      },
-                    ],
-                  ],
-                },
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
               },
             },
           ],
           "Version": "2012-10-17",
         },
         "Path": "/",
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
@@ -619,30 +534,30 @@ systemctl start app
       },
       "Type": "AWS::IAM::Role",
     },
-    "InstanceRoleAppDefaultPolicy7C798473": Object {
-      "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": Array [
+    "InstanceRoleAppDefaultPolicy7C798473": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
                 "s3:GetObject*",
                 "s3:GetBucket*",
                 "s3:List*",
               ],
               "Effect": "Allow",
-              "Resource": Array [
-                Object {
-                  "Fn::GetAtt": Array [
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
                     "staticD8C87B36",
                     "Arn",
                   ],
                 },
-                Object {
-                  "Fn::Join": Array [
+                {
+                  "Fn::Join": [
                     "",
-                    Array [
-                      Object {
-                        "Fn::GetAtt": Array [
+                    [
+                      {
+                        "Fn::GetAtt": [
                           "staticD8C87B36",
                           "Arn",
                         ],
@@ -657,31 +572,31 @@ systemctl start app
           "Version": "2012-10-17",
         },
         "PolicyName": "InstanceRoleAppDefaultPolicy7C798473",
-        "Roles": Array [
-          Object {
+        "Roles": [
+          {
             "Ref": "InstanceRoleApp706F3E68",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "ListenerApp55D0EA9B": Object {
-      "Properties": Object {
-        "Certificates": Array [
-          Object {
-            "CertificateArn": Object {
+    "ListenerApp55D0EA9B": {
+      "Properties": {
+        "Certificates": [
+          {
+            "CertificateArn": {
               "Ref": "CertificateAppCEE540C3",
             },
           },
         ],
-        "DefaultActions": Array [
-          Object {
-            "AuthenticateOidcConfig": Object {
-              "AuthenticationRequestExtraParams": Object {
+        "DefaultActions": [
+          {
+            "AuthenticateOidcConfig": {
+              "AuthenticationRequestExtraParams": {
                 "hd": "guardian.co.uk",
               },
               "AuthorizationEndpoint": "https://accounts.google.com/o/oauth2/v2/auth",
-              "ClientId": Object {
+              "ClientId": {
                 "Ref": "clientIDParameter",
               },
               "ClientSecret": "{{resolve:secretsmanager:/INFRA/stack/app/clientSecret:SecretString:::}}",
@@ -693,15 +608,15 @@ systemctl start app
             "Order": 1,
             "Type": "authenticate-oidc",
           },
-          Object {
+          {
             "Order": 2,
-            "TargetGroupArn": Object {
+            "TargetGroupArn": {
               "Ref": "TargetGroupAppC3FDB286",
             },
             "Type": "forward",
           },
         ],
-        "LoadBalancerArn": Object {
+        "LoadBalancerArn": {
           "Ref": "LoadBalancerApp94515990",
         },
         "Port": 443,
@@ -709,77 +624,85 @@ systemctl start app
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
     },
-    "ListenerAppPRoutRule52A1A63F": Object {
-      "Properties": Object {
-        "Actions": Array [
-          Object {
-            "TargetGroupArn": Object {
+    "ListenerAppPRoutRule52A1A63F": {
+      "Properties": {
+        "Actions": [
+          {
+            "TargetGroupArn": {
               "Ref": "TargetGroupAppC3FDB286",
             },
             "Type": "forward",
           },
         ],
-        "Conditions": Array [
-          Object {
+        "Conditions": [
+          {
             "Field": "path-pattern",
-            "PathPatternConfig": Object {
-              "Values": Array [
+            "PathPatternConfig": {
+              "Values": [
                 "**/_prout",
               ],
             },
           },
         ],
-        "ListenerArn": Object {
+        "ListenerArn": {
           "Ref": "ListenerApp55D0EA9B",
         },
         "Priority": 1,
       },
       "Type": "AWS::ElasticLoadBalancingV2::ListenerRule",
     },
-    "LoadBalancerApp94515990": Object {
-      "Properties": Object {
-        "LoadBalancerAttributes": Array [
-          Object {
+    "LoadBalancerApp94515990": {
+      "Properties": {
+        "LoadBalancerAttributes": [
+          {
             "Key": "deletion_protection.enabled",
+            "Value": "true",
+          },
+          {
+            "Key": "routing.http.x_amzn_tls_version_and_cipher_suite.enabled",
+            "Value": "true",
+          },
+          {
+            "Key": "routing.http.drop_invalid_header_fields.enabled",
             "Value": "true",
           },
         ],
         "Scheme": "internet-facing",
-        "SecurityGroups": Array [
-          Object {
-            "Fn::GetAtt": Array [
+        "SecurityGroups": [
+          {
+            "Fn::GetAtt": [
               "LoadBalancerAppSecurityGroup25B85B40",
               "GroupId",
             ],
           },
-          Object {
-            "Fn::GetAtt": Array [
+          {
+            "Fn::GetAtt": [
               "ldpaccess567AC006",
               "GroupId",
             ],
           },
         ],
-        "Subnets": Object {
+        "Subnets": {
           "Ref": "appPublicSubnets",
         },
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
@@ -788,11 +711,20 @@ systemctl start app
       },
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
     },
-    "LoadBalancerAppSecurityGroup25B85B40": Object {
-      "Properties": Object {
+    "LoadBalancerAppSecurityGroup25B85B40": {
+      "Properties": {
         "GroupDescription": "Automatically created Security Group for ELB staticsiteINFRALoadBalancerAppCB3B8001",
-        "SecurityGroupIngress": Array [
-          Object {
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow to IdP endpoint",
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443,
+          },
+        ],
+        "SecurityGroupIngress": [
+          {
             "CidrIp": "0.0.0.0/0",
             "Description": "Allow from anyone on port 443",
             "FromPort": 443,
@@ -800,46 +732,46 @@ systemctl start app
             "ToPort": 443,
           },
         ],
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
         ],
-        "VpcId": Object {
+        "VpcId": {
           "Ref": "VpcId",
         },
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "LoadBalancerAppSecurityGrouptostaticsiteINFRAGuHttpsEgressSecurityGroupApp9D35DDCD9000D48D79FC": Object {
-      "Properties": Object {
+    "LoadBalancerAppSecurityGrouptostaticsiteINFRAGuHttpsEgressSecurityGroupApp9D35DDCD9000D48D79FC": {
+      "Properties": {
         "Description": "Load balancer to target",
-        "DestinationSecurityGroupId": Object {
-          "Fn::GetAtt": Array [
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
             "GuHttpsEgressSecurityGroupApp026DFC83",
             "GroupId",
           ],
         },
         "FromPort": 9000,
-        "GroupId": Object {
-          "Fn::GetAtt": Array [
+        "GroupId": {
+          "Fn::GetAtt": [
             "LoadBalancerAppSecurityGroup25B85B40",
             "GroupId",
           ],
@@ -849,23 +781,44 @@ systemctl start app
       },
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
-    "ParameterStoreReadApp8C5D582A": Object {
-      "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
+    "LoadBalancerAppSecurityGrouptostaticsiteINFRAWazuhSecurityGroupED10C7AD90003152BEC5": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
+            "WazuhSecurityGroup",
+            "GroupId",
+          ],
+        },
+        "FromPort": 9000,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "LoadBalancerAppSecurityGroup25B85B40",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "ToPort": 9000,
+      },
+      "Type": "AWS::EC2::SecurityGroupEgress",
+    },
+    "ParameterStoreReadApp8C5D582A": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
               "Action": "ssm:GetParametersByPath",
               "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
+              "Resource": {
+                "Fn::Join": [
                   "",
-                  Array [
+                  [
                     "arn:aws:ssm:",
-                    Object {
+                    {
                       "Ref": "AWS::Region",
                     },
                     ":",
-                    Object {
+                    {
                       "Ref": "AWS::AccountId",
                     },
                     ":parameter/INFRA/stack/app",
@@ -873,22 +826,22 @@ systemctl start app
                 ],
               },
             },
-            Object {
-              "Action": Array [
+            {
+              "Action": [
                 "ssm:GetParameters",
                 "ssm:GetParameter",
               ],
               "Effect": "Allow",
-              "Resource": Object {
-                "Fn::Join": Array [
+              "Resource": {
+                "Fn::Join": [
                   "",
-                  Array [
+                  [
                     "arn:aws:ssm:",
-                    Object {
+                    {
                       "Ref": "AWS::Region",
                     },
                     ":",
-                    Object {
+                    {
                       "Ref": "AWS::AccountId",
                     },
                     ":parameter/INFRA/stack/app/*",
@@ -900,20 +853,20 @@ systemctl start app
           "Version": "2012-10-17",
         },
         "PolicyName": "parameter-store-read-policy",
-        "Roles": Array [
-          Object {
+        "Roles": [
+          {
             "Ref": "InstanceRoleApp706F3E68",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "SSMRunCommandPolicy244E1613": Object {
-      "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": Array [
+    "SsmSshPolicy4CFC977E": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
                 "ec2messages:AcknowledgeMessage",
                 "ec2messages:DeleteMessage",
                 "ec2messages:FailMessage",
@@ -935,17 +888,17 @@ systemctl start app
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "ssm-run-command-policy",
-        "Roles": Array [
-          Object {
+        "PolicyName": "ssm-ssh-policy",
+        "Roles": [
+          {
             "Ref": "InstanceRoleApp706F3E68",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "TargetGroupAppC3FDB286": Object {
-      "Properties": Object {
+    "TargetGroupAppC3FDB286": {
+      "Properties": {
         "HealthCheckIntervalSeconds": 10,
         "HealthCheckPath": "/healthcheck",
         "HealthCheckProtocol": "HTTP",
@@ -953,64 +906,64 @@ systemctl start app
         "HealthyThresholdCount": 5,
         "Port": 9000,
         "Protocol": "HTTP",
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
         ],
-        "TargetGroupAttributes": Array [
-          Object {
+        "TargetGroupAttributes": [
+          {
             "Key": "deregistration_delay.timeout_seconds",
             "Value": "30",
           },
-          Object {
+          {
             "Key": "stickiness.enabled",
             "Value": "false",
           },
         ],
         "TargetType": "instance",
         "UnhealthyThresholdCount": 2,
-        "VpcId": Object {
+        "VpcId": {
           "Ref": "VpcId",
         },
       },
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
     },
-    "UnhealthyInstancesAlarmAppBFB0C287": Object {
-      "Properties": Object {
+    "UnhealthyInstancesAlarmAppBFB0C287": {
+      "Properties": {
         "ActionsEnabled": true,
-        "AlarmActions": Array [
-          Object {
-            "Fn::Join": Array [
+        "AlarmActions": [
+          {
+            "Fn::Join": [
               "",
-              Array [
+              [
                 "arn:aws:sns:",
-                Object {
+                {
                   "Ref": "AWS::Region",
                 },
                 ":",
-                Object {
+                {
                   "Ref": "AWS::AccountId",
                 },
                 ":",
-                Object {
+                {
                   "Ref": "AnghammaradSnsArn",
                 },
               ],
@@ -1025,20 +978,20 @@ systemctl start app
         "AlarmName": "Unhealthy instances for app in INFRA",
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
         "DatapointsToAlarm": 30,
-        "Dimensions": Array [
-          Object {
+        "Dimensions": [
+          {
             "Name": "LoadBalancer",
-            "Value": Object {
-              "Fn::Join": Array [
+            "Value": {
+              "Fn::Join": [
                 "",
-                Array [
-                  Object {
-                    "Fn::Select": Array [
+                [
+                  {
+                    "Fn::Select": [
                       1,
-                      Object {
-                        "Fn::Split": Array [
+                      {
+                        "Fn::Split": [
                           "/",
-                          Object {
+                          {
                             "Ref": "ListenerApp55D0EA9B",
                           },
                         ],
@@ -1046,13 +999,13 @@ systemctl start app
                     ],
                   },
                   "/",
-                  Object {
-                    "Fn::Select": Array [
+                  {
+                    "Fn::Select": [
                       2,
-                      Object {
-                        "Fn::Split": Array [
+                      {
+                        "Fn::Split": [
                           "/",
-                          Object {
+                          {
                             "Ref": "ListenerApp55D0EA9B",
                           },
                         ],
@@ -1060,13 +1013,13 @@ systemctl start app
                     ],
                   },
                   "/",
-                  Object {
-                    "Fn::Select": Array [
+                  {
+                    "Fn::Select": [
                       3,
-                      Object {
-                        "Fn::Split": Array [
+                      {
+                        "Fn::Split": [
                           "/",
-                          Object {
+                          {
                             "Ref": "ListenerApp55D0EA9B",
                           },
                         ],
@@ -1077,10 +1030,10 @@ systemctl start app
               ],
             },
           },
-          Object {
+          {
             "Name": "TargetGroup",
-            "Value": Object {
-              "Fn::GetAtt": Array [
+            "Value": {
+              "Fn::GetAtt": [
                 "TargetGroupAppC3FDB286",
                 "TargetGroupFullName",
               ],
@@ -1097,18 +1050,18 @@ systemctl start app
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
-    "WazuhSecurityGroup": Object {
-      "Properties": Object {
+    "WazuhSecurityGroup": {
+      "Properties": {
         "GroupDescription": "Allow outbound traffic from wazuh agent to manager",
-        "SecurityGroupEgress": Array [
-          Object {
+        "SecurityGroupEgress": [
+          {
             "CidrIp": "0.0.0.0/0",
             "Description": "Wazuh event logging",
             "FromPort": 1514,
             "IpProtocol": "tcp",
             "ToPort": 1514,
           },
-          Object {
+          {
             "CidrIp": "0.0.0.0/0",
             "Description": "Wazuh agent registration",
             "FromPort": 1515,
@@ -1116,83 +1069,309 @@ systemctl start app
             "ToPort": 1515,
           },
         ],
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "app",
           },
-          Object {
+          {
+            "Key": "gu:cdk:version",
+            "Value": "58.0.0",
+          },
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
         ],
-        "VpcId": Object {
+        "VpcId": {
           "Ref": "VpcId",
         },
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "ldpaccess567AC006": Object {
-      "Properties": Object {
+    "WazuhSecurityGroupfromstaticsiteINFRALoadBalancerAppSecurityGroup35E6288E90004E40CBF2": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "FromPort": 9000,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "WazuhSecurityGroup",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "LoadBalancerAppSecurityGroup25B85B40",
+            "GroupId",
+          ],
+        },
+        "ToPort": 9000,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "WazuhSecurityGroupfromstaticsiteINFRAldpaccess9458C77F90008F9AAE68": {
+      "Properties": {
+        "Description": "Load balancer to target",
+        "FromPort": 9000,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "WazuhSecurityGroup",
+            "GroupId",
+          ],
+        },
+        "IpProtocol": "tcp",
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "ldpaccess567AC006",
+            "GroupId",
+          ],
+        },
+        "ToPort": 9000,
+      },
+      "Type": "AWS::EC2::SecurityGroupIngress",
+    },
+    "ldpaccess567AC006": {
+      "Properties": {
         "GroupDescription": "static-site-INFRA/ldp-access",
-        "SecurityGroupEgress": Array [
-          Object {
+        "SecurityGroupEgress": [
+          {
             "CidrIp": "0.0.0.0/0",
             "Description": "Allow all outbound traffic by default",
             "IpProtocol": "-1",
           },
         ],
-        "Tags": Array [
-          Object {
-            "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "app",
           },
-          Object {
+          {
+            "Key": "gu:cdk:version",
+            "Value": "58.0.0",
+          },
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
         ],
-        "VpcId": Object {
+        "VpcId": {
           "Ref": "VpcId",
         },
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "staticAppPolicy8865CD33": Object {
-      "Properties": Object {
-        "Bucket": Object {
+    "stackINFRAappF7900B84": {
+      "DependsOn": [
+        "InstanceRoleAppDefaultPolicy7C798473",
+        "InstanceRoleApp706F3E68",
+      ],
+      "Properties": {
+        "LaunchTemplateData": {
+          "IamInstanceProfile": {
+            "Arn": {
+              "Fn::GetAtt": [
+                "stackINFRAappProfileE90C9F1B",
+                "Arn",
+              ],
+            },
+          },
+          "ImageId": {
+            "Ref": "AMIApp",
+          },
+          "InstanceType": "t4g.nano",
+          "MetadataOptions": {
+            "HttpTokens": "required",
+          },
+          "SecurityGroupIds": [
+            {
+              "Fn::GetAtt": [
+                "GuHttpsEgressSecurityGroupApp026DFC83",
+                "GroupId",
+              ],
+            },
+            {
+              "Fn::GetAtt": [
+                "WazuhSecurityGroup",
+                "GroupId",
+              ],
+            },
+          ],
+          "TagSpecifications": [
+            {
+              "ResourceType": "instance",
+              "Tags": [
+                {
+                  "Key": "App",
+                  "Value": "app",
+                },
+                {
+                  "Key": "gu:cdk:version",
+                  "Value": "58.0.0",
+                },
+                {
+                  "Key": "gu:repo",
+                  "Value": "guardian/actions-static-site",
+                },
+                {
+                  "Key": "Name",
+                  "Value": "static-site-INFRA/stack-INFRA-app",
+                },
+                {
+                  "Key": "Stack",
+                  "Value": "stack",
+                },
+                {
+                  "Key": "Stage",
+                  "Value": "INFRA",
+                },
+              ],
+            },
+            {
+              "ResourceType": "volume",
+              "Tags": [
+                {
+                  "Key": "App",
+                  "Value": "app",
+                },
+                {
+                  "Key": "gu:cdk:version",
+                  "Value": "58.0.0",
+                },
+                {
+                  "Key": "gu:repo",
+                  "Value": "guardian/actions-static-site",
+                },
+                {
+                  "Key": "Name",
+                  "Value": "static-site-INFRA/stack-INFRA-app",
+                },
+                {
+                  "Key": "Stack",
+                  "Value": "stack",
+                },
+                {
+                  "Key": "Stage",
+                  "Value": "INFRA",
+                },
+              ],
+            },
+          ],
+          "UserData": {
+            "Fn::Base64": {
+              "Fn::Join": [
+                "",
+                [
+                  "#!/bin/bash -ev
+cat << EOF > /etc/systemd/system/app.service
+[Unit]
+Description=Static Site service
+
+[Service]
+Environment="BUCKET=",
+                  {
+                    "Ref": "staticD8C87B36",
+                  },
+                  ""
+Environment="PORT=9000"
+ExecStart=/app
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+aws s3 cp s3://",
+                  {
+                    "Ref": "DistributionBucketName",
+                  },
+                  "/stack/INFRA/app/static-site-service /app
+chmod +x /app
+systemctl start app
+",
+                ],
+              ],
+            },
+          },
+        },
+        "TagSpecifications": [
+          {
+            "ResourceType": "launch-template",
+            "Tags": [
+              {
+                "Key": "App",
+                "Value": "app",
+              },
+              {
+                "Key": "gu:cdk:version",
+                "Value": "58.0.0",
+              },
+              {
+                "Key": "gu:repo",
+                "Value": "guardian/actions-static-site",
+              },
+              {
+                "Key": "Name",
+                "Value": "static-site-INFRA/stack-INFRA-app",
+              },
+              {
+                "Key": "Stack",
+                "Value": "stack",
+              },
+              {
+                "Key": "Stage",
+                "Value": "INFRA",
+              },
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::EC2::LaunchTemplate",
+    },
+    "stackINFRAappProfileE90C9F1B": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "InstanceRoleApp706F3E68",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "staticAppPolicy8865CD33": {
+      "Properties": {
+        "Bucket": {
           "Ref": "staticD8C87B36",
         },
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
+        "PolicyDocument": {
+          "Statement": [
+            {
               "Action": "s3:PutObject",
               "Effect": "Allow",
-              "Principal": Object {
+              "Principal": {
                 "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
               },
-              "Resource": Object {
-                "Fn::Join": Array [
+              "Resource": {
+                "Fn::Join": [
                   "",
-                  Array [
-                    Object {
-                      "Fn::GetAtt": Array [
+                  [
+                    {
+                      "Fn::GetAtt": [
                         "staticD8C87B36",
                         "Arn",
                       ],
@@ -1202,37 +1381,37 @@ systemctl start app
                 ],
               },
             },
-            Object {
+            {
               "Action": "s3:ListBucket",
-              "Condition": Object {
-                "StringLike": Object {
-                  "s3:prefix": Array [
+              "Condition": {
+                "StringLike": {
+                  "s3:prefix": [
                     "galaxies.gutools.co.uk/data/*",
                   ],
                 },
               },
               "Effect": "Allow",
-              "Principal": Object {
+              "Principal": {
                 "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
               },
-              "Resource": Object {
-                "Fn::GetAtt": Array [
+              "Resource": {
+                "Fn::GetAtt": [
                   "staticD8C87B36",
                   "Arn",
                 ],
               },
             },
-            Object {
+            {
               "Action": "s3:PutObject",
               "Effect": "Allow",
-              "Principal": Object {
-                "AWS": Array [
-                  Object {
-                    "Fn::Join": Array [
+              "Principal": {
+                "AWS": [
+                  {
+                    "Fn::Join": [
                       "",
-                      Array [
+                      [
                         "arn:",
-                        Object {
+                        {
                           "Ref": "AWS::Partition",
                         },
                         ":iam::000000000016:root",
@@ -1242,12 +1421,12 @@ systemctl start app
                   "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
                 ],
               },
-              "Resource": Object {
-                "Fn::Join": Array [
+              "Resource": {
+                "Fn::Join": [
                   "",
-                  Array [
-                    Object {
-                      "Fn::GetAtt": Array [
+                  [
+                    {
+                      "Fn::GetAtt": [
                         "staticD8C87B36",
                         "Arn",
                       ],
@@ -1257,24 +1436,24 @@ systemctl start app
                 ],
               },
             },
-            Object {
+            {
               "Action": "s3:ListBucket",
-              "Condition": Object {
-                "StringLike": Object {
-                  "s3:prefix": Array [
+              "Condition": {
+                "StringLike": {
+                  "s3:prefix": [
                     "galaxies.code.dev-gutools.co.uk/data/*",
                   ],
                 },
               },
               "Effect": "Allow",
-              "Principal": Object {
-                "AWS": Array [
-                  Object {
-                    "Fn::Join": Array [
+              "Principal": {
+                "AWS": [
+                  {
+                    "Fn::Join": [
                       "",
-                      Array [
+                      [
                         "arn:",
-                        Object {
+                        {
                           "Ref": "AWS::Partition",
                         },
                         ":iam::000000000016:root",
@@ -1284,8 +1463,8 @@ systemctl start app
                   "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
                 ],
               },
-              "Resource": Object {
-                "Fn::GetAtt": Array [
+              "Resource": {
+                "Fn::GetAtt": [
                   "staticD8C87B36",
                   "Arn",
                 ],
@@ -1297,57 +1476,58 @@ systemctl start app
       },
       "Type": "AWS::S3::BucketPolicy",
     },
-    "staticD8C87B36": Object {
+    "staticD8C87B36": {
       "DeletionPolicy": "Retain",
-      "Properties": Object {
-        "PublicAccessBlockConfiguration": Object {
+      "Properties": {
+        "PublicAccessBlockConfiguration": {
           "BlockPublicAcls": true,
           "BlockPublicPolicy": true,
           "IgnorePublicAcls": true,
           "RestrictPublicBuckets": true,
         },
-        "Tags": Array [
-          Object {
+        "Tags": [
+          {
             "Key": "App",
             "Value": "app",
           },
-          Object {
+          {
             "Key": "gu:cdk:version",
-            "Value": "48.5.1",
+            "Value": "58.0.0",
           },
-          Object {
+          {
             "Key": "gu:repo",
             "Value": "guardian/actions-static-site",
           },
-          Object {
+          {
             "Key": "Stack",
             "Value": "stack",
           },
-          Object {
+          {
             "Key": "Stage",
             "Value": "INFRA",
           },
         ],
-        "WebsiteConfiguration": Object {
+        "WebsiteConfiguration": {
           "IndexDocument": "index.html",
         },
       },
       "Type": "AWS::S3::Bucket",
       "UpdateReplacePolicy": "Retain",
     },
-    "staticsitealbdnsname7E2D6E36": Object {
-      "Properties": Object {
+    "staticsitealbdnsname7E2D6E36": {
+      "Properties": {
         "Description": "ALB DNS name for static sites.",
         "Name": "/INFRA/stack/app/loadBalancerDnsName",
-        "Tags": Object {
+        "Tags": {
+          "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "48.5.1",
+          "gu:cdk:version": "58.0.0",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",
-        "Value": Object {
-          "Fn::GetAtt": Array [
+        "Value": {
+          "Fn::GetAtt": [
             "LoadBalancerApp94515990",
             "DNSName",
           ],
@@ -1355,35 +1535,37 @@ systemctl start app
       },
       "Type": "AWS::SSM::Parameter",
     },
-    "staticsitebucket16DB0AA4": Object {
-      "Properties": Object {
+    "staticsitebucket16DB0AA4": {
+      "Properties": {
         "Description": "Bucket for static sites.",
         "Name": "/INFRA/stack/app/bucket",
-        "Tags": Object {
+        "Tags": {
+          "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "48.5.1",
+          "gu:cdk:version": "58.0.0",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",
-        "Value": Object {
+        "Value": {
           "Ref": "staticD8C87B36",
         },
       },
       "Type": "AWS::SSM::Parameter",
     },
-    "staticsitelisenerarnA82E77B3": Object {
-      "Properties": Object {
+    "staticsitelisenerarnA82E77B3": {
+      "Properties": {
         "Description": "Listener ARN for static sites.",
         "Name": "/INFRA/stack/app/listenerArn",
-        "Tags": Object {
+        "Tags": {
+          "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "48.5.1",
+          "gu:cdk:version": "58.0.0",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",
-        "Value": Object {
+        "Value": {
           "Ref": "ListenerApp55D0EA9B",
         },
       },
