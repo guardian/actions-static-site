@@ -10,7 +10,11 @@ your files in S3 and data transfer costs - as the core infrastructure is shared.
 **Note: your domain must be registered with the Google project for the Google
 auth callback to work - ping it on the `DevX Stream` channel and we can quickly add this for you.**
 
-**You will also need to add your repo to [riffraff-platform](https://github.com/guardian/riffraff-platform?tab=readme-ov-file#adding-a-new-repository), with riffraff project name `deploy::*appname*`**
+**You will also need to add your repo to [riffraff-platform](https://github.com/guardian/riffraff-platform?tab=readme-ov-file#adding-a-new-repository), with riffraff project name `deploy::*appname*`** - for example [guardian/deacronym#399](https://github.com/guardian/riffraff-platform/pull/399).
+
+You will need to merge the **riffraff-platform** PR before you start creating your `@guardian/actions-static-site` job otherwise the build will fail as your repository expects to have `GU_RIFF_RAFF_ROLE_ARN` in your respository secrets and that gets generated after the merge.
+
+Also it would be good to know that `@guardian/actions-static-site` has just **PROD** environment. For more details check [#41](https://github.com/guardian/actions-static-site/pull/41).
 
 Any paths ending in `/_prout` will skip authentication, so feel free to add the git hash as a file called `_prout` and then wire it up to [PRout](https://github.com/guardian/prout) - for example [guardian/galaxies#102](https://github.com/guardian/galaxies/pull/102).
 
@@ -30,6 +34,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      pull-requests: write
 
     steps:
       # ... (Build your static site.)
