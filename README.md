@@ -83,13 +83,13 @@ an earlier workflow step.
 
 ## How to decommission a static site that is no longer needed
 
-You will need to ask DevX to do the first two steps, but you can do the third yourself.
-
 1. **Remove the stack**
+   You need access to the deployTools account to do this. Either get the permissions from janus, or ask DevX.
    Delete the `deploy-PROD-<app>` stack.
    _Optional:_ You may also delete the relevant content from the S3 bucket, but this is usually unnecessary due to the small file sizes.
 
 2. **Remove the authorised redirect URI in Google Cloud Console**
+   Ask for the following to be done in the `DevX Stream` channel.
    - Go to the project `devx-gh-actions-static-site`.
    - Navigate to **APIs and Services** > **Credentials**.
    - Under **OAuth 2.0 Client IDs**, find the static site entry.
