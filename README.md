@@ -85,7 +85,7 @@ an earlier workflow step.
 
 1. **Remove the stack**
    You need access to the deployTools account to do this. Either get the permissions from janus, or ask DevX.
-   Delete the `deploy-PROD-<app>` stack.
+   Delete the `deploy-PROD-<app>` stack. This will remove the resources defined in [static-site.ts](./cdk/static-site.ts)
    _Optional:_ You may also delete the relevant content from the S3 bucket, but this is usually unnecessary due to the small file sizes.
 
 2. **Remove the authorised redirect URI in Google Cloud Console**
