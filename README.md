@@ -10,6 +10,9 @@ your files in S3 and data transfer costs - as the core infrastructure is shared.
 **Note: your domain must be registered with the Google project for the Google
 auth callback to work - ping it on the `DevX Stream` channel and we can quickly add this for you.**
 
+- (In the google cloud console, go to the project devx-gh-actions-static-site, choose APIs and service, Credentials, under OAuth 2.0 Chlient IDS the static site entry,
+then add the new authorised redirect URI.)
+
 **You will also need to add your repo to [riffraff-platform](https://github.com/guardian/riffraff-platform?tab=readme-ov-file#adding-a-new-repository), with riffraff project name `deploy::*appname*`** - for example [guardian/riffraff-platform#399](https://github.com/guardian/riffraff-platform/pull/399).
 
 You will need to merge the **riffraff-platform** PR before you start creating your `@guardian/actions-static-site` job otherwise the build will fail as your repository expects to have `GU_RIFF_RAFF_ROLE_ARN` in your respository secrets and that gets generated after the merge.
@@ -77,6 +80,22 @@ The domain should be a Guardian-owned domain. For internal tools,
 
 Name of the artifact containing the static resources. Should be uploaded in
 an earlier workflow step.
+
+## How to decommission a static site that is no longer needed
+
+You will need to ask DevX to do the first two steps, but you can do the third yourself.
+
+1. **Remove the stack**
+   Delete the `deploy-PROD-<app>` stack.
+   _Optional:_ You may also delete the relevant content from the S3 bucket, but this is usually unnecessary due to the small file sizes.
+
+2. **Remove the authorised redirect URI in Google Cloud Console**
+   - Go to the project `devx-gh-actions-static-site`.
+   - Navigate to **APIs and Services** > **Credentials**.
+   - Under **OAuth 2.0 Client IDs**, find the static site entry.
+   - Remove the corresponding authorised redirect URI.
+
+3. **Archive the repository in GitHub**
 
 ## Architecture
 
