@@ -1364,7 +1364,7 @@ systemctl start app
               "Action": "s3:PutObject",
               "Effect": "Allow",
               "Principal": {
-                "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
+                "AWS": "arn:aws:iam::000000000035:role/galaxies-data-refresher-lambda-role-PROD",
               },
               "Resource": {
                 "Fn::Join": [
@@ -1392,7 +1392,7 @@ systemctl start app
               },
               "Effect": "Allow",
               "Principal": {
-                "AWS": "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-PROD",
+                "AWS": "arn:aws:iam::000000000035:role/galaxies-data-refresher-lambda-role-PROD",
               },
               "Resource": {
                 "Fn::GetAtt": [
@@ -1414,11 +1414,11 @@ systemctl start app
                         {
                           "Ref": "AWS::Partition",
                         },
-                        ":iam::000000000016:root",
+                        ":iam::000000000035:root",
                       ],
                     ],
                   },
-                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
+                  "arn:aws:iam::000000000035:role/galaxies-data-refresher-lambda-role-CODE",
                 ],
               },
               "Resource": {
@@ -1456,11 +1456,11 @@ systemctl start app
                         {
                           "Ref": "AWS::Partition",
                         },
-                        ":iam::000000000016:root",
+                        ":iam::000000000035:root",
                       ],
                     ],
                   },
-                  "arn:aws:iam::000000000016:role/galaxies-data-refresher-lambda-role-CODE",
+                  "arn:aws:iam::000000000035:role/galaxies-data-refresher-lambda-role-CODE",
                 ],
               },
               "Resource": {
