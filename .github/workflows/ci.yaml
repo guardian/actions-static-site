@@ -19,7 +19,7 @@ jobs:
 
       - uses: guardian/actions-read-private-repos@v1
         with:
-          private-ssh-keys: ${{ secrets.PRIVATE_INFRASTRUCTURE_CONFIG_DEPLOY_KEY }}
+          private-ssh-keys: ${{ secrets.AWS_ACCOUNT_SETUP_DEPLOY_KEY }}
 
       - uses: actions/setup-node@v4
         with:

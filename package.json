@@ -33,10 +33,10 @@
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
+    "@guardian/aws-account-setup": "github:guardian/aws-account-setup#shared@1.0.0",
     "@guardian/cdk": "58.0.0",
     "@guardian/eslint-config-typescript": "^10.0.0",
     "@guardian/prettier": "^8.0.0",
-    "@guardian/private-infrastructure-config": "git+ssh://git@github.com/guardian/private-infrastructure-config.git#c6159b4a0a09d4f3a7a978a6fd48e37b1a2c8e3b",
     "@tsconfig/node20": "^20.1.4",
     "@types/jest": "^29.5.12",
     "@types/js-yaml": "^4.0.9",

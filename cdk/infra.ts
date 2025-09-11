@@ -1,3 +1,4 @@
+import { GuardianAwsAccounts } from '@guardian/aws-account-setup';
 import { GuEc2App } from '@guardian/cdk';
 import { AccessScope } from '@guardian/cdk/lib/constants';
 import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
@@ -9,7 +10,6 @@ import {
 import { GuCname } from '@guardian/cdk/lib/constructs/dns/';
 import { GuVpc } from '@guardian/cdk/lib/constructs/ec2';
 import { GuS3Bucket } from '@guardian/cdk/lib/constructs/s3';
-import { GuardianAwsAccounts } from '@guardian/private-infrastructure-config';
 import type { App } from 'aws-cdk-lib';
 import { Duration, SecretValue } from 'aws-cdk-lib';
 import {
