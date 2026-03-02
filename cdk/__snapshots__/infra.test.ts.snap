@@ -21,16 +21,16 @@ exports[`static site INFRA should match snapshot 1`] = `
       "GuParameterStoreReadPolicy",
       "GuAmiParameter",
       "GuHttpsEgressSecurityGroup",
-      "GuWazuhAccess",
       "GuAutoScalingGroup",
       "GuApplicationLoadBalancer",
+      "GuAccessLoggingBucketParameter",
       "GuApplicationTargetGroup",
       "GuHttpsApplicationListener",
       "GuAlb5xxPercentageAlarm",
       "GuUnhealthyInstancesAlarm",
       "GuCname",
     ],
-    "gu:cdk:version": "58.0.0",
+    "gu:cdk:version": "62.5.0",
   },
   "Outputs": {
     "LoadBalancerAppDnsName": {
@@ -47,6 +47,11 @@ exports[`static site INFRA should match snapshot 1`] = `
     "AMIApp": {
       "Description": "Amazon Machine Image ID for the app app. Use this in conjunction with AMIgo to keep AMIs up to date.",
       "Type": "AWS::EC2::Image::Id",
+    },
+    "AccessLoggingBucket": {
+      "Default": "/account/services/access-logging/bucket",
+      "Description": "S3 bucket to store your access logs",
+      "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "AnghammaradSnsArn": {
       "Default": "/account/services/anghammarad.topic.arn",
@@ -100,6 +105,11 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
         },
         "MaxSize": "2",
+        "MetricsCollection": [
+          {
+            "Granularity": "1Minute",
+          },
+        ],
         "MinSize": "1",
         "Tags": [
           {
@@ -110,7 +120,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           {
             "Key": "gu:cdk:version",
             "PropagateAtLaunch": true,
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -162,7 +172,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -280,7 +290,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -357,11 +367,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 "Fn::Join": [
                   "",
                   [
-                    "arn:aws:kinesis:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
+                    "arn:aws:kinesis:eu-west-1:",
                     {
                       "Ref": "AWS::AccountId",
                     },
@@ -393,11 +399,7 @@ exports[`static site INFRA should match snapshot 1`] = `
             "Fn::Join": [
               "",
               [
-                "arn:aws:sns:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":",
+                "arn:aws:sns:eu-west-1:",
                 {
                   "Ref": "AWS::AccountId",
                 },
@@ -418,6 +420,7 @@ exports[`static site INFRA should match snapshot 1`] = `
             "Expression": "100*(m1+m2)/m3",
             "Id": "expr_1",
             "Label": "% of 5XX responses served for app (load balancer and instances combined)",
+            "ReturnData": true,
           },
           {
             "Id": "m1",
@@ -489,6 +492,28 @@ exports[`static site INFRA should match snapshot 1`] = `
             "ReturnData": false,
           },
         ],
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "app",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "62.5.0",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/actions-static-site",
+          },
+          {
+            "Key": "Stack",
+            "Value": "stack",
+          },
+          {
+            "Key": "Stage",
+            "Value": "INFRA",
+          },
+        ],
         "Threshold": 1,
         "TreatMissingData": "notBreaching",
       },
@@ -516,7 +541,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -621,6 +646,7 @@ exports[`static site INFRA should match snapshot 1`] = `
         },
         "Port": 443,
         "Protocol": "HTTPS",
+        "SslPolicy": "ELBSecurityPolicy-TLS13-1-2-2021-06",
       },
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
     },
@@ -666,6 +692,20 @@ exports[`static site INFRA should match snapshot 1`] = `
             "Key": "routing.http.drop_invalid_header_fields.enabled",
             "Value": "true",
           },
+          {
+            "Key": "access_logs.s3.enabled",
+            "Value": "true",
+          },
+          {
+            "Key": "access_logs.s3.bucket",
+            "Value": {
+              "Ref": "AccessLoggingBucket",
+            },
+          },
+          {
+            "Key": "access_logs.s3.prefix",
+            "Value": "application-load-balancer/INFRA/stack/app",
+          },
         ],
         "Scheme": "internet-facing",
         "SecurityGroups": [
@@ -692,7 +732,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -739,7 +779,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -781,27 +821,6 @@ exports[`static site INFRA should match snapshot 1`] = `
       },
       "Type": "AWS::EC2::SecurityGroupEgress",
     },
-    "LoadBalancerAppSecurityGrouptostaticsiteINFRAWazuhSecurityGroupED10C7AD90003152BEC5": {
-      "Properties": {
-        "Description": "Load balancer to target",
-        "DestinationSecurityGroupId": {
-          "Fn::GetAtt": [
-            "WazuhSecurityGroup",
-            "GroupId",
-          ],
-        },
-        "FromPort": 9000,
-        "GroupId": {
-          "Fn::GetAtt": [
-            "LoadBalancerAppSecurityGroup25B85B40",
-            "GroupId",
-          ],
-        },
-        "IpProtocol": "tcp",
-        "ToPort": 9000,
-      },
-      "Type": "AWS::EC2::SecurityGroupEgress",
-    },
     "ParameterStoreReadApp8C5D582A": {
       "Properties": {
         "PolicyDocument": {
@@ -813,11 +832,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 "Fn::Join": [
                   "",
                   [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
+                    "arn:aws:ssm:eu-west-1:",
                     {
                       "Ref": "AWS::AccountId",
                     },
@@ -836,11 +851,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 "Fn::Join": [
                   "",
                   [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region",
-                    },
-                    ":",
+                    "arn:aws:ssm:eu-west-1:",
                     {
                       "Ref": "AWS::AccountId",
                     },
@@ -913,7 +924,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -954,11 +965,7 @@ exports[`static site INFRA should match snapshot 1`] = `
             "Fn::Join": [
               "",
               [
-                "arn:aws:sns:",
-                {
-                  "Ref": "AWS::Region",
-                },
-                ":",
+                "arn:aws:sns:eu-west-1:",
                 {
                   "Ref": "AWS::AccountId",
                 },
@@ -1045,6 +1052,28 @@ exports[`static site INFRA should match snapshot 1`] = `
         "Namespace": "AWS/ApplicationELB",
         "Period": 60,
         "Statistic": "Maximum",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "app",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "62.5.0",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/actions-static-site",
+          },
+          {
+            "Key": "Stack",
+            "Value": "stack",
+          },
+          {
+            "Key": "Stage",
+            "Value": "INFRA",
+          },
+        ],
         "Threshold": 1,
         "TreatMissingData": "notBreaching",
       },
@@ -1056,17 +1085,8 @@ exports[`static site INFRA should match snapshot 1`] = `
         "SecurityGroupEgress": [
           {
             "CidrIp": "0.0.0.0/0",
-            "Description": "Wazuh event logging",
-            "FromPort": 1514,
-            "IpProtocol": "tcp",
-            "ToPort": 1514,
-          },
-          {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "Wazuh agent registration",
-            "FromPort": 1515,
-            "IpProtocol": "tcp",
-            "ToPort": 1515,
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
           },
         ],
         "Tags": [
@@ -1076,7 +1096,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -1097,48 +1117,6 @@ exports[`static site INFRA should match snapshot 1`] = `
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "WazuhSecurityGroupfromstaticsiteINFRALoadBalancerAppSecurityGroup35E6288E90004E40CBF2": {
-      "Properties": {
-        "Description": "Load balancer to target",
-        "FromPort": 9000,
-        "GroupId": {
-          "Fn::GetAtt": [
-            "WazuhSecurityGroup",
-            "GroupId",
-          ],
-        },
-        "IpProtocol": "tcp",
-        "SourceSecurityGroupId": {
-          "Fn::GetAtt": [
-            "LoadBalancerAppSecurityGroup25B85B40",
-            "GroupId",
-          ],
-        },
-        "ToPort": 9000,
-      },
-      "Type": "AWS::EC2::SecurityGroupIngress",
-    },
-    "WazuhSecurityGroupfromstaticsiteINFRAldpaccess9458C77F90008F9AAE68": {
-      "Properties": {
-        "Description": "Load balancer to target",
-        "FromPort": 9000,
-        "GroupId": {
-          "Fn::GetAtt": [
-            "WazuhSecurityGroup",
-            "GroupId",
-          ],
-        },
-        "IpProtocol": "tcp",
-        "SourceSecurityGroupId": {
-          "Fn::GetAtt": [
-            "ldpaccess567AC006",
-            "GroupId",
-          ],
-        },
-        "ToPort": 9000,
-      },
-      "Type": "AWS::EC2::SecurityGroupIngress",
-    },
     "ldpaccess567AC006": {
       "Properties": {
         "GroupDescription": "static-site-INFRA/ldp-access",
@@ -1156,7 +1134,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -1198,17 +1176,15 @@ exports[`static site INFRA should match snapshot 1`] = `
           "InstanceType": "t4g.nano",
           "MetadataOptions": {
             "HttpTokens": "required",
+            "InstanceMetadataTags": "enabled",
+          },
+          "Monitoring": {
+            "Enabled": false,
           },
           "SecurityGroupIds": [
             {
               "Fn::GetAtt": [
                 "GuHttpsEgressSecurityGroupApp026DFC83",
-                "GroupId",
-              ],
-            },
-            {
-              "Fn::GetAtt": [
-                "WazuhSecurityGroup",
                 "GroupId",
               ],
             },
@@ -1223,7 +1199,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 },
                 {
                   "Key": "gu:cdk:version",
-                  "Value": "58.0.0",
+                  "Value": "62.5.0",
                 },
                 {
                   "Key": "gu:repo",
@@ -1252,7 +1228,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 },
                 {
                   "Key": "gu:cdk:version",
-                  "Value": "58.0.0",
+                  "Value": "62.5.0",
                 },
                 {
                   "Key": "gu:repo",
@@ -1295,15 +1271,13 @@ ExecStart=/app
 [Install]
 WantedBy=multi-user.target
 EOF
-
 aws s3 cp s3://",
                   {
                     "Ref": "DistributionBucketName",
                   },
                   "/stack/INFRA/app/static-site-service /app
 chmod +x /app
-systemctl start app
-",
+systemctl start app",
                 ],
               ],
             },
@@ -1319,7 +1293,7 @@ systemctl start app
               },
               {
                 "Key": "gu:cdk:version",
-                "Value": "58.0.0",
+                "Value": "62.5.0",
               },
               {
                 "Key": "gu:repo",
@@ -1492,7 +1466,7 @@ systemctl start app
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "58.0.0",
+            "Value": "62.5.0",
           },
           {
             "Key": "gu:repo",
@@ -1522,7 +1496,7 @@ systemctl start app
           "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "58.0.0",
+          "gu:cdk:version": "62.5.0",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",
@@ -1543,7 +1517,7 @@ systemctl start app
           "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "58.0.0",
+          "gu:cdk:version": "62.5.0",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",
@@ -1561,7 +1535,7 @@ systemctl start app
           "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "58.0.0",
+          "gu:cdk:version": "62.5.0",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",

@@ -9,6 +9,7 @@ describe("static site INFRA", () => {
       app: 'app',
       stack: 'stack',
       stage: "INFRA",
+      env: { region: 'eu-west-1' },
       domainName: "example.devx.gutools.co.uk",
     });
 
