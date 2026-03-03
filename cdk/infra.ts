@@ -7,7 +7,7 @@ import {
 	GuDistributionBucketParameter,
 	GuStack,
 } from '@guardian/cdk/lib/constructs/core';
-import { GuCname } from '@guardian/cdk/lib/constructs/dns/';
+import { GuCname } from '@guardian/cdk/lib/constructs/dns';
 import { GuVpc } from '@guardian/cdk/lib/constructs/ec2';
 import { GuS3Bucket } from '@guardian/cdk/lib/constructs/s3';
 import type { App } from 'aws-cdk-lib';
