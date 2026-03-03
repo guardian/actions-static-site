@@ -17,6 +17,7 @@ import {
 	InstanceSize,
 	InstanceType,
 	SecurityGroup,
+	UserData,
 } from 'aws-cdk-lib/aws-ec2';
 import {
 	ListenerAction,
@@ -72,8 +73,9 @@ export class Infra extends GuStack {
 		const distBucket =
 			GuDistributionBucketParameter.getInstance(this).valueAsString;
 
-		const userData = `#!/bin/bash -ev
-cat << EOF > /etc/systemd/system/${app}.service
+		const userData = UserData.forLinux({ shebang: '#!/bin/bash -ev' });
+		userData.addCommands(
+			`cat << EOF > /etc/systemd/system/${app}.service
 [Unit]
 Description=Static Site service
 
@@ -84,12 +86,11 @@ ExecStart=/${app}
 
 [Install]
 WantedBy=multi-user.target
-EOF
-
-aws s3 cp s3://${distBucket}/${keyPrefix}/static-site-service /${app}
-chmod +x /${app}
-systemctl start ${app}
-`;
+EOF`,
+			`aws s3 cp s3://${distBucket}/${keyPrefix}/static-site-service /${app}`,
+			`chmod +x /${app}`,
+			`systemctl start ${app}`,
+		);
 
 		const ec2 = new GuEc2App(this, {
 			app: app,
@@ -112,6 +113,28 @@ systemctl start ${app}
 			userData: userData,
 			imageRecipe: 'arm64-bionic-java11-deploy-infrastructure',
 			applicationLogging: { enabled: true },
+			instanceMetricGranularity: '5Minute',
+		});
+
+		// Temporary security group with a fixed logical ID, replicating the one
+		// removed from GuCDK v61.5.0. This is part one of the two-step Wazuh
+		// removal process required when using Riff-Raff's ASG deployment type.
+		// See https://github.com/guardian/cdk/blob/main/CHANGELOG.md#6150
+		// In a follow-up PR (after this one is deployed), remove this block.
+		const tempWazuhSecurityGroup = new SecurityGroup(
+			this,
+			'WazuhSecurityGroup',
+			{
+				vpc: ec2.vpc,
+				// Must keep the same description, else CloudFormation will try to replace the security group
+				description:
+					'Allow outbound traffic from wazuh agent to manager',
+			},
+		);
+		this.overrideLogicalId(tempWazuhSecurityGroup, {
+			logicalId: 'WazuhSecurityGroup',
+			reason:
+				'Part one of updating to GuCDK 61.5.0+ whilst using Riff-Raff\'s ASG deployment type',
 		});
 
 		// Need to give the ALB outbound access on 443 for the IdP endpoints.
