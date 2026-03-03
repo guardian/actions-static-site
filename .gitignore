@@ -2,3 +2,4 @@ node_modules
 test-data
 staging
 lambda/main
+cdk.out
