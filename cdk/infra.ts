@@ -116,27 +116,6 @@ EOF`,
 			instanceMetricGranularity: '5Minute',
 		});
 
-		// Temporary security group with a fixed logical ID, replicating the one
-		// removed from GuCDK v61.5.0. This is part one of the two-step Wazuh
-		// removal process required when using Riff-Raff's ASG deployment type.
-		// See https://github.com/guardian/cdk/blob/main/CHANGELOG.md#6150
-		// In a follow-up PR (after this one is deployed), remove this block.
-		const tempWazuhSecurityGroup = new SecurityGroup(
-			this,
-			'WazuhSecurityGroup',
-			{
-				vpc: ec2.vpc,
-				// Must keep the same description, else CloudFormation will try to replace the security group
-				description:
-					'Allow outbound traffic from wazuh agent to manager',
-			},
-		);
-		this.overrideLogicalId(tempWazuhSecurityGroup, {
-			logicalId: 'WazuhSecurityGroup',
-			reason:
-				'Part one of updating to GuCDK 61.5.0+ whilst using Riff-Raff\'s ASG deployment type',
-		});
-
 		// Need to give the ALB outbound access on 443 for the IdP endpoints.
 		const sg = new SecurityGroup(this, 'ldp-access', {
 			vpc: GuVpc.fromIdParameter(this, 'vpc', {}),

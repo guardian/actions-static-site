@@ -1079,44 +1079,6 @@ exports[`static site INFRA should match snapshot 1`] = `
       },
       "Type": "AWS::CloudWatch::Alarm",
     },
-    "WazuhSecurityGroup": {
-      "Properties": {
-        "GroupDescription": "Allow outbound traffic from wazuh agent to manager",
-        "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "Allow all outbound traffic by default",
-            "IpProtocol": "-1",
-          },
-        ],
-        "Tags": [
-          {
-            "Key": "App",
-            "Value": "app",
-          },
-          {
-            "Key": "gu:cdk:version",
-            "Value": "62.5.0",
-          },
-          {
-            "Key": "gu:repo",
-            "Value": "guardian/actions-static-site",
-          },
-          {
-            "Key": "Stack",
-            "Value": "stack",
-          },
-          {
-            "Key": "Stage",
-            "Value": "INFRA",
-          },
-        ],
-        "VpcId": {
-          "Ref": "VpcId",
-        },
-      },
-      "Type": "AWS::EC2::SecurityGroup",
-    },
     "ldpaccess567AC006": {
       "Properties": {
         "GroupDescription": "static-site-INFRA/ldp-access",
