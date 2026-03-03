@@ -80,7 +80,7 @@
        "Action": "s3:PutObject",
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-PROD"
+        "AWS": "arn:aws:iam::339713052561:role/galaxies-data-refresher-lambda-role-PROD"
        },
        "Resource": {
         "Fn::Join": [
@@ -108,7 +108,7 @@
        },
        "Effect": "Allow",
        "Principal": {
-        "AWS": "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-PROD"
+        "AWS": "arn:aws:iam::339713052561:role/galaxies-data-refresher-lambda-role-PROD"
        },
        "Resource": {
         "Fn::GetAtt": [
@@ -130,11 +130,11 @@
             {
              "Ref": "AWS::Partition"
             },
-            ":iam::702972749545:root"
+            ":iam::339713052561:root"
            ]
           ]
          },
-         "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-CODE"
+         "arn:aws:iam::339713052561:role/galaxies-data-refresher-lambda-role-CODE"
         ]
        },
        "Resource": {
@@ -172,11 +172,11 @@
             {
              "Ref": "AWS::Partition"
             },
-            ":iam::702972749545:root"
+            ":iam::339713052561:root"
            ]
           ]
          },
-         "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-CODE"
+         "arn:aws:iam::339713052561:role/galaxies-data-refresher-lambda-role-CODE"
         ]
        },
        "Resource": {

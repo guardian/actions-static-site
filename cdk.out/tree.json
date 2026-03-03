@@ -75,7 +75,7 @@
                               "Action": "s3:PutObject",
                               "Effect": "Allow",
                               "Principal": {
-                                "AWS": "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-PROD"
+                                "AWS": "arn:aws:iam::339713052561:role/galaxies-data-refresher-lambda-role-PROD"
                               },
                               "Resource": {
                                 "Fn::Join": [
@@ -103,7 +103,7 @@
                               },
                               "Effect": "Allow",
                               "Principal": {
-                                "AWS": "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-PROD"
+                                "AWS": "arn:aws:iam::339713052561:role/galaxies-data-refresher-lambda-role-PROD"
                               },
                               "Resource": {
                                 "Fn::GetAtt": [
@@ -125,11 +125,11 @@
                                         {
                                           "Ref": "AWS::Partition"
                                         },
-                                        ":iam::702972749545:root"
+                                        ":iam::339713052561:root"
                                       ]
                                     ]
                                   },
-                                  "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-CODE"
+                                  "arn:aws:iam::339713052561:role/galaxies-data-refresher-lambda-role-CODE"
                                 ]
                               },
                               "Resource": {
@@ -167,11 +167,11 @@
                                         {
                                           "Ref": "AWS::Partition"
                                         },
-                                        ":iam::702972749545:root"
+                                        ":iam::339713052561:root"
                                       ]
                                     ]
                                   },
-                                  "arn:aws:iam::702972749545:role/galaxies-data-refresher-lambda-role-CODE"
+                                  "arn:aws:iam::339713052561:role/galaxies-data-refresher-lambda-role-CODE"
                                 ]
                               },
                               "Resource": {
@@ -243,9 +243,9 @@
               "version": "2.136.1"
             }
           },
-          "subnet-#{Token[TOKEN.843]}": {
-            "id": "subnet-#{Token[TOKEN.843]}",
-            "path": "Static-Site-INFRA/subnet-#{Token[TOKEN.843]}",
+          "subnet-#{Token[TOKEN.840]}": {
+            "id": "subnet-#{Token[TOKEN.840]}",
+            "path": "Static-Site-INFRA/subnet-#{Token[TOKEN.840]}",
             "constructInfo": {
               "fqn": "aws-cdk-lib.Resource",
               "version": "2.136.1"
@@ -259,9 +259,9 @@
               "version": "2.136.1"
             }
           },
-          "subnet-#{Token[TOKEN.846]}": {
-            "id": "subnet-#{Token[TOKEN.846]}",
-            "path": "Static-Site-INFRA/subnet-#{Token[TOKEN.846]}",
+          "subnet-#{Token[TOKEN.843]}": {
+            "id": "subnet-#{Token[TOKEN.843]}",
+            "path": "Static-Site-INFRA/subnet-#{Token[TOKEN.843]}",
             "constructInfo": {
               "fqn": "aws-cdk-lib.Resource",
               "version": "2.136.1"
