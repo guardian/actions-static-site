@@ -1,6 +1,6 @@
 import { App } from "aws-cdk-lib";
 import { Template } from "aws-cdk-lib/assertions";
-import {Infra} from "./infra";
+import { Infra } from "./infra";
 
 describe("static site INFRA", () => {
   it("should match snapshot", () => {
@@ -10,6 +10,7 @@ describe("static site INFRA", () => {
       stack: 'stack',
       stage: "INFRA",
       domainName: "example.devx.gutools.co.uk",
+      env: { region: 'eu-west-1' },
     });
 
     const got = Template.fromStack(cdkStack).toJSON();
