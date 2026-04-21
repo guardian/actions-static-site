@@ -28,7 +28,7 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version: '1.18'
+          go-version-file: 'service/go.mod'
       - name: Build Go service
         run: |
           cd service
