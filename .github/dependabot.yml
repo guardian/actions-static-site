@@ -10,6 +10,19 @@ updates:
       - dependency-name: 'aws-cdk'
       - dependency-name: 'aws-cdk-lib'
       - dependency-name: 'constructs'
+  - package-ecosystem: gomod
+    directory: 'service'
+    schedule:
+      interval: quarterly
+    commit-message:
+      prefix: "chore(deps): "
+    groups:
+      # The AWS SDK dependencies must be updated in unison.
+      # See https://github.com/aws/aws-sdk-go-v2/issues/2370#issuecomment-1878423518.
+      aws-sdk:
+        patterns:
+          - "github.com/aws/aws-sdk-go-v2"
+          - "github.com/aws/aws-sdk-go-v2/*"
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
