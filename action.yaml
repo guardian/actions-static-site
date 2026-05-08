@@ -38,6 +38,10 @@ runs:
         INPUT_DRYRUN: ${{ inputs.dryRun}}
         INPUT_ACTIONS_RUNTIME_TOKEN: ${ github.token }
 
+    - name: Clear site folder in preparation for artifact download
+      shell: bash
+      run: rm -rf site
+
     - uses: actions/download-artifact@v8
       with:
         name: ${{ inputs.artifact }}
