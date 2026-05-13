@@ -15,14 +15,8 @@ type S3Store struct {
 }
 
 // Reads usual creds chain
-func New(bucket, profile string) S3Store {
-	opts := []func(*config.LoadOptions) error{
-		config.WithRegion("eu-west-1"),
-	}
-	if profile != "" {
-		opts = append(opts, config.WithSharedConfigProfile(profile))
-	}
-	cfg, err := config.LoadDefaultConfig(context.TODO(), opts...)
+func New(bucket string) S3Store {
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
 
 	if err != nil {
 		log.Fatalf("unable to load AWS default config: %v", err)
