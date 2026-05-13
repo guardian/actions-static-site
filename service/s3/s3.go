@@ -16,13 +16,16 @@ type S3Store struct {
 
 // Reads usual creds chain
 func New(bucket string) S3Store {
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-west-1"))
+	config, err := config.LoadDefaultConfig(
+		context.TODO(),
+		config.WithRegion("eu-west-1"),
+	)
 
 	if err != nil {
 		log.Fatalf("unable to load AWS default config: %v", err)
 	}
 
-	client := awsS3.NewFromConfig(cfg)
+	client := awsS3.NewFromConfig(config)
 	return S3Store{client: *client, bucket: bucket}
 }
 
