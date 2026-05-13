@@ -19,7 +19,6 @@ type Config struct {
 
 	// Override when local for easier testing.
 	RequireAuth bool
-	Profile     string
 }
 
 func required(key string) string {
@@ -45,13 +44,12 @@ func getConfig() Config {
 		Bucket:      required("BUCKET"),
 		Port:        optional("PORT", "3333"),
 		RequireAuth: optional("REQUIRE_AUTH", "true") != "false",
-		Profile:     optional("PROFILE", ""),
 	}
 }
 
 func main() {
 	config := getConfig()
-	store := s3.New(config.Bucket, config.Profile)
+	store := s3.New(config.Bucket)
 
 	http.HandleFunc("/healthcheck", middleware.WithRequestLog(http.HandlerFunc(ok)))
 

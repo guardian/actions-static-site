@@ -16,3 +16,7 @@ Run the tests with:
 
   $ go test ./...
 
+Run locally with:
+
+  $ BUCKET=<bucket-name> REQUIRE_AUTH=false AWS_PROFILE=deployTools go run main.go
+

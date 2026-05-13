@@ -15,11 +15,10 @@ type S3Store struct {
 }
 
 // Reads usual creds chain
-func New(bucket, profile string) S3Store {
+func New(bucket string) S3Store {
 	config, err := config.LoadDefaultConfig(
 		context.TODO(),
 		config.WithRegion("eu-west-1"),
-		config.WithSharedConfigProfile("deployTools"),
 	)
 
 	if err != nil {
