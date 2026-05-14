@@ -6,7 +6,6 @@ exports[`static site INFRA should match snapshot 1`] = `
     "gu:cdk:constructs": [
       "GuS3Bucket",
       "GuDistributionBucketParameter",
-      "GuAnghammaradTopicParameter",
       "GuVpcParameter",
       "GuSubnetListParameter",
       "GuSubnetListParameter",
@@ -51,11 +50,6 @@ exports[`static site INFRA should match snapshot 1`] = `
     "AccessLoggingBucket": {
       "Default": "/account/services/access-logging/bucket",
       "Description": "S3 bucket to store your access logs",
-      "Type": "AWS::SSM::Parameter::Value<String>",
-    },
-    "AnghammaradSnsArn": {
-      "Default": "/account/services/anghammarad.topic.arn",
-      "Description": "SSM parameter containing the ARN of the Anghammarad SNS topic",
       "Type": "AWS::SSM::Parameter::Value<String>",
     },
     "DistributionBucketName": {
@@ -403,10 +397,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":",
-                {
-                  "Ref": "AnghammaradSnsArn",
-                },
+                ":devx-reliabilityandoperations",
               ],
             ],
           },
@@ -969,10 +960,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 {
                   "Ref": "AWS::AccountId",
                 },
-                ":",
-                {
-                  "Ref": "AnghammaradSnsArn",
-                },
+                ":devx-reliabilityandoperations",
               ],
             ],
           },
