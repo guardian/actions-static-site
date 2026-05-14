@@ -3,7 +3,6 @@ import { GuEc2App } from '@guardian/cdk';
 import { AccessScope } from '@guardian/cdk/lib/constants';
 import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import {
-	GuAnghammaradTopicParameter,
 	GuDistributionBucketParameter,
 	GuStack,
 } from '@guardian/cdk/lib/constructs/core';
@@ -100,8 +99,7 @@ EOF`,
 			instanceType: InstanceType.of(InstanceClass.T4G, InstanceSize.NANO),
 			applicationPort: port,
 			monitoringConfiguration: {
-				snsTopicName:
-					GuAnghammaradTopicParameter.getInstance(this).valueAsString,
+				snsTopicName: 'devx-reliabilityandoperations', // DevX RelOps owns this service, so route alarms to them
 				unhealthyInstancesAlarm: true,
 				http5xxAlarm: {
 					tolerated5xxPercentage: 1,
