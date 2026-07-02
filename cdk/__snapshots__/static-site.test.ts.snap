@@ -9,7 +9,7 @@ exports[`static site should match snapshot 1`] = `
       "GuCname",
       "GuCertificate",
     ],
-    "gu:cdk:version": "63.3.0",
+    "gu:cdk:version": "63.6.2",
   },
   "Parameters": {
     "listenerArn": {
@@ -35,7 +35,7 @@ exports[`static site should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "63.3.0",
+            "Value": "63.6.2",
           },
           {
             "Key": "gu:repo",
