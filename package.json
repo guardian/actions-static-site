@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@guardian/aws-account-setup": "github:guardian/aws-account-setup#shared@1.0.0",
-    "@guardian/cdk": "63.6.2",
+    "@guardian/cdk": "64.0.0",
     "@guardian/eslint-config-typescript": "^10.0.0",
     "@guardian/prettier": "^11.0.0",
     "@tsconfig/node20": "^20.1.9",
