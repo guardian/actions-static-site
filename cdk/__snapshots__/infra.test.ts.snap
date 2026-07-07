@@ -29,7 +29,7 @@ exports[`static site INFRA should match snapshot 1`] = `
       "GuUnhealthyInstancesAlarm",
       "GuCname",
     ],
-    "gu:cdk:version": "64.0.0",
+    "gu:cdk:version": "TEST",
   },
   "Outputs": {
     "LoadBalancerAppDnsName": {
@@ -114,7 +114,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           {
             "Key": "gu:cdk:version",
             "PropagateAtLaunch": true,
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -166,7 +166,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -284,7 +284,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -490,7 +490,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -532,7 +532,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -723,7 +723,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -770,7 +770,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -915,7 +915,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -1047,7 +1047,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -1084,7 +1084,7 @@ exports[`static site INFRA should match snapshot 1`] = `
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -1149,7 +1149,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 },
                 {
                   "Key": "gu:cdk:version",
-                  "Value": "64.0.0",
+                  "Value": "TEST",
                 },
                 {
                   "Key": "gu:repo",
@@ -1178,7 +1178,7 @@ exports[`static site INFRA should match snapshot 1`] = `
                 },
                 {
                   "Key": "gu:cdk:version",
-                  "Value": "64.0.0",
+                  "Value": "TEST",
                 },
                 {
                   "Key": "gu:repo",
@@ -1243,7 +1243,7 @@ systemctl start app",
               },
               {
                 "Key": "gu:cdk:version",
-                "Value": "64.0.0",
+                "Value": "TEST",
               },
               {
                 "Key": "gu:repo",
@@ -1416,7 +1416,7 @@ systemctl start app",
           },
           {
             "Key": "gu:cdk:version",
-            "Value": "64.0.0",
+            "Value": "TEST",
           },
           {
             "Key": "gu:repo",
@@ -1446,7 +1446,7 @@ systemctl start app",
           "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "64.0.0",
+          "gu:cdk:version": "TEST",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",
@@ -1467,7 +1467,7 @@ systemctl start app",
           "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "64.0.0",
+          "gu:cdk:version": "TEST",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",
@@ -1485,7 +1485,7 @@ systemctl start app",
           "App": "app",
           "Stack": "stack",
           "Stage": "INFRA",
-          "gu:cdk:version": "64.0.0",
+          "gu:cdk:version": "TEST",
           "gu:repo": "guardian/actions-static-site",
         },
         "Type": "String",
