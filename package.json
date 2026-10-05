@@ -34,7 +34,7 @@
     "@guardian/cdk": "64.0.0",
     "@guardian/eslint-config-typescript": "^10.0.0",
     "@guardian/prettier": "^11.0.0",
-    "@tsconfig/node20": "^20.1.9",
+    "@tsconfig/node20": "^20.1.10",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.1.0",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
