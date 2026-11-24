@@ -13,6 +13,8 @@ auth callback to work - ping it on the `DevX Stream` channel and we can quickly 
 - (In the google cloud console, go to the project devx-gh-actions-static-site, choose APIs and service, Credentials, under OAuth 2.0 Chlient IDS the static site entry,
 then add the new authorised redirect URI.)
 
+**If the domain is new, it will need adding to [allowed-domains](https://github.com/guardian/cfn-private-resource-types/blob/main/packages/dns-change-executor/src/allowed-domains.ts) in [guardian/cfn-private-resource-types](https://github.com/guardian/cfn-private-resource-types).** Example PR [here](https://github.com/guardian/cfn-private-resource-types/pull/309). If it's not new but not listed there, please add it anyway (though your site will work without adding).
+
 **You will also need to add your repo to [riffraff-platform](https://github.com/guardian/riffraff-platform?tab=readme-ov-file#adding-a-new-repository), with riffraff project name `deploy::*appname*`** - for example [guardian/riffraff-platform#399](https://github.com/guardian/riffraff-platform/pull/399).
 
 You will need to merge the **riffraff-platform** PR before you start creating your `@guardian/actions-static-site` job otherwise the build will fail as your repository expects to have `GU_RIFF_RAFF_ROLE_ARN` in your respository secrets and that gets generated after the merge.
